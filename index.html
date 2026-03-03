@@ -51,7 +51,211 @@ var to_top_options = {"scroll_offset":"100","icon_opacity":"50","style":"icon","
 <link rel="icon" href="wp-content/uploads/2024/03/homme-300x300.png" sizes="192x192" />
 <link rel="apple-touch-icon" href="wp-content/uploads/2024/03/homme-300x300.png" />
 <meta name="msapplication-TileImage" content="wp-content/uploads/2024/03/homme-300x300.png" />
-<!-- To Top Custom CSS --><style type='text/css'>#to_top_scrollup {font-size: 40px; width: 40px; height: 40px;background-color: #0083ff;}</style>	</head>
+<!-- To Top Custom CSS -->
+ <style type='text/css'>#to_top_scrollup {font-size: 40px; width: 40px; height: 40px;background-color: #0083ff;}
+	:root{
+    --pf-primary:#0b5cff;
+    --pf-text:#0f172a;
+    --pf-muted:#475569;
+    --pf-card:#ffffff;
+    --pf-border:rgba(15, 23, 42, .10);
+    --pf-shadow:0 10px 25px rgba(2, 6, 23, .08);
+  }
+
+  .pf-section{
+    padding: 56px 20px;
+    background: #ffffff;
+  }
+
+  .pf-container{
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .pf-header{
+    text-align:center;
+    margin-bottom: 28px;
+  }
+
+  .pf-title{
+    margin: 0;
+    font-size: clamp(26px, 2.2vw, 34px);
+    line-height: 1.2;
+    color: var(--pf-text);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .pf-subtitle{
+    margin: 10px auto 0;
+    max-width: 780px;
+    color: var(--pf-muted);
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  .pf-divider{
+    width: 140px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--pf-primary), rgba(11,92,255,.25));
+    border-radius: 999px;
+    margin: 18px auto 0;
+  }
+
+  .pf-grid{
+    display:grid;
+    gap: 18px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 28px;
+  }
+
+  @media (max-width: 900px){
+    .pf-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 620px){
+    .pf-grid{ grid-template-columns: 1fr; }
+  }
+
+  .pf-card{
+    background: var(--pf-card);
+    border: 1px solid var(--pf-border);
+    border-radius: 16px;
+    box-shadow: var(--pf-shadow);
+    padding: 18px 18px 16px;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+
+  .pf-card:hover{
+    transform: translateY(-3px);
+    border-color: rgba(11, 92, 255, .35);
+    box-shadow: 0 18px 38px rgba(2, 6, 23, .12);
+  }
+
+  .pf-card-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .pf-badge{
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--pf-primary);
+    background: rgba(11,92,255,.10);
+    padding: 6px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .pf-icon{
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display:grid;
+    place-items:center;
+    background: rgba(11,92,255,.10);
+    color: var(--pf-primary);
+    flex: 0 0 auto;
+  }
+
+  .pf-card h3{
+    margin: 10px 0 8px;
+    font-size: 18px;
+    color: var(--pf-text);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .pf-card p{
+    margin: 0;
+    color: var(--pf-muted);
+    line-height: 1.65;
+    font-size: 15px;
+  }
+
+  .pf-list{
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+    display:grid;
+    gap: 8px;
+    color: var(--pf-muted);
+    font-size: 14px;
+  }
+
+  .pf-list li{
+    display:flex;
+    gap: 8px;
+    align-items:flex-start;
+  }
+
+  .pf-check{
+    margin-top: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    display:grid;
+    place-items:center;
+    background: rgba(11,92,255,.10);
+    color: var(--pf-primary);
+    flex: 0 0 auto;
+  }
+
+  .pf-linkedin{
+    margin-top: 22px;
+    border-radius: 16px;
+    border: 1px solid var(--pf-border);
+    box-shadow: var(--pf-shadow);
+    padding: 16px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 12px;
+    background: linear-gradient(135deg, rgba(11,92,255,.06), rgba(2, 6, 23, .02));
+  }
+
+  .pf-linkedin-left{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+  }
+
+  .pf-linkedin h4{
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--pf-text);
+  }
+
+  .pf-linkedin small{
+    display:block;
+    margin-top: 2px;
+    color: var(--pf-muted);
+    line-height: 1.4;
+  }
+
+  .pf-btn{
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    text-decoration:none;
+    font-weight: 800;
+    font-size: 14px;
+    color: #fff;
+    background: linear-gradient(71deg, rgb(0,98,255) 0%, rgb(62,57,96) 100%);
+    border: none;
+    white-space: nowrap;
+  }
+
+  .pf-btn:hover{ filter: brightness(1.05); }
+
+</style>	
+
+</head>
 
 
 <body class="home page-template-default page page-id-13 wp-custom-logo wp-embed-responsive" data-link="type-2" data-prefix="single_page" data-header="type-1" data-footer="type-1" itemscope="itemscope" itemtype="https://schema.org/WebPage">
@@ -354,94 +558,111 @@ var to_top_options = {"scroll_offset":"100","icon_opacity":"50","style":"icon","
 </div>
 </div>
 
-<div class="wp-block-group alignfull has-background-background-color has-background is-content-justification-center is-layout-constrained wp-container-core-group-is-layout-21 wp-block-group-is-layout-constrained" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--30)">
-<p></p>
+<section class="pf-section" id="projets-futurs">
+  <div class="pf-container">
 
-<h3 class="wp-block-heading has-text-align-center">Projets futurs</h3>
+    <div class="pf-header">
+      <h2 class="pf-title">Projets futurs</h2>
+      <p class="pf-subtitle">
+        Une trajectoire claire : renforcer mes compétences en systèmes & réseaux, développer une spécialisation en cybersécurité,
+        puis évoluer vers un poste d’administrateur systèmes et réseaux.
+      </p>
+      <div class="pf-divider" aria-hidden="true"></div>
+    </div>
 
-<div class="wp-block-kadence-spacer aligncenter kt-block-spacer-13_430285-68"><div class="kt-block-spacer kt-block-spacer-halign-center"><hr class="kt-divider"/></div></div>
-</div>
+    <div class="pf-grid">
 
-<div class="wp-block-group alignwide is-layout-constrained wp-container-core-group-is-layout-31 wp-block-group-is-layout-constrained">
-<div class="wp-block-columns alignwide is-layout-flex wp-container-core-columns-is-layout-5 wp-block-columns-is-layout-flex">
-<div class="wp-block-column has-border-color has-palette-color-1-border-color has-pale-cyan-blue-background-color has-background is-layout-constrained wp-container-core-column-is-layout-10 wp-block-column-is-layout-constrained" style="border-width:5px;box-shadow:var(--wp--preset--shadow--sharp)">
-<div class="wp-block-group has-pale-cyan-blue-background-color has-background is-layout-constrained wp-container-core-group-is-layout-24 wp-block-group-is-layout-constrained" style="padding-top:var(--wp--preset--spacing--30);padding-right:24px;padding-bottom:var(--wp--preset--spacing--30);padding-left:24px">
-<div class="wp-block-group is-nowrap is-layout-flex wp-container-core-group-is-layout-23 wp-block-group-is-layout-flex">
-<div class="wp-block-group is-layout-constrained wp-block-group-is-layout-constrained">
-<div class="wp-block-kadence-icon kt-svg-icons kt-svg-icons13_49b5d9-01 alignnone">
-<div class="wp-block-kadence-single-icon kt-svg-style-default kt-svg-icon-wrap kt-svg-item-13_aafe9e-b4"><span class="kb-svg-icon-wrap kb-svg-icon-fas_graduation-cap"><svg viewBox="0 0 640 512"  fill="currentColor" xmlns="http://www.w3.org/2000/svg"  aria-hidden="true"><path d="M622.34 153.2L343.4 67.5c-15.2-4.67-31.6-4.67-46.79 0L17.66 153.2c-23.54 7.23-23.54 38.36 0 45.59l48.63 14.94c-10.67 13.19-17.23 29.28-17.88 46.9C38.78 266.15 32 276.11 32 288c0 10.78 5.68 19.85 13.86 25.65L20.33 428.53C18.11 438.52 25.71 448 35.94 448h56.11c10.24 0 17.84-9.48 15.62-19.47L82.14 313.65C90.32 307.85 96 298.78 96 288c0-11.57-6.47-21.25-15.66-26.87.76-15.02 8.44-28.3 20.69-36.72L296.6 284.5c9.06 2.78 26.44 6.25 46.79 0l278.95-85.7c23.55-7.24 23.55-38.36 0-45.6zM352.79 315.09c-28.53 8.76-52.84 3.92-65.59 0l-145.02-44.55L128 384c0 35.35 85.96 64 192 64s192-28.65 192-64l-14.18-113.47-145.03 44.56z"/></svg></span></div>
-</div>
-</div>
+      <!-- Carte 1 -->
+      <article class="pf-card">
+        <div class="pf-card-top">
+          <div class="pf-icon" aria-hidden="true">
+            <!-- Graduation cap -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 3 1 8l11 5 9-4.09V17h2V8L12 3zm-7 7.27V15c0 2.76 3.13 5 7 5s7-2.24 7-5v-4.73l-7 3.18-7-3.18z"/>
+            </svg>
+          </div>
+          <span class="pf-badge">Après le BTS</span>
+        </div>
 
-<h4 class="wp-block-heading has-text-align-left">Après le BTS</h4>
-</div>
+        <h3>Consolider mes compétences</h3>
+        <p>Approfondir l’administration, le support et l’exploitation d’infrastructures systèmes & réseaux.</p>
 
-<h6 class="wp-block-heading has-text-align-left has-medium-font-size">Consolider mes compétences en systèmes & réseaux</h6>
+        <ul class="pf-list">
+          <li><span class="pf-check" aria-hidden="true">✓</span> Virtualisation, Active Directory, services réseau</li>
+          <li><span class="pf-check" aria-hidden="true">✓</span> Méthodes : documentation, procédures, bonnes pratiques</li>
+          <li><span class="pf-check" aria-hidden="true">✓</span> Poursuite d’études orientée infrastructure (selon opportunités)</li>
+        </ul>
+      </article>
 
-<p class="has-text-align-left has-medium-font-size">Poursuite d’études orientée infrastructure (selon opportunités)</p>
-</div>
-</div>
+      <!-- Carte 2 -->
+      <article class="pf-card">
+        <div class="pf-card-top">
+          <div class="pf-icon" aria-hidden="true">
+            <!-- Shield -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3zm0 18c-3.3-1.2-6-4.8-6-9V6.3L12 4l6 2.3V11c0 4.2-2.7 7.8-6 9z"/>
+            </svg>
+          </div>
+          <span class="pf-badge">Spécialisation</span>
+        </div>
 
-<div class="wp-block-column has-border-color has-palette-color-1-border-color has-tertiary-background-color has-background is-layout-flow wp-block-column-is-layout-flow" style="border-width:5px;box-shadow:var(--wp--preset--shadow--sharp)">
-<div class="wp-block-group has-pale-cyan-blue-background-color has-background is-layout-constrained wp-container-core-group-is-layout-27 wp-block-group-is-layout-constrained" style="padding-top:var(--wp--preset--spacing--30);padding-right:24px;padding-bottom:var(--wp--preset--spacing--30);padding-left:24px">
-<div class="wp-block-group is-nowrap is-layout-flex wp-container-core-group-is-layout-26 wp-block-group-is-layout-flex">
-<div class="wp-block-group is-layout-constrained wp-block-group-is-layout-constrained">
-<div class="wp-block-kadence-icon kt-svg-icons kt-svg-icons13_807cfa-c3 alignnone">
-<div class="wp-block-kadence-single-icon kt-svg-style-default kt-svg-icon-wrap kt-svg-item-13_8f9e69-98"><span class="kb-svg-icon-wrap kb-svg-icon-fas_graduation-cap"><svg viewBox="0 0 640 512"  fill="currentColor" xmlns="http://www.w3.org/2000/svg"  aria-hidden="true"><path d="M622.34 153.2L343.4 67.5c-15.2-4.67-31.6-4.67-46.79 0L17.66 153.2c-23.54 7.23-23.54 38.36 0 45.59l48.63 14.94c-10.67 13.19-17.23 29.28-17.88 46.9C38.78 266.15 32 276.11 32 288c0 10.78 5.68 19.85 13.86 25.65L20.33 428.53C18.11 438.52 25.71 448 35.94 448h56.11c10.24 0 17.84-9.48 15.62-19.47L82.14 313.65C90.32 307.85 96 298.78 96 288c0-11.57-6.47-21.25-15.66-26.87.76-15.02 8.44-28.3 20.69-36.72L296.6 284.5c9.06 2.78 26.44 6.25 46.79 0l278.95-85.7c23.55-7.24 23.55-38.36 0-45.6zM352.79 315.09c-28.53 8.76-52.84 3.92-65.59 0l-145.02-44.55L128 384c0 35.35 85.96 64 192 64s192-28.65 192-64l-14.18-113.47-145.03 44.56z"/></svg></span></div>
-</div>
-</div>
+        <h3>Cybersécurité & supervision</h3>
+        <p>Renforcer la sécurité, la supervision et la qualité de service (prévention, détection, réaction).</p>
 
-<h4 class="wp-block-heading has-text-align-left">Spécialisation</h4>
-</div>
+        <ul class="pf-list">
+          <li><span class="pf-check" aria-hidden="true">✓</span> Sauvegardes, durcissement, segmentation, MFA</li>
+          <li><span class="pf-check" aria-hidden="true">✓</span> Supervision : logs, alerting, indicateurs, reporting</li>
+          <li><span class="pf-check" aria-hidden="true">✓</span> Bonnes pratiques SI (PSSI, gestion des droits, patching)</li>
+        </ul>
+      </article>
 
-<h6 class="wp-block-heading has-medium-font-size">Cybersécurité & supervision</h6>
+      <!-- Carte 3 -->
+      <article class="pf-card">
+        <div class="pf-card-top">
+          <div class="pf-icon" aria-hidden="true">
+            <!-- Network -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2a4 4 0 0 0-4 4c0 .7.2 1.4.5 2H5a3 3 0 0 0-3 3v1h8v-1a3 3 0 0 0-1.1-2.3A4 4 0 0 0 12 10a4 4 0 0 0 3.1-1.3A3 3 0 0 0 14 11v1h8v-1a3 3 0 0 0-3-3h-3.5c.3-.6.5-1.3.5-2a4 4 0 0 0-4-4zm0 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM4 13h6v2H4v-2zm10 0h6v2h-6v-2zM7 16h10v2H7v-2z"/>
+            </svg>
+          </div>
+          <span class="pf-badge">Objectif métier</span>
+        </div>
 
-<p class="has-medium-font-size">Renforcer la sécurité, la supervision et les bonnes pratiques SI</p>
-</div>
-</div>
+        <h3>Administrateur systèmes & réseaux</h3>
+        <p>Évoluer vers la gestion, l’optimisation et la sécurisation d’infrastructures.</p>
 
-<div class="wp-block-column has-border-color has-palette-color-1-border-color has-tertiary-background-color has-background is-layout-flow wp-block-column-is-layout-flow" style="border-width:5px;box-shadow:var(--wp--preset--shadow--sharp)">
-<div class="wp-block-group has-pale-cyan-blue-background-color has-background is-layout-constrained wp-container-core-group-is-layout-30 wp-block-group-is-layout-constrained" style="padding-top:var(--wp--preset--spacing--30);padding-right:24px;padding-bottom:var(--wp--preset--spacing--30);padding-left:24px">
-<div class="wp-block-group is-nowrap is-layout-flex wp-container-core-group-is-layout-29 wp-block-group-is-layout-flex">
-<div class="wp-block-group is-layout-constrained wp-block-group-is-layout-constrained">
-<div class="wp-block-kadence-icon kt-svg-icons kt-svg-icons13_e04e3a-a4 alignnone">
-<div class="wp-block-kadence-single-icon kt-svg-style-default kt-svg-icon-wrap kt-svg-item-13_1fe9d4-35"><span class="kb-svg-icon-wrap kb-svg-icon-fas_graduation-cap"><svg viewBox="0 0 640 512"  fill="currentColor" xmlns="http://www.w3.org/2000/svg"  aria-hidden="true"><path d="M622.34 153.2L343.4 67.5c-15.2-4.67-31.6-4.67-46.79 0L17.66 153.2c-23.54 7.23-23.54 38.36 0 45.59l48.63 14.94c-10.67 13.19-17.23 29.28-17.88 46.9C38.78 266.15 32 276.11 32 288c0 10.78 5.68 19.85 13.86 25.65L20.33 428.53C18.11 438.52 25.71 448 35.94 448h56.11c10.24 0 17.84-9.48 15.62-19.47L82.14 313.65C90.32 307.85 96 298.78 96 288c0-11.57-6.47-21.25-15.66-26.87.76-15.02 8.44-28.3 20.69-36.72L296.6 284.5c9.06 2.78 26.44 6.25 46.79 0l278.95-85.7c23.55-7.24 23.55-38.36 0-45.6zM352.79 315.09c-28.53 8.76-52.84 3.92-65.59 0l-145.02-44.55L128 384c0 35.35 85.96 64 192 64s192-28.65 192-64l-14.18-113.47-145.03 44.56z"/></svg></span></div>
-</div>
-</div>
+        <ul class="pf-list">
+          <li><span class="pf-check" aria-hidden="true">✓</span> Exploitation & MCO/MCS, supervision, continuité</li>
+          <li><span class="pf-check" aria-hidden="true">✓</span> Sécurisation et amélioration continue</li>
+          <li><span class="pf-check" aria-hidden="true">✓</span> Documentation, support et accompagnement utilisateurs</li>
+        </ul>
+      </article>
 
-<h4 class="wp-block-heading">Objectif métier</h4>
-</div>
+    </div>
 
-<h6 class="wp-block-heading has-medium-font-size">Administrateur systèmes et réseaux</h6>
+    <!-- Bandeau LinkedIn (CTA) -->
+    <div class="pf-linkedin">
+      <div class="pf-linkedin-left">
+        <div class="pf-icon" aria-hidden="true" style="background: rgba(10,102,194,.10); color:#0A66C2;">
+          <!-- LinkedIn icon -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H7.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM3.56 20.45h3.56V9H3.56v11.45z"/>
+          </svg>
+        </div>
+        <div>
+          <h4>Découvrir mon profil LinkedIn</h4>
+          <small>Réseau, projets, parcours et certifications — tout au même endroit.</small>
+        </div>
+      </div>
 
-<p class="has-medium-font-size">Évoluer vers la gestion et la sécurisation d’infrastructures</p>
-</div>
-</div>
-</div>
-</div>
+      <a class="pf-btn" href="https://www.linkedin.com/in/chahine-aouizir-5955bb292/" target="_blank" rel="noopener noreferrer">
+        Voir LinkedIn
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
 
-<div class="wp-block-group is-layout-constrained wp-block-group-is-layout-constrained">
-<div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-7 wp-block-columns-is-layout-flex">
-<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-6 wp-block-columns-is-layout-flex">
-<div class="wp-block-column is-vertically-aligned-center has-border-color has-palette-color-1-border-color has-pale-cyan-blue-background-color has-background is-layout-constrained wp-container-core-column-is-layout-13 wp-block-column-is-layout-constrained" style="border-width:5px;box-shadow:var(--wp--preset--shadow--sharp)">
-<div class="wp-block-group has-pale-cyan-blue-background-color has-background is-layout-constrained wp-container-core-group-is-layout-34 wp-block-group-is-layout-constrained" style="padding-top:var(--wp--preset--spacing--30);padding-right:24px;padding-bottom:var(--wp--preset--spacing--30);padding-left:24px">
-<div class="wp-block-group is-content-justification-center is-nowrap is-layout-flex wp-container-core-group-is-layout-33 wp-block-group-is-layout-flex">
-<div class="wp-block-group is-layout-constrained wp-block-group-is-layout-constrained">
-<div class="wp-block-kadence-icon kt-svg-icons kt-svg-icons13_858da1-f1 alignnone">
-<div class="wp-block-kadence-single-icon kt-svg-style-default kt-svg-icon-wrap kt-svg-item-13_82269e-3e"><a href="https://www.linkedin.com/in/chahine-aouizir-5955bb292/" class="kt-svg-icon-link"><span class="kb-svg-icon-wrap kb-svg-icon-fa_linkedin"><svg viewBox="0 0 448 512"  fill="currentColor" xmlns="http://www.w3.org/2000/svg"  aria-hidden="true"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg></span></a></div>
-</div>
-</div>
-
-<h4 class="wp-block-heading has-text-align-left">Administrateur réseaux</h4>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-
+  </div>
+</section>
 <div class="wp-block-group alignfull has-background-background-color has-background is-content-justification-center is-layout-constrained wp-container-core-group-is-layout-36 wp-block-group-is-layout-constrained" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--30)">
 <h3 class="wp-block-heading has-text-align-center"><strong>Intéressé(e) par mon profil ?</strong></h3>
 
