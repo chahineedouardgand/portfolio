@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="fr-FR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
+  <link rel="profile" href="https://gmpg.org/xfn/11">
+
+  <title>AP 1ère Année – PORTFOLIO AOUIZIR CHAHINE</title>
+  <meta name="description" content="Actions Professionnelles 1ère année BTS SIO SISR – Projet Windows Server & Active Directory. Portfolio de Chahine Aouizir." />
+  <meta name="robots" content="max-image-preview:large" />
+
+  <link rel="alternate" type="application/rss+xml" title="PORTFOLIO AOUIZIR CHAHINE » Flux" href="../feed/index.html" />
+  <link rel="stylesheet" href="../wp-includes/css/dist/block-library/style.min9704.css?ver=6.7.1" media="all" />
+  <link rel="stylesheet" href="../wp-includes/css/dashicons.min9704.css?ver=6.7.1" media="all" />
+  <link rel="stylesheet" href="../wp-content/plugins/to-top/public/css/to-top-public21bb.css?ver=2.5.4" media="all" />
+  <link rel="stylesheet" href="../wp-content/themes/blocksy/static/bundle/main.mind44c.css?ver=2.0.86" media="all" />
+  <link rel="stylesheet" href="../wp-content/themes/blocksy/static/bundle/page-title.mind44c.css?ver=2.0.86" media="all" />
+  <noscript><link rel="stylesheet" href="../wp-content/themes/blocksy/static/bundle/no-scripts.min.css" type="text/css"></noscript>
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box;}
+    :root{
+      --theme-palette-color-1:#2872fa;--theme-palette-color-2:#1559ed;
+      --theme-palette-color-3:#3A4F66;--theme-palette-color-4:#192a3d;
+      --theme-palette-color-5:#e1e8ed;--theme-palette-color-6:#f2f5f7;
+      --theme-palette-color-7:#ffffff;--theme-palette-color-8:#ffffff;
+      --theme-text-color:var(--theme-palette-color-3);
+      --theme-headings-color:var(--theme-palette-color-4);
+      --theme-font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+      --theme-font-size:16px;--theme-line-height:1.65;
+      /* Palette AP1 : bleu royal — distinct du violet de AP2 */
+      --ap1-p:#2872fa;
+      --ap1-pl:rgba(40,114,250,0.09);
+      --ap1-pb:rgba(40,114,250,0.18);
+    }
+    body{margin:0;font-family:var(--theme-font-family);font-size:var(--theme-font-size);line-height:var(--theme-line-height);color:var(--theme-text-color);background:#f4f8ff;}
+    h1,h2,h3,h4,h5,h6{color:var(--theme-headings-color);line-height:1.3;}
+
+    [data-header*="type-1"] .ct-header [data-id="logo"] .site-logo-container{--logo-max-height:50px;}
+    [data-header*="type-1"] .ct-header [data-id="logo"] .site-title{--theme-font-weight:700;--theme-font-size:25px;--theme-line-height:1.5;--theme-link-initial-color:var(--theme-palette-color-4);}
+    [data-header*="type-1"] .ct-header [data-id="logo"]{--horizontal-alignment:center;}
+    [data-header*="type-1"] .ct-header [data-id="menu"]{--menu-items-spacing:39px;}
+    [data-header*="type-1"] .ct-header [data-id="menu"] > ul > li > a{--theme-font-weight:700;--theme-text-transform:uppercase;--theme-font-size:16px;--theme-line-height:0;--theme-link-initial-color:var(--theme-text-color);}
+    [data-header*="type-1"] .ct-header [data-id="menu"] .sub-menu .ct-menu-link{--theme-link-initial-color:var(--theme-palette-color-8);--theme-font-weight:500;--theme-font-size:12px;}
+    [data-header*="type-1"] .ct-header [data-row*="middle"]{--height:120px;background-color:var(--theme-palette-color-8);}
+    [data-header*="type-1"] [data-id="mobile-menu"]{--theme-font-weight:700;--theme-font-size:20px;--theme-link-initial-color:#ffffff;}
+    [data-header*="type-1"] #offcanvas{--side-panel-width:500px;}
+    [data-header*="type-1"] #offcanvas .ct-panel-inner{background-color:rgba(18,21,25,0.98);}
+    [data-header*="type-1"]{--header-height:120px;}
+    [data-footer*="type-1"] .ct-footer{background-color:var(--theme-palette-color-6);}
+    [data-footer*="type-1"] [data-id="copyright"]{--theme-font-size:15px;}
+    @media(max-width:999.98px){[data-header*="type-1"] .ct-header [data-row*="middle"]{--height:70px;}[data-header*="type-1"]{--header-height:70px;}[data-header*="type-1"] #offcanvas{--side-panel-width:65vw;}}
+    @media(max-width:689.98px){[data-header*="type-1"] #offcanvas{--side-panel-width:90vw;}}
+    #to_top_scrollup{font-size:40px;width:40px;height:40px;background-color:#0083ff;}
+
+    /* ===== PAGE AP1 ===== */
+    .ap1-page{max-width:1200px;margin:0 auto;padding:40px 20px 80px;}
+
+    /* BREADCRUMB */
+    .ap1-bread{display:flex;align-items:center;gap:8px;font-size:13px;color:#94a3b8;margin-bottom:36px;flex-wrap:wrap;}
+    .ap1-bread a{color:#64748b;text-decoration:none;}
+    .ap1-bread a:hover{color:var(--ap1-p);}
+    .ap1-bread-sep{color:#cbd5e1;}
+    .ap1-bread span{color:var(--ap1-p);font-weight:700;}
+
+    /* ===== HERO ===== */
+    .ap1-hero{
+      background:linear-gradient(145deg,#0a1628 0%,#112044 55%,#0a1628 100%);
+      border-radius:28px;
+      padding:52px 56px;
+      margin-bottom:48px;
+      position:relative;overflow:hidden;
+      box-shadow:0 16px 52px rgba(40,114,250,0.18);
+      display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;
+    }
+
+    .ap1-hero::before{
+      content:'';position:absolute;inset:0;
+      background:
+        radial-gradient(circle at 85% 20%,rgba(40,114,250,0.25) 0%,transparent 45%),
+        radial-gradient(circle at 10% 85%,rgba(99,102,241,0.12) 0%,transparent 40%);
+      pointer-events:none;
+    }
+
+    .ap1-hero::after{
+      content:'';position:absolute;inset:0;
+      background-image:radial-gradient(circle,rgba(255,255,255,0.04) 1px,transparent 1px);
+      background-size:28px 28px;pointer-events:none;
+    }
+
+    .ap1-hero-left{position:relative;z-index:1;}
+
+    .ap1-hero-chip{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(40,114,250,0.18);border:1px solid rgba(40,114,250,0.35);
+      color:#93c5fd;font-size:11px;font-weight:700;
+      padding:5px 14px;border-radius:999px;margin-bottom:18px;
+      text-transform:uppercase;letter-spacing:.07em;width:fit-content;
+    }
+
+    .ap1-hero h1{margin:0 0 12px;font-size:clamp(26px,3.2vw,44px);color:#fff;font-weight:800;letter-spacing:-0.025em;line-height:1.1;}
+
+    .ap1-hero h1 em{
+      font-style:normal;
+      background:linear-gradient(90deg,#60a5fa,#93c5fd);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+
+    .ap1-hero p{margin:0;color:#64748b;font-size:15px;line-height:1.7;max-width:520px;}
+
+    .ap1-hero-stats{
+      position:relative;z-index:1;
+      display:grid;grid-template-columns:repeat(2,1fr);gap:12px;min-width:220px;
+    }
+
+    .ap1-stat{
+      background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.10);
+      border-radius:16px;padding:16px;text-align:center;
+    }
+
+    .ap1-stat-n{font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.01em;}
+    .ap1-stat-l{font-size:11px;color:#64748b;margin-top:3px;}
+
+    @media(max-width:700px){.ap1-hero{padding:36px 24px;}.ap1-hero-stats{min-width:auto;width:100%;}}
+
+    /* ===== NAV MISSIONS ===== */
+    .ap1-nav-missions{
+      display:flex;gap:10px;flex-wrap:wrap;
+      margin-bottom:40px;
+      position:sticky;top:0;z-index:50;
+      background:#f4f8ff;
+      padding:12px 0 12px;
+      border-bottom:1px solid rgba(40,114,250,0.08);
+    }
+
+    .ap1-nav-btn{
+      display:inline-flex;align-items:center;gap:7px;
+      padding:7px 14px;border-radius:999px;
+      font-size:12px;font-weight:700;
+      border:1px solid rgba(40,114,250,0.15);
+      background:#ffffff;color:#475569;
+      text-decoration:none;
+      transition:all .15s;white-space:nowrap;
+    }
+
+    .ap1-nav-btn:hover,.ap1-nav-btn.active{background:var(--ap1-p);color:#fff;border-color:var(--ap1-p);}
+
+    .ap1-nav-btn-num{
+      width:20px;height:20px;border-radius:6px;
+      background:rgba(40,114,250,0.10);color:var(--ap1-p);
+      font-size:10px;font-weight:800;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+
+    .ap1-nav-btn:hover .ap1-nav-btn-num,.ap1-nav-btn.active .ap1-nav-btn-num{background:rgba(255,255,255,0.2);color:#fff;}
+
+    /* ===== SECTION PROJET ===== */
+    .ap1-project-title{
+      display:flex;align-items:center;gap:14px;
+      margin-bottom:24px;
+    }
+
+    .ap1-project-badge{
+      display:inline-flex;align-items:center;gap:7px;
+      padding:6px 16px;border-radius:999px;
+      font-size:12px;font-weight:800;
+      background:linear-gradient(135deg,#2872fa,#1559ed);
+      color:#fff;
+    }
+
+    .ap1-project-title-text{font-size:20px;font-weight:800;color:#0f172a;letter-spacing:-0.01em;}
+    .ap1-project-line{flex:1;height:2px;background:linear-gradient(90deg,rgba(40,114,250,0.2),transparent);border-radius:999px;}
+
+    /* ===== MISSION CARD ===== */
+    .ap1-mission{
+      background:#ffffff;
+      border-radius:24px;
+      border:1px solid rgba(15,23,42,0.07);
+      box-shadow:0 6px 24px rgba(15,23,42,0.05);
+      margin-bottom:22px;
+      overflow:hidden;
+      scroll-margin-top:80px;
+    }
+
+    .ap1-mission:last-child{margin-bottom:0;}
+
+    .ap1-m-head{
+      display:flex;align-items:center;gap:0;
+      cursor:pointer;user-select:none;
+    }
+
+    .ap1-m-num{
+      width:72px;height:72px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      font-size:15px;font-weight:900;color:#fff;
+      line-height:1.2;text-align:center;padding:8px;
+    }
+
+    .ap1-m-head-content{
+      flex:1;padding:18px 22px;
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+    }
+
+    .ap1-m-label{font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
+    .ap1-m-title{font-size:16px;font-weight:800;color:#0f172a;}
+
+    .ap1-m-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+    .ap1-m-tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;background:#f1f5f9;color:#475569;border:1px solid rgba(15,23,42,0.08);}
+
+    .ap1-m-toggle{
+      width:36px;height:36px;border-radius:999px;
+      background:var(--ap1-pl);color:var(--ap1-p);
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+      transition:background .15s;
+    }
+
+    .ap1-m-toggle svg{width:16px;height:16px;transition:transform .2s;}
+    .ap1-mission.open .ap1-m-toggle svg{transform:rotate(180deg);}
+    .ap1-mission.open .ap1-m-toggle{background:var(--ap1-p);color:#fff;}
+
+    .ap1-m-body{
+      display:none;
+      border-top:1px solid rgba(15,23,42,0.06);
+      padding:28px 32px;
+    }
+
+    .ap1-mission.open .ap1-m-body{display:block;}
+
+    /* sections dans le body */
+    .ap1-section-head{display:flex;align-items:center;gap:12px;margin-bottom:8px;margin-top:24px;}
+    .ap1-section-head:first-child{margin-top:0;}
+    .ap1-section-num{
+      width:28px;height:28px;border-radius:8px;
+      background:var(--ap1-pl);color:var(--ap1-p);
+      font-size:12px;font-weight:800;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .ap1-section-title{font-size:15px;font-weight:800;color:#0f172a;}
+    .ap1-bar{width:36px;height:2px;background:linear-gradient(90deg,var(--ap1-p),rgba(40,114,250,0.1));border-radius:999px;margin:8px 0 14px;}
+
+    .ap1-m-body p{margin:0 0 12px;font-size:14px;color:#475569;line-height:1.75;}
+    .ap1-m-body p:last-of-type{margin-bottom:0;}
+
+    /* listes */
+    .ap1-list{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:8px;}
+    .ap1-list li{
+      display:flex;align-items:flex-start;gap:10px;
+      font-size:14px;color:#334155;line-height:1.6;
+      padding:8px 12px;background:#f8fafc;border-radius:10px;
+      border:1px solid rgba(15,23,42,0.06);
+    }
+    .ap1-list-dot{width:6px;height:6px;border-radius:50%;background:var(--ap1-p);flex-shrink:0;margin-top:6px;}
+
+    /* blocs de commandes */
+    .ap1-cmd{
+      background:#0f172a;border-radius:14px;
+      padding:18px 20px;margin:14px 0;
+      font-family:monospace;font-size:13px;
+      color:#e2e8f0;line-height:1.7;
+      overflow-x:auto;position:relative;
+    }
+    .ap1-cmd-label{
+      position:absolute;top:10px;right:14px;
+      font-size:10px;font-weight:700;color:#475569;
+      text-transform:uppercase;letter-spacing:.06em;font-family:inherit;
+    }
+    .ap1-cmd .kw{color:#a78bfa;}
+    .ap1-cmd .val{color:#86efac;}
+    .ap1-cmd .cmt{color:#475569;font-style:italic;}
+
+    /* grille 2 colonnes */
+    .ap1-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+    @media(max-width:640px){.ap1-grid2{grid-template-columns:1fr;}}
+
+    .ap1-info-block{background:#f8fafc;border-radius:14px;border:1px solid rgba(15,23,42,0.07);padding:16px;}
+    .ap1-info-block-title{font-size:11px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
+    .ap1-info-row{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:5px 0;border-bottom:1px solid rgba(15,23,42,0.05);}
+    .ap1-info-row:last-child{border-bottom:none;padding-bottom:0;}
+    .ap1-info-key{color:#64748b;}
+    .ap1-info-val{font-weight:700;color:#0f172a;text-align:right;}
+
+    /* résultat */
+    .ap1-result{
+      display:flex;align-items:flex-start;gap:14px;
+      background:linear-gradient(135deg,#eff6ff,#dbeafe);
+      border:1px solid rgba(40,114,250,0.14);
+      border-radius:14px;padding:16px 18px;margin-top:18px;
+    }
+    .ap1-result-ico{
+      width:38px;height:38px;border-radius:10px;
+      background:rgba(40,114,250,0.12);color:var(--ap1-p);
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .ap1-result-ico svg{width:18px;height:18px;}
+    .ap1-result-title{font-size:13px;font-weight:800;color:#0f172a;margin-bottom:3px;}
+    .ap1-result-text{font-size:13px;color:#475569;line-height:1.55;margin:0;}
+
+    /* bouton PDF */
+    .ap1-pdf-btn{
+      display:inline-flex;align-items:center;gap:8px;
+      margin-top:18px;padding:11px 20px;border-radius:12px;
+      font-size:13px;font-weight:800;color:#fff;
+      background:linear-gradient(135deg,#2872fa,#1559ed);
+      box-shadow:0 6px 18px rgba(40,114,250,0.22);
+      text-decoration:none;
+      transition:transform .15s,box-shadow .15s;
+    }
+    .ap1-pdf-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(40,114,250,0.32);}
+    .ap1-pdf-btn svg{width:15px;height:15px;}
+
+    /* encart info bientôt disponible */
+    .ap1-coming{
+      display:flex;align-items:flex-start;gap:16px;
+      background:#ffffff;
+      border:1px solid rgba(40,114,250,0.10);
+      border-radius:18px;
+      padding:24px 28px;
+      margin-top:28px;
+      box-shadow:0 4px 16px rgba(15,23,42,0.04);
+    }
+    .ap1-coming-ico{
+      width:46px;height:46px;border-radius:13px;
+      background:rgba(40,114,250,0.08);color:var(--ap1-p);
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .ap1-coming-ico svg{width:22px;height:22px;}
+    .ap1-coming-title{font-size:15px;font-weight:800;color:#0f172a;margin-bottom:5px;}
+    .ap1-coming-text{font-size:14px;color:#475569;line-height:1.65;margin:0;}
+
+    /* navigation bas */
+    .ap1-bottom-nav{
+      display:flex;justify-content:space-between;align-items:center;
+      margin-top:40px;flex-wrap:wrap;gap:12px;
+    }
+    .ap1-nav-link{
+      display:inline-flex;align-items:center;gap:8px;
+      font-size:14px;font-weight:700;color:var(--ap1-p);
+      text-decoration:none;
+      padding:10px 18px;border-radius:999px;
+      border:1px solid var(--ap1-pb);background:var(--ap1-pl);
+      transition:background .15s,border-color .15s;
+    }
+    .ap1-nav-link:hover{background:rgba(40,114,250,0.16);border-color:rgba(40,114,250,0.35);}
+  </style>
+
+  <link rel="icon" href="../wp-content/uploads/2024/03/homme-150x150.png" sizes="32x32" />
+  <link rel="icon" href="../wp-content/uploads/2024/03/homme-300x300.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="../wp-content/uploads/2024/03/homme-300x300.png" />
+  <meta name="msapplication-TileImage" content="../wp-content/uploads/2024/03/homme-300x300.png" />
+</head>
+
+<body class="page-template-default page wp-custom-logo wp-embed-responsive" data-link="type-2" data-prefix="single_page" data-header="type-1" data-footer="type-1" itemscope="itemscope" itemtype="https://schema.org/WebPage">
+
+<a class="skip-link screen-reader-text" href="#main">Passer au contenu</a>
+
+<!-- DRAWER MOBILE -->
+<div class="ct-drawer-canvas" data-location="start">
+  <div id="offcanvas" class="ct-panel ct-header" data-behaviour="right-side" aria-label="Modale hors toile" inert="">
+    <div class="ct-panel-inner">
+      <div class="ct-panel-actions">
+        <button class="ct-toggle-close" data-type="type-1" aria-label="Fermer le tiroir">
+          <svg class="ct-icon" width="12" height="12" viewBox="0 0 15 15"><path d="M1 15a1 1 0 01-.71-.29 1 1 0 010-1.41l5.8-5.8-5.8-5.8A1 1 0 011.7.29l5.8 5.8 5.8-5.8a1 1 0 011.41 1.41l-5.8 5.8 5.8 5.8a1 1 0 01-1.41 1.41l-5.8-5.8-5.8 5.8A1 1 0 011 15z"/></svg>
+        </button>
+      </div>
+      <div class="ct-panel-content" data-device="desktop"><div class="ct-panel-content-inner"></div></div>
+      <div class="ct-panel-content" data-device="mobile">
+        <div class="ct-panel-content-inner">
+          <nav class="mobile-menu menu-container has-submenu" data-id="mobile-menu" data-interaction="click" data-toggle-type="type-1" data-submenu-dots="yes" aria-label="menu 1">
+            <ul id="menu-menu-2">
+              <li class="menu-item"><a href="../index.html" class="ct-menu-link">A PROPOS</a></li>
+              <li class="menu-item menu-item-has-children">
+                <span class="ct-sub-menu-parent"><a href="../bts-sio/index.html" class="ct-menu-link">BTS SIO</a>
+                <button class="ct-toggle-dropdown-mobile" aria-label="Déplier" aria-haspopup="true" aria-expanded="false"><svg class="ct-icon toggle-icon-1" width="15" height="15" viewBox="0 0 15 15"><path d="M3.9,5.1l3.6,3.6l3.6-3.6l1.4,0.7l-5,5l-5-5L3.9,5.1z"/></svg></button></span>
+                <ul class="sub-menu">
+                  <li class="menu-item"><a href="../sisr/index.html" class="ct-menu-link">SISR</a></li>
+                  <li class="menu-item"><a href="../slam/index.html" class="ct-menu-link">SLAM</a></li>
+                </ul>
+              </li>
+              <li class="menu-item menu-item-has-children">
+                <span class="ct-sub-menu-parent"><a href="../stages/index.html" class="ct-menu-link">STAGES</a>
+                <button class="ct-toggle-dropdown-mobile" aria-label="Déplier" aria-haspopup="true" aria-expanded="false"><svg class="ct-icon toggle-icon-1" width="15" height="15" viewBox="0 0 15 15"><path d="M3.9,5.1l3.6,3.6l3.6-3.6l1.4,0.7l-5,5l-5-5L3.9,5.1z"/></svg></button></span>
+                <ul class="sub-menu">
+                  <li class="menu-item"><a href="../stage-1ere-annee/index.html" class="ct-menu-link">stage-1ère-année</a></li>
+                  <li class="menu-item"><a href="../stage-2eme-annee/index.html" class="ct-menu-link">stage-2eme-année</a></li>
+                </ul>
+              </li>
+              <li class="menu-item current-menu-ancestor menu-item-has-children">
+                <span class="ct-sub-menu-parent"><a href="../equipe/index.html" class="ct-menu-link">AP</a>
+                <button class="ct-toggle-dropdown-mobile" aria-label="Déplier" aria-haspopup="true" aria-expanded="false"><svg class="ct-icon toggle-icon-1" width="15" height="15" viewBox="0 0 15 15"><path d="M3.9,5.1l3.6,3.6l3.6-3.6l1.4,0.7l-5,5l-5-5L3.9,5.1z"/></svg></button></span>
+                <ul class="sub-menu">
+                  <li class="menu-item current-menu-item"><a href="index.html" aria-current="page" class="ct-menu-link">AP-1ère-Année</a></li>
+                  <li class="menu-item"><a href="../ap-2eme-annee/index.html" class="ct-menu-link">AP-2ème-Année</a></li>
+                </ul>
+              </li>
+              <li class="menu-item"><a href="../veille-technologique/index.html" class="ct-menu-link">VEILLE</a></li>
+              <li class="menu-item"><a href="../certification/index.html" class="ct-menu-link">CERTIFICATION</a></li>
+              <li class="menu-item"><a href="../me-contacter/index.html" class="ct-menu-link">ME CONTACTER</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="main-container">
+
+  <!-- HEADER -->
+  <header id="header" class="ct-header" data-id="type-1" itemscope="" itemtype="https://schema.org/WPHeader">
+    <div data-device="desktop">
+      <div data-row="middle" data-column-set="2">
+        <div class="ct-container">
+          <div data-column="start" data-placements="1"><div data-items="primary">
+            <div class="site-branding" data-id="logo" data-logo="left" itemscope="itemscope" itemtype="https://schema.org/Organization">
+              <a href="../index.html" class="site-logo-container" rel="home" itemprop="url">
+                <img width="512" height="512" src="../wp-content/uploads/2024/03/homme.png" class="default-logo" alt="Logo du portfolio de Chahine Aouizir" decoding="async" fetchpriority="high" srcset="../wp-content/uploads/2024/03/homme.png 512w, ../wp-content/uploads/2024/03/homme-300x300.png 300w, ../wp-content/uploads/2024/03/homme-150x150.png 150w" sizes="(max-width:512px) 100vw,512px" />
+              </a>
+              <div class="site-title-container"><span class="site-title" itemprop="name"><a href="../index.html" rel="home" itemprop="url">PORTFOLIO AOUIZIR CHAHINE</a></span></div>
+            </div>
+          </div></div>
+          <div data-column="end" data-placements="1"><div data-items="primary">
+            <nav id="header-menu-1" class="header-menu-1 menu-container" data-id="menu" data-interaction="hover" data-menu="type-1" data-dropdown="type-1:simple" data-responsive="no" itemscope="" itemtype="https://schema.org/SiteNavigationElement" aria-label="menu 1">
+              <ul id="menu-menu-1" class="menu">
+                <li class="menu-item"><a href="../index.html" class="ct-menu-link">A PROPOS</a></li>
+                <li class="menu-item menu-item-has-children animated-submenu-block">
+                  <a href="../bts-sio/index.html" class="ct-menu-link">BTS SIO<span class="ct-toggle-dropdown-desktop"><svg class="ct-icon" width="8" height="8" viewBox="0 0 15 15"><path d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"/></svg></span></a>
+                  <button class="ct-toggle-dropdown-desktop-ghost" aria-label="Déplier" aria-haspopup="true" aria-expanded="false"></button>
+                  <ul class="sub-menu">
+                    <li class="menu-item"><a href="../sisr/index.html" class="ct-menu-link">SISR</a></li>
+                    <li class="menu-item"><a href="../slam/index.html" class="ct-menu-link">SLAM</a></li>
+                  </ul>
+                </li>
+                <li class="menu-item menu-item-has-children animated-submenu-block">
+                  <a href="../stages/index.html" class="ct-menu-link">STAGES<span class="ct-toggle-dropdown-desktop"><svg class="ct-icon" width="8" height="8" viewBox="0 0 15 15"><path d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"/></svg></span></a>
+                  <button class="ct-toggle-dropdown-desktop-ghost" aria-label="Déplier" aria-haspopup="true" aria-expanded="false"></button>
+                  <ul class="sub-menu">
+                    <li class="menu-item"><a href="../stage-1ere-annee/index.html" class="ct-menu-link">stage-1ère-année</a></li>
+                    <li class="menu-item"><a href="../stage-2eme-annee/index.html" class="ct-menu-link">stage-2eme-année</a></li>
+                  </ul>
+                </li>
+                <li class="menu-item current-menu-ancestor menu-item-has-children animated-submenu-block">
+                  <a href="../equipe/index.html" class="ct-menu-link">AP<span class="ct-toggle-dropdown-desktop"><svg class="ct-icon" width="8" height="8" viewBox="0 0 15 15"><path d="M2.1,3.2l5.4,5.4l5.4-5.4L15,4.3l-7.5,7.5L0,4.3L2.1,3.2z"/></svg></span></a>
+                  <button class="ct-toggle-dropdown-desktop-ghost" aria-label="Déplier" aria-haspopup="true" aria-expanded="false"></button>
+                  <ul class="sub-menu">
+                    <li class="menu-item current-menu-item"><a href="index.html" aria-current="page" class="ct-menu-link">AP-1ère-Année</a></li>
+                    <li class="menu-item"><a href="../ap-2eme-annee/index.html" class="ct-menu-link">AP-2ème-Année</a></li>
+                  </ul>
+                </li>
+                <li class="menu-item"><a href="../veille-technologique/index.html" class="ct-menu-link">VEILLE</a></li>
+                <li class="menu-item"><a href="../certification/index.html" class="ct-menu-link">CERTIFICATION</a></li>
+                <li class="menu-item"><a href="../me-contacter/index.html" class="ct-menu-link">ME CONTACTER</a></li>
+              </ul>
+            </nav>
+          </div></div>
+        </div>
+      </div>
+    </div>
+
+    <div data-device="mobile">
+      <div data-row="middle" data-column-set="2">
+        <div class="ct-container">
+          <div data-column="start" data-placements="1"><div data-items="primary">
+            <div class="site-branding" data-id="logo" data-logo="left">
+              <a href="../index.html" class="site-logo-container" rel="home" itemprop="url">
+                <img width="512" height="512" src="../wp-content/uploads/2024/03/homme.png" class="default-logo" alt="Logo du portfolio de Chahine Aouizir" decoding="async" srcset="../wp-content/uploads/2024/03/homme.png 512w, ../wp-content/uploads/2024/03/homme-300x300.png 300w, ../wp-content/uploads/2024/03/homme-150x150.png 150w" sizes="(max-width:512px) 100vw,512px" />
+              </a>
+              <div class="site-title-container"><span class="site-title"><a href="../index.html" rel="home">PORTFOLIO AOUIZIR CHAHINE</a></span></div>
+            </div>
+          </div></div>
+          <div data-column="end" data-placements="1"><div data-items="primary">
+            <button data-toggle-panel="#offcanvas" class="ct-header-trigger ct-toggle" data-design="simple" data-label="right" aria-label="Menu" data-id="trigger">
+              <span class="ct-label ct-hidden-sm ct-hidden-md ct-hidden-lg">Menu</span>
+              <svg class="ct-icon" width="18" height="14" viewBox="0 0 18 14" aria-hidden="true" data-type="type-1">
+                <rect y="0.00" width="18" height="1.7" rx="1"/><rect y="6.15" width="18" height="1.7" rx="1"/><rect y="12.3" width="18" height="1.7" rx="1"/>
+              </svg>
+            </button>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main id="main" class="site-main hfeed">
+    <div class="ct-container-full" data-content="normal" data-vertical-spacing="top:bottom">
+      <article class="page type-page status-publish hentry">
+        <div class="entry-content is-layout-constrained">
+          <section class="ap1-page">
+
+            <!-- BREADCRUMB -->
+            <nav class="ap1-bread" aria-label="Fil d'ariane">
+              <a href="../index.html">Accueil</a>
+              <span class="ap1-bread-sep">›</span>
+              <a href="../equipe/index.html">Actions Professionnelles</a>
+              <span class="ap1-bread-sep">›</span>
+              <span>1ère Année</span>
+            </nav>
+
+            <!-- HERO -->
+            <div class="ap1-hero">
+              <div class="ap1-hero-left">
+                <div class="ap1-hero-chip">BTS SIO SISR — 1ère année</div>
+                <h1>Actions Professionnelles<br><em>1ère Année</em></h1>
+                <p>Travaux pratiques réalisés en classe durant la 1ère année de BTS SIO option SISR — installation, configuration et administration de Windows Server avec Active Directory. Des projets concrets qui posent les bases de l'administration système.</p>
+              </div>
+              <div class="ap1-hero-stats">
+                <div class="ap1-stat">
+                  <div class="ap1-stat-n">1</div>
+                  <div class="ap1-stat-l">Projet</div>
+                </div>
+                <div class="ap1-stat">
+                  <div class="ap1-stat-n">3</div>
+                  <div class="ap1-stat-l">Étapes clés</div>
+                </div>
+                <div class="ap1-stat">
+                  <div class="ap1-stat-n">WS</div>
+                  <div class="ap1-stat-l">Windows Server</div>
+                </div>
+                <div class="ap1-stat">
+                  <div class="ap1-stat-n">AD</div>
+                  <div class="ap1-stat-l">Active Directory</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- NAV RAPIDE -->
+            <nav class="ap1-nav-missions" aria-label="Navigation rapide">
+              <a href="#mission-ws" class="ap1-nav-btn active">
+                <span class="ap1-nav-btn-num">WS</span>
+                Windows Server & AD
+              </a>
+            </nav>
+
+            <!-- ==================== PROJET WINDOWS SERVER ==================== -->
+            <div class="ap1-project-title">
+              <span class="ap1-project-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg>
+                Projet Windows Server
+              </span>
+              <span class="ap1-project-title-text">Administration système — VM, Windows Server & Active Directory</span>
+              <div class="ap1-project-line"></div>
+            </div>
+
+            <!-- ===== MISSION WINDOWS SERVER ===== -->
+            <div class="ap1-mission open" id="mission-ws">
+              <div class="ap1-m-head" onclick="toggleMission(this)">
+                <div class="ap1-m-num" style="background:linear-gradient(135deg,#0369a1,#2872fa);">WS<br>AD</div>
+                <div class="ap1-m-head-content">
+                  <div>
+                    <div class="ap1-m-label">TP — 1ère année BTS SIO SISR</div>
+                    <div class="ap1-m-title">Windows Server & Active Directory — Installation et configuration complète</div>
+                    <div class="ap1-m-tags">
+                      <span class="ap1-m-tag">Windows Server</span>
+                      <span class="ap1-m-tag">Active Directory</span>
+                      <span class="ap1-m-tag">VirtualBox</span>
+                      <span class="ap1-m-tag">AD DS</span>
+                      <span class="ap1-m-tag">dcdiag</span>
+                      <span class="ap1-m-tag">GPO</span>
+                    </div>
+                  </div>
+                  <div class="ap1-m-toggle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="ap1-m-body">
+
+                <!-- OBJECTIF -->
+                <div class="ap1-section-head">
+                  <div class="ap1-section-num">1</div>
+                  <div class="ap1-section-title">Objectif du projet</div>
+                </div>
+                <div class="ap1-bar"></div>
+                <p>Ce projet de 1ère année a pour objectif de créer et configurer un serveur Windows Server complet dans un environnement virtualisé. Il couvre l'installation du système, la configuration réseau, le déploiement d'Active Directory et la gestion des utilisateurs — compétences fondamentales pour un futur administrateur systèmes et réseaux.</p>
+
+                <!-- ÉTAPE 1 : VM -->
+                <div class="ap1-section-head">
+                  <div class="ap1-section-num">2</div>
+                  <div class="ap1-section-title">Étape 1 — Création de la VM avec VirtualBox</div>
+                </div>
+                <div class="ap1-bar"></div>
+                <p>La première étape consiste à créer une machine virtuelle sous Windows Server à l'aide d'Oracle VirtualBox. La VM est configurée avec les ressources nécessaires, puis le réseau est mis en mode <strong>Accès par pont</strong> pour que la VM puisse communiquer avec le réseau local du lycée.</p>
+
+                <div class="ap1-grid2">
+                  <div class="ap1-info-block">
+                    <div class="ap1-info-block-title">Configuration VM</div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">Logiciel</span><span class="ap1-info-val">Oracle VirtualBox</span></div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">Système</span><span class="ap1-info-val">Windows Server 2019/2022</span></div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">Réseau</span><span class="ap1-info-val">Accès par pont (Bridge)</span></div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">But</span><span class="ap1-info-val">Communication avec le LAN</span></div>
+                  </div>
+                  <div class="ap1-info-block">
+                    <div class="ap1-info-block-title">Post-installation</div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">Additions invité</span><span class="ap1-info-val">Meilleures performances</span></div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">Windows Update</span><span class="ap1-info-val">Système à jour + sécurisé</span></div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">IP fixe</span><span class="ap1-info-val">Configurée manuellement</span></div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">Nom serveur</span><span class="ap1-info-val">Défini avant promotion AD</span></div>
+                  </div>
+                </div>
+
+                <!-- ÉTAPE 2 : AD DS -->
+                <div class="ap1-section-head">
+                  <div class="ap1-section-num">3</div>
+                  <div class="ap1-section-title">Étape 2 — Installation du rôle AD DS</div>
+                </div>
+                <div class="ap1-bar"></div>
+                <p>Une fois Windows Server installé et à jour, le rôle <strong>AD DS (Active Directory Domain Services)</strong> est ajouté via le Gestionnaire de serveur. Ce rôle permet de transformer le serveur en contrôleur de domaine — le cœur de la gestion centralisée des utilisateurs et des machines dans un réseau d'entreprise.</p>
+
+                <ul class="ap1-list">
+                  <li><span class="ap1-list-dot"></span>Ouvrir le <strong>Gestionnaire de serveur</strong> → Gérer → Ajouter des rôles et fonctionnalités</li>
+                  <li><span class="ap1-list-dot"></span>Sélectionner <strong>Services AD DS</strong> dans la liste des rôles → Installer</li>
+                  <li><span class="ap1-list-dot"></span>Après installation → cliquer sur la notification "Promouvoir ce serveur en contrôleur de domaine"</li>
+                  <li><span class="ap1-list-dot"></span>Choisir <strong>Ajouter une nouvelle forêt</strong> → saisir le nom de domaine (ex : <code>mondomaine.local</code>)</li>
+                  <li><span class="ap1-list-dot"></span>Définir le mot de passe DSRM → laisser les options par défaut → Installer → Redémarrage automatique</li>
+                </ul>
+
+                <!-- ÉTAPE 3 : VÉRIFICATION -->
+                <div class="ap1-section-head">
+                  <div class="ap1-section-num">4</div>
+                  <div class="ap1-section-title">Étape 3 — Vérification du contrôleur de domaine</div>
+                </div>
+                <div class="ap1-bar"></div>
+                <p>Après le redémarrage, on vérifie que le serveur fonctionne correctement en tant que contrôleur de domaine à l'aide des commandes de diagnostic :</p>
+
+                <div class="ap1-cmd">
+                  <span class="ap1-cmd-label">PowerShell / CMD — Vérifications</span>
+                  <span class="cmt">REM Vérifier la configuration réseau</span><br>
+                  <span class="kw">ipconfig</span> /all<br>
+                  <br>
+                  <span class="cmt">REM Diagnostiquer l'Active Directory</span><br>
+                  <span class="kw">dcdiag</span><br>
+                  <br>
+                  <span class="cmt">REM Résultat attendu : tous les tests = Passed</span><br>
+                  <span class="cmt">REM "DC: TEST: Advertising ... passed"</span><br>
+                  <br>
+                  <span class="cmt">REM Vérifier les services AD</span><br>
+                  <span class="kw">net logon</span><br>
+                  <span class="kw">net start</span> <span class="val">| findstr</span> Active
+                </div>
+
+                <!-- GESTION DES UTILISATEURS -->
+                <div class="ap1-section-head">
+                  <div class="ap1-section-num">5</div>
+                  <div class="ap1-section-title">Gestion des utilisateurs et des GPO</div>
+                </div>
+                <div class="ap1-bar"></div>
+                <p>Une fois le domaine en place, on peut gérer les utilisateurs, les groupes et les politiques de groupe (GPO) via les outils d'administration Windows Server :</p>
+
+                <div class="ap1-grid2">
+                  <div class="ap1-info-block">
+                    <div class="ap1-info-block-title">Utilisateurs & Groupes</div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">Outil</span><span class="ap1-info-val">Utilisateurs et ordinateurs AD</span></div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">Créer user</span><span class="ap1-info-val">Clic droit → Nouvel utilisateur</span></div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">Groupes</span><span class="ap1-info-val">Sécurité / Distribution</span></div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">OUs</span><span class="ap1-info-val">Organisation hiérarchique</span></div>
+                  </div>
+                  <div class="ap1-info-block">
+                    <div class="ap1-info-block-title">GPO (Stratégies de groupe)</div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">Outil</span><span class="ap1-info-val">Gestion des stratégies de groupe</span></div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">Appliquer à</span><span class="ap1-info-val">OU, domaine, site</span></div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">Exemples</span><span class="ap1-info-val">Fond d'écran, restrictions</span></div>
+                    <div class="ap1-info-row"><span class="ap1-info-key">Forcer MAJ</span><span class="ap1-info-val">gpupdate /force</span></div>
+                  </div>
+                </div>
+
+                <!-- COMPÉTENCES -->
+                <div class="ap1-section-head">
+                  <div class="ap1-section-num">6</div>
+                  <div class="ap1-section-title">Compétences SISR développées</div>
+                </div>
+                <div class="ap1-bar"></div>
+
+                <ul class="ap1-list">
+                  <li><span class="ap1-list-dot"></span><strong>Virtualisation</strong> — Créer et configurer une VM avec VirtualBox, gérer les ressources et le réseau</li>
+                  <li><span class="ap1-list-dot"></span><strong>Administration Windows</strong> — Installer et configurer Windows Server, gérer les rôles et fonctionnalités</li>
+                  <li><span class="ap1-list-dot"></span><strong>Active Directory</strong> — Déployer un contrôleur de domaine, créer des utilisateurs et des OUs</li>
+                  <li><span class="ap1-list-dot"></span><strong>Politique de groupe</strong> — Comprendre et appliquer des GPO pour centraliser la configuration des postes</li>
+                  <li><span class="ap1-list-dot"></span><strong>Diagnostic</strong> — Utiliser <code>dcdiag</code>, <code>ipconfig</code> et les journaux d'événements pour vérifier le bon fonctionnement</li>
+                  <li><span class="ap1-list-dot"></span><strong>Travail en mode projet</strong> — Planifier les étapes, travailler en autonomie, vérifier à chaque phase</li>
+                </ul>
+
+                <!-- RÉSULTAT -->
+                <div class="ap1-result">
+                  <div class="ap1-result-ico">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="ap1-result-title">Résultat obtenu</div>
+                    <p class="ap1-result-text">La VM Windows Server est opérationnelle avec Active Directory entièrement configuré. Le serveur fonctionne en contrôleur de domaine, vérifié par <code>dcdiag</code> (tous les tests passés) et <code>ipconfig</code>. Les utilisateurs, les groupes et les OUs sont créés. Les GPO sont appliquées et mises à jour via <code>gpupdate /force</code>.</p>
+                  </div>
+                </div>
+
+                <a href="../wp-content/uploads/2024/TP SISR Windows Server et Active Directory.pdf" class="ap1-pdf-btn" target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+                  Compte rendu PDF
+                </a>
+
+              </div>
+            </div>
+
+            <!-- ENCART : AUTRES PROJETS À VENIR -->
+            <div class="ap1-coming">
+              <div class="ap1-coming-ico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+              </div>
+              <div>
+                <div class="ap1-coming-title">D'autres projets de 1ère année à venir</div>
+                <p class="ap1-coming-text">Cette page sera complétée avec les autres travaux pratiques réalisés en 1ère année au fur et à mesure. Les compte-rendus et configurations détaillés de chaque projet seront ajoutés ici avec le même niveau de détail que le projet Windows Server.</p>
+              </div>
+            </div>
+
+            <!-- NAV BAS -->
+            <div class="ap1-bottom-nav">
+              <a href="../equipe/index.html" class="ap1-nav-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"/></svg>
+                Retour aux AP
+              </a>
+              <a href="../ap-2eme-annee/index.html" class="ap1-nav-link">
+                AP 2ème année
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13.172 12 8.222 7.05l1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"/></svg>
+              </a>
+            </div>
+
+          </section>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer id="footer" class="ct-footer" data-id="type-1" itemscope="" itemtype="https://schema.org/WPFooter">
+    <div data-row="bottom"><div class="ct-container"><div data-column="copyright">
+      <div class="ct-footer-copyright" data-id="copyright"><p>Copyright © 2025 - AOUIZIR Chahine.</p></div>
+    </div></div></div>
+  </footer>
+
+</div>
+
+<span aria-hidden="true" id="to_top_scrollup" class="dashicons dashicons-arrow-up-alt2"><span class="screen-reader-text">Défiler vers le haut</span></span>
+
+<script src="../wp-includes/js/jquery/jquery.minf43b.js?ver=3.7.1" id="jquery-core-js"></script>
+<script src="../wp-includes/js/jquery/jquery-migrate.min5589.js?ver=3.4.1" id="jquery-migrate-js"></script>
+<script id="to-top-js-extra">
+var to_top_options={"scroll_offset":"100","icon_opacity":"50","style":"icon","icon_type":"dashicons-arrow-up-alt2","icon_color":"#ffffff","icon_bg_color":"#0083ff","icon_size":"40","border_radius":"5","image":"../wp-content/plugins/to-top/admin/images/default.png","image_width":"65","image_alt":"","location":"bottom-right","margin_x":"20","margin_y":"20","show_on_admin":"0","enable_autohide":"0","autohide_time":"2","enable_hide_small_device":"0","small_device_max_width":"640","reset":"0"};
+</script>
+<script async src="../wp-content/plugins/to-top/public/js/to-top-public21bb.js?ver=2.5.4" id="to-top-js"></script>
+<script id="ct-scripts-js-extra">
+var ct_localizations={"ajax_url":"../wp-admin/admin-ajax.php","public_url":"../wp-content/themes/blocksy/static/bundle/","rest_url":"../wp-json/","search_url":"../search/QUERY_STRING/","show_more_text":"Afficher plus","more_text":"Plus","search_live_results":"Résultats de recherche","search_live_no_results":"Aucun résultat","search_live_no_result":"Aucun résultat","clipboard_copied":"Copié !","clipboard_failed":"Échec de la copie","expand_submenu":"Déplier le menu déroulant","collapse_submenu":"Replier le menu déroulant","dynamic_js_chunks":[],"dynamic_styles":{"lazy_load":"../wp-content/themes/blocksy/static/bundle/non-critical-styles.min.css?ver=2.0.86","search_lazy":"../wp-content/themes/blocksy/static/bundle/non-critical-search-styles.min.css?ver=2.0.86","back_to_top":"../wp-content/themes/blocksy/static/bundle/back-to-top.min.css?ver=2.0.86"},"dynamic_styles_selectors":[{"selector":".ct-header-cart, #woo-cart-panel","url":"../wp-content/themes/blocksy/static/bundle/cart-header-element-lazy.min.css?ver=2.0.86"},{"selector":".flexy","url":"../wp-content/themes/blocksy/static/bundle/flexy.min.css?ver=2.0.86"}]};
+</script>
+<script src="../wp-content/themes/blocksy/static/bundle/maind44c.js?ver=2.0.86" id="ct-scripts-js"></script>
+
+<script>
+  function toggleMission(headEl) {
+    var mission = headEl.closest('.ap1-mission');
+    mission.classList.toggle('open');
+  }
+
+  var navBtns = document.querySelectorAll('.ap1-nav-btn');
+  navBtns.forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      if (btn.getAttribute('href') && btn.getAttribute('href').startsWith('#')) {
+        e.preventDefault();
+        var target = document.querySelector(btn.getAttribute('href'));
+        if (target) {
+          if (!target.classList.contains('open')) target.classList.add('open');
+          setTimeout(function() {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 50);
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
