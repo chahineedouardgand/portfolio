@@ -556,6 +556,8 @@
               <a href="#mission-7" class="ap2-nav-btn"><span class="ap2-nav-btn-num">7</span>EtherChannel</a>
               <a href="#mission-8" class="ap2-nav-btn"><span class="ap2-nav-btn-num">8</span>Port Security</a>
               <a href="#mission-ws" class="ap2-nav-btn"><span class="ap2-nav-btn-num">+</span>Windows Server</a>
+			  <a href="#mission-s1" class="ap2-nav-btn" style="border-color:rgba(13,148,136,0.2);"><span class="ap2-nav-btn-num" style="background:rgba(13,148,136,0.10);color:#0d9488;">E6</span>CCF Sujet 1</a>
+			  <a href="#mission-s2" class="ap2-nav-btn" style="border-color:rgba(124,58,237,0.2);"><span class="ap2-nav-btn-num" style="background:rgba(124,58,237,0.10);color:#7c3aed;">E6</span>CCF Sujet 2</a>
             </nav>
 
             <!-- ==================== PROJET CRASH ==================== -->
@@ -1196,6 +1198,397 @@
 
               </div>
             </div>
+
+
+			<!-- ==================== ÉPREUVE PRATIQUE CCF E6 ==================== -->
+<div class="ap2-project-title" style="margin-top:52px;">
+  <span class="ap2-project-badge" style="background:linear-gradient(135deg,#0f766e,#0d9488);">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Épreuve Pratique
+  </span>
+  <span class="ap2-project-title-text">CCF E6 — Sujet 1 & Sujet 2</span>
+  <div class="ap2-project-line"></div>
+</div>
+
+<!-- ===== SUJET 1 ===== -->
+<div class="ap2-mission" data-m="s1" id="mission-s1" style="--ap2-p:#0d9488;--ap2-pl:rgba(13,148,136,0.09);--ap2-pb:rgba(13,148,136,0.18);">
+  <div class="ap2-m-head" onclick="toggleMission(this)">
+    <div class="ap2-m-num" style="background:linear-gradient(135deg,#0f766e,#0d9488);">S1</div>
+    <div class="ap2-m-head-content">
+      <div class="ap2-m-title-wrap">
+        <div class="ap2-m-label">CCF E6 — Épreuve Pratique Sujet 1</div>
+        <div class="ap2-m-title">Infrastructure HAProxy + VLAN + NAT + DHCP + TLS + DNS</div>
+        <div class="ap2-m-tags">
+          <span class="ap2-m-tag">Cisco 2960 / 2901</span>
+          <span class="ap2-m-tag">HAProxy</span>
+          <span class="ap2-m-tag">VLAN 10/20</span>
+          <span class="ap2-m-tag">NAT</span>
+          <span class="ap2-m-tag">DHCP</span>
+          <span class="ap2-m-tag">TLS/SSL</span>
+          <span class="ap2-m-tag">Technitium DNS</span>
+        </div>
+      </div>
+      <div class="ap2-m-toggle" style="background:rgba(13,148,136,0.09);color:#0d9488;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="ap2-m-body">
+
+    <!-- CONTEXTE -->
+    <div class="ap2-section-head">
+      <div class="ap2-section-num" style="background:rgba(13,148,136,0.09);color:#0d9488;">1</div>
+      <div class="ap2-section-title">Contexte de l'épreuve</div>
+    </div>
+    <div class="ap2-bar" style="background:linear-gradient(90deg,#0d9488,rgba(13,148,136,0.1));"></div>
+    <p>Le Sujet 1 est une épreuve pratique du CCF E6 du BTS SIO SISR. L'objectif est de mettre en place une infrastructure réseau complète incluant un switch Cisco 2960, un routeur Cisco 2901, trois machines virtuelles Linux, et des services réseau avancés (HAProxy, DHCP, DNS, TLS).</p>
+    <p>L'adressage IP change à chaque épreuve — seule la <strong>structure reste fixe</strong> : VLAN 10 pour les serveurs, VLAN 20 pour les clients, NAT vers Internet, ip helper-address pour le relai DHCP.</p>
+
+    <!-- ARCHITECTURE -->
+    <div class="ap2-section-head">
+      <div class="ap2-section-num" style="background:rgba(13,148,136,0.09);color:#0d9488;">2</div>
+      <div class="ap2-section-title">Architecture réseau</div>
+    </div>
+    <div class="ap2-bar" style="background:linear-gradient(90deg,#0d9488,rgba(13,148,136,0.1));"></div>
+
+    <div class="ap2-grid2">
+      <div class="ap2-info-block">
+        <div class="ap2-info-block-title">VLAN 10 — Serveurs</div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Réseau</span><span class="ap2-info-val">10.0.10.0/24</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Routeur Gi0/0.10</span><span class="ap2-info-val">10.0.10.1</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Switch SVI</span><span class="ap2-info-val">10.0.10.2</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">VM HAProxy</span><span class="ap2-info-val">10.0.10.11</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">VM Web1</span><span class="ap2-info-val">10.0.10.12</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">VM Web2</span><span class="ap2-info-val">10.0.10.13</span></div>
+      </div>
+      <div class="ap2-info-block">
+        <div class="ap2-info-block-title">VLAN 20 — Clients + Internet</div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Réseau</span><span class="ap2-info-val">10.0.20.0/24</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Routeur Gi0/0.20</span><span class="ap2-info-val">10.0.20.1</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Xubuntu (client)</span><span class="ap2-info-val">DHCP auto</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Routeur Gi0/1 (WAN)</span><span class="ap2-info-val">172.25.85.201/16</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Câblage fixe</span><span class="ap2-info-val">A5=Fa0/2 | A2=Fa0/24</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Passerelle labo</span><span class="ap2-info-val">172.25.254.254</span></div>
+      </div>
+    </div>
+
+    <!-- ÉTAPE 1 : CISCO SWITCH -->
+    <div class="ap2-section-head">
+      <div class="ap2-section-num" style="background:rgba(13,148,136,0.09);color:#0d9488;">3</div>
+      <div class="ap2-section-title">Étape 1 — Configuration Switch Cisco 2960</div>
+    </div>
+    <div class="ap2-bar" style="background:linear-gradient(90deg,#0d9488,rgba(13,148,136,0.1));"></div>
+    <p>Connexion via PuTTY en mode Serial (COM1, 9600 baud). Reset complet avant de commencer, puis configuration des VLAN, des ports et de la SVI :</p>
+
+    <div class="ap2-cmd">
+      <span class="ap2-cmd-label">Switch 2960 — Config complète</span>
+      <span class="cmt">! 1. Reset + reboot</span><br>
+      <span class="kw">write erase</span> &amp;&amp; <span class="kw">delete flash:vlan.dat</span> &amp;&amp; <span class="kw">reload</span><br>
+      <br>
+      <span class="cmt">! 2. Hostname + VLANs</span><br>
+      <span class="kw">hostname</span> SW1<br>
+      <span class="kw">vlan</span> <span class="val">10</span> → name Serveurs<br>
+      <span class="kw">vlan</span> <span class="val">20</span> → name Clients<br>
+      <br>
+      <span class="cmt">! 3. Trunk Fa0/1 → Routeur</span><br>
+      <span class="kw">interface</span> Fa0/1<br>
+      <span class="kw"> switchport trunk allowed vlan</span> <span class="val">10,20</span><br>
+      <span class="kw"> switchport mode trunk</span><br>
+      <br>
+      <span class="cmt">! 4. Fa0/2 (A5) → VLAN 20 clients/VMs</span><br>
+      <span class="kw">interface</span> Fa0/2 → <span class="kw">switchport access vlan</span> <span class="val">20</span><br>
+      <br>
+      <span class="cmt">! 5. Fa0/24 (A2) → VLAN 10 admin</span><br>
+      <span class="kw">interface</span> Fa0/24 → <span class="kw">switchport access vlan</span> <span class="val">10</span><br>
+      <br>
+      <span class="cmt">! 6. SVI VLAN 10 + passerelle</span><br>
+      <span class="kw">interface Vlan10</span> → <span class="kw">ip address</span> <span class="val">10.0.10.2 255.255.255.0</span><br>
+      <span class="kw">ip default-gateway</span> <span class="val">10.0.10.1</span><br>
+      <span class="kw">write memory</span>
+    </div>
+
+    <!-- ÉTAPE 2 : ROUTEUR -->
+    <div class="ap2-section-head">
+      <div class="ap2-section-num" style="background:rgba(13,148,136,0.09);color:#0d9488;">4</div>
+      <div class="ap2-section-title">Étape 2 — Configuration Routeur Cisco 2901 (NAT + DHCP relay)</div>
+    </div>
+    <div class="ap2-bar" style="background:linear-gradient(90deg,#0d9488,rgba(13,148,136,0.1));"></div>
+
+    <div class="ap2-cmd">
+      <span class="ap2-cmd-label">Routeur 2901 — Sous-interfaces + NAT</span>
+      <span class="cmt">! Interface WAN (internet labo)</span><br>
+      <span class="kw">interface</span> Gi0/1 → <span class="kw">ip address</span> <span class="val">172.25.85.201 255.255.0.0</span><br>
+      <span class="kw"> ip nat outside</span><br>
+      <br>
+      <span class="cmt">! Sous-interface VLAN 10 (serveurs)</span><br>
+      <span class="kw">interface</span> Gi0/0.<span class="val">10</span><br>
+      <span class="kw"> encapsulation dot1Q</span> <span class="val">10</span><br>
+      <span class="kw"> ip address</span> <span class="val">10.0.10.1 255.255.255.0</span><br>
+      <span class="kw"> ip nat inside</span><br>
+      <br>
+      <span class="cmt">! Sous-interface VLAN 20 (clients + ip helper DHCP)</span><br>
+      <span class="kw">interface</span> Gi0/0.<span class="val">20</span><br>
+      <span class="kw"> encapsulation dot1Q</span> <span class="val">20</span><br>
+      <span class="kw"> ip address</span> <span class="val">10.0.20.1 255.255.255.0</span><br>
+      <span class="kw"> ip nat inside</span><br>
+      <span class="kw"> ip helper-address</span> <span class="val">10.0.10.11</span>  <span class="cmt">← redirige DHCP vers HAProxy</span><br>
+      <br>
+      <span class="cmt">! NAT + ACL + Route par défaut</span><br>
+      <span class="kw">access-list</span> 1 permit <span class="val">10.0.0.0 0.0.255.255</span><br>
+      <span class="kw">ip nat inside source list</span> 1 interface Gi0/1 overload<br>
+      <span class="kw">ip route</span> 0.0.0.0 0.0.0.0 <span class="val">172.25.254.254</span><br>
+      <span class="kw">write memory</span>
+    </div>
+
+    <!-- ÉTAPE 3 : VMs -->
+    <div class="ap2-section-head">
+      <div class="ap2-section-num" style="background:rgba(13,148,136,0.09);color:#0d9488;">5</div>
+      <div class="ap2-section-title">Étape 3 — Clonage et configuration des VMs (nmtui)</div>
+    </div>
+    <div class="ap2-bar" style="background:linear-gradient(90deg,#0d9488,rgba(13,148,136,0.1));"></div>
+    <p>1 VM de base → 3 clones intégraux (HAProxy, Web1, Web2) en mode Bridge sur la carte filaire. Configuration IP via <code>nmtui</code> :</p>
+
+    <div class="ap2-grid2">
+      <div class="ap2-info-block">
+        <div class="ap2-info-block-title">IPs des VMs (VLAN 10)</div>
+        <div class="ap2-info-row"><span class="ap2-info-key">HAProxy</span><span class="ap2-info-val">10.0.10.11 | GW 10.0.10.1</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Web1</span><span class="ap2-info-val">10.0.10.12 | GW 10.0.10.1</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Web2</span><span class="ap2-info-val">10.0.10.13 | GW 10.0.10.1</span></div>
+      </div>
+      <div class="ap2-info-block">
+        <div class="ap2-info-block-title">Pages Web différenciées</div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Web1</span><span class="ap2-info-val">Fond bleu (#dbeafe)</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Web2</span><span class="ap2-info-val">Fond jaune (#fef9c3)</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">But</span><span class="ap2-info-val">Identifier la répartition</span></div>
+      </div>
+    </div>
+
+    <!-- ÉTAPE 4 : DHCP -->
+    <div class="ap2-section-head">
+      <div class="ap2-section-num" style="background:rgba(13,148,136,0.09);color:#0d9488;">6</div>
+      <div class="ap2-section-title">Étape 4 — DHCP sur HAProxy (isc-dhcp-server)</div>
+    </div>
+    <div class="ap2-bar" style="background:linear-gradient(90deg,#0d9488,rgba(13,148,136,0.1));"></div>
+    <p>Le serveur DHCP tourne sur la VM HAProxy. Grâce à l'<code>ip helper-address</code> du routeur, les clients Xubuntu dans le VLAN 20 obtiennent leur IP automatiquement :</p>
+
+    <div class="ap2-cmd">
+      <span class="ap2-cmd-label">HAProxy — /etc/dhcp/dhcpd.conf</span>
+      default-lease-time <span class="val">600</span>;<br>
+      max-lease-time <span class="val">7200</span>;<br>
+      <br>
+      subnet <span class="val">10.0.20.0</span> netmask <span class="val">255.255.255.0</span> {<br>
+      &nbsp;&nbsp;range <span class="val">10.0.20.100</span> <span class="val">10.0.20.200</span>;<br>
+      &nbsp;&nbsp;option routers <span class="val">10.0.20.1</span>;<br>
+      &nbsp;&nbsp;option domain-name-servers <span class="val">10.0.10.11</span>;<br>
+      &nbsp;&nbsp;option domain-name <span class="val">"sujet1.local"</span>;<br>
+      }
+    </div>
+
+    <!-- ÉTAPE 5 : HAProxy -->
+    <div class="ap2-section-head">
+      <div class="ap2-section-num" style="background:rgba(13,148,136,0.09);color:#0d9488;">7</div>
+      <div class="ap2-section-title">Étape 5 — HAProxy (répartition de charge + HTTPS)</div>
+    </div>
+    <div class="ap2-bar" style="background:linear-gradient(90deg,#0d9488,rgba(13,148,136,0.1));"></div>
+
+    <div class="ap2-cmd">
+      <span class="ap2-cmd-label">HAProxy — /etc/haproxy/haproxy.cfg</span>
+      <span class="cmt"># Frontend HTTP → port 80</span><br>
+      frontend http_front<br>
+      &nbsp;&nbsp;bind *:<span class="val">80</span><br>
+      &nbsp;&nbsp;default_backend web_servers<br>
+      <br>
+      <span class="cmt"># Frontend HTTPS → port 443 (après création du .pem)</span><br>
+      frontend https_front<br>
+      &nbsp;&nbsp;bind *:<span class="val">443</span> ssl crt <span class="val">/root/ssl/haproxy.pem</span><br>
+      &nbsp;&nbsp;default_backend web_servers<br>
+      <br>
+      <span class="cmt"># Backend — roundrobin entre Web1 et Web2</span><br>
+      backend web_servers<br>
+      &nbsp;&nbsp;balance roundrobin<br>
+      &nbsp;&nbsp;option httpchk GET /<br>
+      &nbsp;&nbsp;server web1 <span class="val">10.0.10.12:80</span> check<br>
+      &nbsp;&nbsp;server web2 <span class="val">10.0.10.13:80</span> check
+    </div>
+
+    <!-- ÉTAPE 6 : TLS + DNS -->
+    <div class="ap2-section-head">
+      <div class="ap2-section-num" style="background:rgba(13,148,136,0.09);color:#0d9488;">8</div>
+      <div class="ap2-section-title">Étape 6 — Certificat TLS + DNS Technitium</div>
+    </div>
+    <div class="ap2-bar" style="background:linear-gradient(90deg,#0d9488,rgba(13,148,136,0.1));"></div>
+
+    <div class="ap2-cmd">
+      <span class="ap2-cmd-label">Certificats TLS — Création AC + Certificat site</span>
+      <span class="cmt"># 1. Créer l'AC (Autorité de Certification)</span><br>
+      openssl req -x509 -newkey rsa:2048 -keyout ca.key -out ca.crt -days 365 -nodes -subj <span class="val">"/CN=AC"</span><br>
+      <br>
+      <span class="cmt"># 2. Créer la clé + CSR du site</span><br>
+      openssl req -newkey rsa:2048 -nodes -keyout site.key -out site.csr -subj <span class="val">"/CN=monsite.local"</span><br>
+      <br>
+      <span class="cmt"># 3. Signer avec l'AC</span><br>
+      openssl x509 -req -in site.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out site.crt -days 365<br>
+      <br>
+      <span class="cmt"># 4. Créer le .pem pour HAProxy</span><br>
+      cat site.crt site.key ca.crt &gt; <span class="val">haproxy.pem</span>
+    </div>
+
+    <p>DNS Technitium est lancé via Docker sur HAProxy (port 5380 pour l'interface web, port 53 pour les requêtes). Une zone est créée avec un enregistrement A pointant vers l'IP de HAProxy.</p>
+
+    <!-- RÉSULTAT -->
+    <div class="ap2-result" style="background:linear-gradient(135deg,#f0fdfa,#ecfdf5);border-color:rgba(13,148,136,0.18);">
+      <div class="ap2-result-ico" style="background:rgba(13,148,136,0.12);color:#0d9488;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div>
+        <div class="ap2-result-title">Tests validés</div>
+        <p class="ap2-result-text">✅ Routage inter-VLAN (ping entre VLAN 10 et 20) | ✅ DHCP relay (Xubuntu obtient une IP dans 10.0.20.100-200) | ✅ Répartition de charge (curl alterne WEB 1 / WEB 2) | ✅ HTTPS avec cadenas vert dans Firefox | ✅ DNS résout l'URL vers HAProxy | ✅ Haute disponibilité (si Web1 tombe, tout bascule sur Web2)</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SUJET 2 ===== -->
+<div class="ap2-mission" data-m="s2" id="mission-s2" style="--ap2-p:#7c3aed;--ap2-pl:rgba(124,58,237,0.09);--ap2-pb:rgba(124,58,237,0.18);">
+  <div class="ap2-m-head" onclick="toggleMission(this)">
+    <div class="ap2-m-num" style="background:linear-gradient(135deg,#6d28d9,#7c3aed);">S2</div>
+    <div class="ap2-m-head-content">
+      <div class="ap2-m-title-wrap">
+        <div class="ap2-m-label">CCF E6 — Épreuve Pratique Sujet 2</div>
+        <div class="ap2-m-title">Sécurisation DMZ — GLPI + Pare-feu SNS + DNS Technitium</div>
+        <div class="ap2-m-tags">
+          <span class="ap2-m-tag">Stormshield SNS</span>
+          <span class="ap2-m-tag">DMZ</span>
+          <span class="ap2-m-tag">GLPI Apache</span>
+          <span class="ap2-m-tag">Filtrage</span>
+          <span class="ap2-m-tag">NAT SNAT/DNAT</span>
+          <span class="ap2-m-tag">Technitium DNS</span>
+        </div>
+      </div>
+      <div class="ap2-m-toggle" style="background:rgba(124,58,237,0.09);color:#7c3aed;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="ap2-m-body">
+
+    <!-- CONTEXTE -->
+    <div class="ap2-section-head">
+      <div class="ap2-section-num" style="background:rgba(124,58,237,0.09);color:#7c3aed;">1</div>
+      <div class="ap2-section-title">Contexte de l'épreuve</div>
+    </div>
+    <div class="ap2-bar" style="background:linear-gradient(90deg,#7c3aed,rgba(124,58,237,0.1));"></div>
+    <p>Le Sujet 2 porte sur la sécurisation d'une infrastructure avec un pare-feu Stormshield SNS EVA1. L'objectif est de configurer les 3 zones réseau (OUT/Internet, DMZ, LAN), de créer les règles de filtrage et le NAT pour que les accès soient sécurisés et contrôlés selon une matrice de flux imposée.</p>
+
+    <!-- ARCHITECTURE -->
+    <div class="ap2-section-head">
+      <div class="ap2-section-num" style="background:rgba(124,58,237,0.09);color:#7c3aed;">2</div>
+      <div class="ap2-section-title">Architecture — 3 zones réseau</div>
+    </div>
+    <div class="ap2-bar" style="background:linear-gradient(90deg,#7c3aed,rgba(124,58,237,0.1));"></div>
+
+    <div class="ap2-grid2">
+      <div class="ap2-info-block">
+        <div class="ap2-info-block-title">SNS EVA1 — Interfaces</div>
+        <div class="ap2-info-row"><span class="ap2-info-key">OUT (Internet labo)</span><span class="ap2-info-val">172.25.27.94/16</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">DMZ</span><span class="ap2-info-val">10.20.4.254/24</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">IN (LAN)</span><span class="ap2-info-val">10.100.3.254/24</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Accès web SNS</span><span class="ap2-info-val">https://10.0.0.254</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Login SNS</span><span class="ap2-info-val">admin / admin</span></div>
+      </div>
+      <div class="ap2-info-block">
+        <div class="ap2-info-block-title">VMs configurées</div>
+        <div class="ap2-info-row"><span class="ap2-info-key">glpi-srv (DMZ)</span><span class="ap2-info-val">10.20.4.1/24 | GW .254</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Apache glpi-srv</span><span class="ap2-info-val">Port 8443 (pas 80)</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">SSH glpi-srv</span><span class="ap2-info-val">Port 2222 (pas 22)</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">DNS Technitium</span><span class="ap2-info-val">10.20.4.1:53 (sur glpi)</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Client LAN</span><span class="ap2-info-val">10.100.3.x/24 | GW .254</span></div>
+      </div>
+    </div>
+
+    <!-- MATRICE DE FLUX -->
+    <div class="ap2-section-head">
+      <div class="ap2-section-num" style="background:rgba(124,58,237,0.09);color:#7c3aed;">3</div>
+      <div class="ap2-section-title">Matrice de flux — 8 règles + BLOCK ALL</div>
+    </div>
+    <div class="ap2-bar" style="background:linear-gradient(90deg,#7c3aed,rgba(124,58,237,0.1));"></div>
+
+    <div class="ap2-info-block" style="margin-bottom:14px;">
+      <div class="ap2-info-block-title">Règles de filtrage SNS (ordre important)</div>
+      <div class="ap2-info-row"><span class="ap2-info-key" style="color:#0d9488;font-weight:700;">R1</span><span class="ap2-info-val">LAN → Internet : TCP/80, TCP/443, UDP/53 ✅</span></div>
+      <div class="ap2-info-row"><span class="ap2-info-key" style="color:#0d9488;font-weight:700;">R2</span><span class="ap2-info-val">Internet → glpi-srv : TCP/443 → NAT → 8443 ✅</span></div>
+      <div class="ap2-info-row"><span class="ap2-info-key" style="color:#0d9488;font-weight:700;">R3</span><span class="ap2-info-val">LAN → glpi-srv : TCP/53, UDP/53 (DNS) ✅</span></div>
+      <div class="ap2-info-row"><span class="ap2-info-key" style="color:#0d9488;font-weight:700;">R4</span><span class="ap2-info-val">glpi-srv → Client : UDP/514 (Syslog) ✅</span></div>
+      <div class="ap2-info-row"><span class="ap2-info-key" style="color:#0d9488;font-weight:700;">R5</span><span class="ap2-info-val">Client → glpi-srv : TCP/2222 (SSH admin) ✅</span></div>
+      <div class="ap2-info-row"><span class="ap2-info-key" style="color:#0d9488;font-weight:700;">R6</span><span class="ap2-info-val">glpi-srv → Internet : TCP/53, UDP/53 ✅</span></div>
+      <div class="ap2-info-row"><span class="ap2-info-key" style="color:#0d9488;font-weight:700;">R7</span><span class="ap2-info-val">DMZ → Internet : TCP/80, TCP/443 ✅</span></div>
+      <div class="ap2-info-row"><span class="ap2-info-key" style="color:#0d9488;font-weight:700;">R8</span><span class="ap2-info-val">LAN → glpi-srv : TCP/8443 (GLPI direct) ✅</span></div>
+      <div class="ap2-info-row"><span class="ap2-info-key" style="color:#dc2626;font-weight:700;">R9</span><span class="ap2-info-val">ANY → ANY : BLOQUER TOUT 🚫</span></div>
+    </div>
+
+    <!-- ÉTAPES GLPI-SRV -->
+    <div class="ap2-section-head">
+      <div class="ap2-section-num" style="background:rgba(124,58,237,0.09);color:#7c3aed;">4</div>
+      <div class="ap2-section-title">Configuration de glpi-srv (Apache + SSH + DNS)</div>
+    </div>
+    <div class="ap2-bar" style="background:linear-gradient(90deg,#7c3aed,rgba(124,58,237,0.1));"></div>
+
+    <ul class="ap2-list">
+      <li><span class="ap2-list-dot" style="background:#7c3aed;"></span>IP configurée avec <code>nmtui</code> : 10.20.4.1 | GW 10.20.4.254 | DNS 127.0.0.1</li>
+      <li><span class="ap2-list-dot" style="background:#7c3aed;"></span>Apache changé du port 80 → <strong>8443</strong> dans <code>ports.conf</code> et <code>000-default.conf</code></li>
+      <li><span class="ap2-list-dot" style="background:#7c3aed;"></span>SSH changé du port 22 → <strong>2222</strong> dans <code>/etc/ssh/sshd_config</code> — faire depuis la console VirtualBox !</li>
+      <li><span class="ap2-list-dot" style="background:#7c3aed;"></span>Technitium DNS lancé via Docker (port 53 + 5380) — désactiver <code>systemd-resolved</code> avant</li>
+      <li><span class="ap2-list-dot" style="background:#7c3aed;"></span>Zone DNS créée : <code>crash-sport.fr</code> → enregistrement A : <code>app → 172.25.27.94</code> (IP OUT du SNS, pas l'IP de glpi !)</li>
+    </ul>
+
+    <div class="ap2-cmd">
+      <span class="ap2-cmd-label">Vérification finale glpi-srv</span>
+      <span class="kw">ss -tlnp</span>  <span class="cmt">← doit montrer *:8443 et *:2222</span><br>
+      <span class="kw">docker ps</span>  <span class="cmt">← dns Up (Technitium actif)</span><br>
+      <span class="kw">nslookup</span> app.crash-sport.fr <span class="val">127.0.0.1</span>  <span class="cmt">← doit retourner 172.25.27.94</span>
+    </div>
+
+    <!-- NAT -->
+    <div class="ap2-section-head">
+      <div class="ap2-section-num" style="background:rgba(124,58,237,0.09);color:#7c3aed;">5</div>
+      <div class="ap2-section-title">NAT sur le SNS — SNAT + DNAT 443→8443</div>
+    </div>
+    <div class="ap2-bar" style="background:linear-gradient(90deg,#7c3aed,rgba(124,58,237,0.1));"></div>
+
+    <div class="ap2-grid2">
+      <div class="ap2-info-block">
+        <div class="ap2-info-block-title">SNAT (sortie vers Internet)</div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Source</span><span class="ap2-info-val">LAN + DMZ</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Dest.</span><span class="ap2-info-val">Internet</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Traduit en</span><span class="ap2-info-val">IP OUT SNS (masquerade)</span></div>
+      </div>
+      <div class="ap2-info-block">
+        <div class="ap2-info-block-title">DNAT (entrée HTTPS → GLPI)</div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Destination</span><span class="ap2-info-val">172.25.27.94:443</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">Redirigé vers</span><span class="ap2-info-val">10.20.4.1:8443</span></div>
+        <div class="ap2-info-row"><span class="ap2-info-key">But</span><span class="ap2-info-val">Accès GLPI depuis Internet</span></div>
+      </div>
+    </div>
+
+    <!-- RÉSULTAT -->
+    <div class="ap2-result" style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-color:rgba(124,58,237,0.14);">
+      <div class="ap2-result-ico" style="background:rgba(124,58,237,0.12);color:#7c3aed;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div>
+        <div class="ap2-result-title">Tests fonctionnels validés</div>
+        <p class="ap2-result-text">✅ Client LAN accède à Internet (R1) | ✅ https://app.crash-sport.fr accessible depuis Internet via NAT (R2) | ✅ DNS résout depuis le LAN (R3) | ✅ SSH admin depuis client vers glpi-srv sur port 2222 (R5) | ✅ BLOCK ALL empêche tout trafic non autorisé (R9) | ✅ Nmap depuis Internet ne voit que le port 443</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
 
             <!-- NAV BAS -->
             <div class="ap2-bottom-nav">
