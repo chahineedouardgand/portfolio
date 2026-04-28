@@ -555,7 +555,6 @@
               <a href="#mission-6" class="ap2-nav-btn"><span class="ap2-nav-btn-num">6</span>VLAN / VTP</a>
               <a href="#mission-7" class="ap2-nav-btn"><span class="ap2-nav-btn-num">7</span>EtherChannel</a>
               <a href="#mission-8" class="ap2-nav-btn"><span class="ap2-nav-btn-num">8</span>Port Security</a>
-              <a href="#mission-ws" class="ap2-nav-btn"><span class="ap2-nav-btn-num">+</span>Windows Server</a>
 			  <a href="#mission-s1" class="ap2-nav-btn" style="border-color:rgba(13,148,136,0.2);"><span class="ap2-nav-btn-num" style="background:rgba(13,148,136,0.10);color:#0d9488;">E6</span>CCF Sujet 1</a>
 			  <a href="#mission-s2" class="ap2-nav-btn" style="border-color:rgba(124,58,237,0.2);"><span class="ap2-nav-btn-num" style="background:rgba(124,58,237,0.10);color:#7c3aed;">E6</span>CCF Sujet 2</a>
             </nav>
@@ -1093,105 +1092,6 @@
                 </div>
 
                 <a href="../wp-content/uploads/Compte_Rendu_Mission_8_PORT_SECURITY_CRASH.docx" class="ap2-pdf-btn" target="_blank" rel="noopener">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
-                  Compte rendu PDF
-                </a>
-
-              </div>
-            </div>
-
-            <!-- ==================== PROJET WINDOWS SERVER ==================== -->
-            <div class="ap2-project-title" style="margin-top:52px;">
-              <span class="ap2-project-badge" style="background:linear-gradient(135deg,#0369a1,#0284c7);">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg>
-                Projet Windows Server
-              </span>
-              <span class="ap2-project-title-text">Administration Windows Server & Active Directory</span>
-              <div class="ap2-project-line"></div>
-            </div>
-
-            <!-- ===== MISSION WINDOWS SERVER ===== -->
-            <div class="ap2-mission" data-m="ws" id="mission-ws">
-              <div class="ap2-m-head" onclick="toggleMission(this)">
-                <div class="ap2-m-num" style="font-size:13px;line-height:1.2;text-align:center;padding:8px;">WS<br>AD</div>
-                <div class="ap2-m-head-content">
-                  <div class="ap2-m-title-wrap">
-                    <div class="ap2-m-label">TP — Projet Windows Server</div>
-                    <div class="ap2-m-title">Windows Server & Active Directory — Création d'un contrôleur de domaine</div>
-                    <div class="ap2-m-tags">
-                      <span class="ap2-m-tag">Windows Server</span>
-                      <span class="ap2-m-tag">Active Directory</span>
-                      <span class="ap2-m-tag">VirtualBox</span>
-                      <span class="ap2-m-tag">AD DS</span>
-                      <span class="ap2-m-tag">dcdiag</span>
-                    </div>
-                  </div>
-                  <div class="ap2-m-toggle">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-                  </div>
-                </div>
-              </div>
-              <div class="ap2-m-body">
-
-                <div class="ap2-section-head">
-                  <div class="ap2-section-num">1</div>
-                  <div class="ap2-section-title">Installation de la VM Windows Server via VirtualBox</div>
-                </div>
-                <div class="ap2-bar"></div>
-                <p>Le premier objectif était de créer une machine virtuelle sous Windows Server à l'aide de VirtualBox. La VM a été générée, le système d'exploitation installé, puis le réseau configuré en mode <strong>Accès par pont</strong> pour permettre à la VM de communiquer avec le réseau local.</p>
-
-                <ul class="ap2-list">
-                  <li><span class="ap2-list-dot"></span>Installation des <strong>Additions invité</strong> pour améliorer les performances et l'affichage</li>
-                  <li><span class="ap2-list-dot"></span>Mise à jour via <strong>Windows Update</strong> pour sécuriser et stabiliser le système</li>
-                  <li><span class="ap2-list-dot"></span>Configuration réseau en mode <strong>Accès par pont</strong> pour accès au LAN</li>
-                </ul>
-
-                <div class="ap2-section-head">
-                  <div class="ap2-section-num">2</div>
-                  <div class="ap2-section-title">Installation et configuration d'Active Directory (AD DS)</div>
-                </div>
-                <div class="ap2-bar"></div>
-                <p>Une fois Windows Server prêt, le rôle AD DS (Active Directory Domain Services) a été ajouté via le Gestionnaire de serveur, puis le serveur a été promu en contrôleur de domaine.</p>
-
-                <ul class="ap2-list">
-                  <li><span class="ap2-list-dot"></span>Ajout du rôle <strong>AD DS</strong> via le Gestionnaire de serveur</li>
-                  <li><span class="ap2-list-dot"></span>Promotion du serveur en <strong>contrôleur de domaine</strong></li>
-                  <li><span class="ap2-list-dot"></span>Création d'une <strong>nouvelle forêt</strong> Active Directory</li>
-                  <li><span class="ap2-list-dot"></span>Vérification via la commande <code>dcdiag</code> pour s'assurer que le serveur fonctionne sans erreur</li>
-                </ul>
-
-                <div class="ap2-section-head">
-                  <div class="ap2-section-num">3</div>
-                  <div class="ap2-section-title">Compétences développées</div>
-                </div>
-                <div class="ap2-bar"></div>
-
-                <div class="ap2-grid2">
-                  <div class="ap2-info-block">
-                    <div class="ap2-info-block-title">Travailler en mode projet</div>
-                    <div class="ap2-info-row"><span class="ap2-info-key">Analyse</span><span class="ap2-info-val">Besoins du système</span></div>
-                    <div class="ap2-info-row"><span class="ap2-info-key">Planification</span><span class="ap2-info-val">Étapes d'installation</span></div>
-                    <div class="ap2-info-row"><span class="ap2-info-key">Vérification</span><span class="ap2-info-val">À chaque phase</span></div>
-                  </div>
-                  <div class="ap2-info-block">
-                    <div class="ap2-info-block-title">Compétences SISR développées</div>
-                    <div class="ap2-info-row"><span class="ap2-info-key">Déploiement</span><span class="ap2-info-val">VM + Serveur AD</span></div>
-                    <div class="ap2-info-row"><span class="ap2-info-key">Réseau</span><span class="ap2-info-val">Réseau local simulé</span></div>
-                    <div class="ap2-info-row"><span class="ap2-info-key">Autonomie</span><span class="ap2-info-val">Outils professionnels</span></div>
-                  </div>
-                </div>
-
-                <div class="ap2-result">
-                  <div class="ap2-result-ico">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                  </div>
-                  <div>
-                    <div class="ap2-result-title">Résultat</div>
-                    <p class="ap2-result-text">La VM Windows Server est opérationnelle avec Active Directory configuré. Le serveur fonctionne en contrôleur de domaine, vérifié par <code>dcdiag</code> et <code>ipconfig</code>. Le réseau local simulé est fonctionnel.</p>
-                  </div>
-                </div>
-
-                <a href="../wp-content/uploads/2024/TP7 SISR Windows Server et Active Directory.pdf" class="ap2-pdf-btn" target="_blank" rel="noopener">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
                   Compte rendu PDF
                 </a>
