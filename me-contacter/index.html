@@ -661,7 +661,12 @@
                   <p class="mc-form-subtitle">Remplissez le formulaire ci-dessous et je vous répondrai dès que possible.</p>
 
                   <div id="mc-form-container">
-                    <form class="mc-form" id="mc-form" novalidate>
+                    <form class="mc-form" id="mc-form" action="https://formsubmit.co/chahine.75018@gmail.com" method="POST" novalidate>
+                      <!-- Configuration FormSubmit -->
+                      <input type="hidden" name="_subject" value="📬 Nouveau message depuis ton portfolio">
+                      <input type="hidden" name="_template" value="table">
+                      <input type="hidden" name="_captcha" value="false">
+                      <input type="hidden" name="_next" value=""><!-- laisser vide pour garder l'affichage JS -->
 
                       <div class="mc-field-row">
                         <div class="mc-field">
@@ -763,7 +768,6 @@ var ct_localizations={"ajax_url":"../wp-admin/admin-ajax.php","public_url":"../w
     var message = document.getElementById('mc-message').value.trim();
 
     if (!prenom || !email || !message) {
-      /* highlight champs vides */
       ['mc-prenom','mc-email','mc-message'].forEach(function(id) {
         var el = document.getElementById(id);
         if (!el.value.trim()) {
@@ -778,16 +782,34 @@ var ct_localizations={"ajax_url":"../wp-admin/admin-ajax.php","public_url":"../w
       return;
     }
 
-    /* Simuler l'envoi — remplacer par appel AJAX réel si backend dispo */
     var btn = this.querySelector('.mc-submit');
     btn.disabled = true;
     btn.querySelector('span').textContent = 'Envoi en cours…';
 
-    setTimeout(function() {
-      document.getElementById('mc-form').style.display = 'none';
-      var success = document.getElementById('mc-success');
-      success.style.display = 'flex';
-    }, 1200);
+    /* Envoi réel via FormSubmit */
+    var formData = new FormData(this);
+    fetch('https://formsubmit.co/ajax/chahine.75018@gmail.com', {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      if (data.success === 'true' || data.success === true) {
+        document.getElementById('mc-form').style.display = 'none';
+        var success = document.getElementById('mc-success');
+        success.style.display = 'flex';
+      } else {
+        btn.disabled = false;
+        btn.querySelector('span').textContent = 'Envoyer le message';
+        alert('Une erreur est survenue. Réessayez ou contactez-moi directement par email.');
+      }
+    })
+    .catch(function() {
+      btn.disabled = false;
+      btn.querySelector('span').textContent = 'Envoyer le message';
+      alert('Erreur réseau. Contactez-moi directement à chahine.75018@gmail.com');
+    });
   });
 </script>
 
