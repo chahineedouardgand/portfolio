@@ -6,11 +6,8 @@
   <link rel="profile" href="https://gmpg.org/xfn/11">
 
   <title>Stage 1re année – PORTFOLIO AOUIZIR CHAHINE</title>
-  <meta name="description" content="Détail de mon stage de 1re année de BTS SIO chez SAFO – fibre optique et réseaux. Portfolio de Chahine Aouizir." />
+  <meta name="description" content="Rapport de stage de 1re année BTS SIO SISR chez SAFO – fibre optique, réseaux, Montreuil. Portfolio de Chahine Aouizir." />
   <meta name="robots" content="max-image-preview:large" />
-
-  <link rel="alternate" type="application/rss+xml" title="PORTFOLIO AOUIZIR CHAHINE » Flux" href="../feed/index.html" />
-  <link rel="alternate" type="application/rss+xml" title="PORTFOLIO AOUIZIR CHAHINE » Flux des commentaires" href="../comments/feed/index.html" />
 
   <link rel="stylesheet" href="../wp-includes/css/dist/block-library/style.min9704.css?ver=6.7.1" media="all" />
   <link rel="stylesheet" href="../wp-includes/css/dashicons.min9704.css?ver=6.7.1" media="all" />
@@ -20,20 +17,25 @@
   <noscript><link rel="stylesheet" href="../wp-content/themes/blocksy/static/bundle/no-scripts.min.css" type="text/css"></noscript>
 
   <style>
+    *, *::before, *::after { box-sizing: border-box; }
     :root {
       --theme-palette-color-1:#2872fa; --theme-palette-color-2:#1559ed;
       --theme-palette-color-3:#3A4F66; --theme-palette-color-4:#192a3d;
       --theme-palette-color-5:#e1e8ed; --theme-palette-color-6:#f2f5f7;
       --theme-palette-color-7:#ffffff; --theme-palette-color-8:#ffffff;
       --theme-text-color:var(--theme-palette-color-3);
-      --theme-link-initial-color:var(--theme-palette-color-1);
-      --theme-link-hover-color:var(--theme-palette-color-2);
-      --theme-border-color:var(--theme-palette-color-5);
       --theme-headings-color:var(--theme-palette-color-4);
       --theme-font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
       --theme-font-size:16px; --theme-line-height:1.65;
+
+      /* Palette stage 1 : bleu marine */
+      --s1p: #2872fa;
+      --s1pl: rgba(40,114,250,0.08);
+      --s1pb: rgba(40,114,250,0.16);
+      --s1ps: rgba(40,114,250,0.22);
     }
-    body { margin:0; font-family:var(--theme-font-family); font-size:var(--theme-font-size); line-height:var(--theme-line-height); color:var(--theme-text-color); background:#f8fafc; }
+
+    body { margin:0; font-family:var(--theme-font-family); font-size:var(--theme-font-size); line-height:var(--theme-line-height); color:var(--theme-text-color); background:#f4f7fc; }
     h1,h2,h3,h4,h5,h6 { color:var(--theme-headings-color); line-height:1.3; }
 
     [data-header*="type-1"] .ct-header [data-id="logo"] .site-logo-container{--logo-max-height:50px;}
@@ -53,465 +55,375 @@
     @media(max-width:689.98px){[data-header*="type-1"] #offcanvas{--side-panel-width:90vw;}}
     #to_top_scrollup{font-size:40px;width:40px;height:40px;background-color:#0083ff;}
 
-    /* ========= PAGE STAGE 1 ========= */
+    /* ══════════════════════════════════════
+       PAGE STAGE 1
+    ══════════════════════════════════════ */
+    .s1-page { max-width:1200px; margin:0 auto; padding:40px 20px 80px; }
 
-    .s1-wrap {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 40px 20px 80px;
+    /* BREADCRUMB */
+    .s1-bread { display:flex; align-items:center; gap:8px; font-size:13px; color:#94a3b8; margin-bottom:36px; flex-wrap:wrap; }
+    .s1-bread a { color:#64748b; text-decoration:none; }
+    .s1-bread a:hover { color:var(--s1p); }
+    .s1-bread-sep { color:#cbd5e1; }
+    .s1-bread span { color:var(--s1p); font-weight:700; }
+
+    /* ── HERO ── */
+    .s1-hero {
+      border-radius:28px;
+      overflow:hidden;
+      box-shadow:0 16px 56px rgba(15,23,42,0.10);
+      margin-bottom:36px;
     }
 
-    /* ---- BREADCRUMB ---- */
-    .s1-breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: #94a3b8;
-      margin-bottom: 32px;
-      flex-wrap: wrap;
-    }
-    .s1-breadcrumb a { color: #64748b; text-decoration: none; }
-    .s1-breadcrumb a:hover { color: #2872fa; }
-    .s1-breadcrumb-sep { color: #cbd5e1; }
-    .s1-breadcrumb span { color: #2872fa; font-weight: 600; }
-
-    /* ---- HEADER CARD ---- */
-    .s1-header {
-      background: #ffffff;
-      border-radius: 28px;
-      border: 1px solid rgba(15,23,42,0.07);
-      box-shadow: 0 8px 32px rgba(15,23,42,0.06);
-      overflow: hidden;
-      margin-bottom: 32px;
+    .s1-hero-top {
+      background:linear-gradient(145deg,#091528 0%,#112044 55%,#091528 100%);
+      padding:52px 56px 44px;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:32px;
+      flex-wrap:wrap;
     }
 
-    .s1-header-top {
-      background: linear-gradient(135deg, #0f1f3d 0%, #162b4e 60%, #0f1f3d 100%);
-      padding: 40px 48px 36px;
-      position: relative;
-      overflow: hidden;
+    .s1-hero-top::before {
+      content:''; position:absolute;
+      top:-80px; right:-80px;
+      width:360px; height:360px; border-radius:50%;
+      background:radial-gradient(circle,rgba(40,114,250,0.2) 0%,transparent 65%);
+      pointer-events:none;
     }
 
-    .s1-header-top::before {
-      content: '';
-      position: absolute;
-      right: -80px; top: -80px;
-      width: 320px; height: 320px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(40,114,250,0.18) 0%, transparent 70%);
-      pointer-events: none;
+    .s1-hero-top::after {
+      content:''; position:absolute; inset:0;
+      background-image:radial-gradient(circle,rgba(255,255,255,0.03) 1px,transparent 1px);
+      background-size:28px 28px; pointer-events:none;
     }
 
-    .s1-header-top::after {
-      content: '';
-      position: absolute;
-      left: 30%; bottom: -60px;
-      width: 200px; height: 200px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(96,165,250,0.1) 0%, transparent 70%);
-      pointer-events: none;
+    .s1-hero-left { position:relative; z-index:1; }
+
+    .s1-chip {
+      display:inline-flex; align-items:center; gap:8px;
+      background:rgba(40,114,250,0.18); border:1px solid rgba(40,114,250,0.38);
+      color:#93c5fd; font-size:11px; font-weight:700;
+      padding:5px 14px; border-radius:999px; margin-bottom:18px;
+      text-transform:uppercase; letter-spacing:.06em; width:fit-content;
     }
 
-    .s1-header-top-inner { position: relative; z-index: 1; }
-
-    .s1-number-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(40,114,250,0.2);
-      border: 1px solid rgba(40,114,250,0.4);
-      color: #93c5fd;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 5px 14px;
-      border-radius: 999px;
-      margin-bottom: 18px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+    .s1-hero-top h1 {
+      margin:0 0 12px;
+      font-size:clamp(26px,3.2vw,44px);
+      color:#fff; font-weight:800; letter-spacing:-0.025em; line-height:1.1;
     }
 
-    .s1-header-top h1 {
-      margin: 0 0 12px;
-      font-size: clamp(28px, 3.5vw, 44px);
-      color: #ffffff;
-      font-weight: 800;
-      letter-spacing: -0.02em;
+    .s1-hero-top h1 strong {
+      display:block;
+      background:linear-gradient(90deg,#60a5fa,#a5b4fc);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
     }
 
-    .s1-header-top h1 em {
-      font-style: normal;
-      background: linear-gradient(90deg, #60a5fa, #a78bfa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .s1-hero-top p { margin:0; color:#94a3b8; font-size:15px; line-height:1.7; max-width:520px; }
+
+    /* KPIs droite */
+    .s1-hero-kpis {
+      position:relative; z-index:1;
+      display:grid; grid-template-columns:repeat(2,1fr);
+      gap:12px; min-width:240px;
     }
 
-    .s1-header-top p {
-      margin: 0;
-      color: #94a3b8;
-      font-size: 16px;
-      max-width: 600px;
-      line-height: 1.6;
+    .s1-kpi {
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.09);
+      border-radius:16px; padding:16px; text-align:center;
     }
 
-    .s1-header-bottom {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      border-top: 1px solid rgba(15,23,42,0.06);
+    .s1-kpi-ico {
+      width:36px; height:36px; border-radius:10px;
+      background:rgba(40,114,250,0.15); color:#60a5fa;
+      display:flex; align-items:center; justify-content:center;
+      margin:0 auto 8px;
+    }
+    .s1-kpi-ico svg { width:17px; height:17px; }
+    .s1-kpi-val { font-size:18px; font-weight:800; color:#fff; letter-spacing:-0.01em; }
+    .s1-kpi-lbl { font-size:11px; color:#64748b; margin-top:2px; }
+
+    @media(max-width:700px){ .s1-hero-top{ padding:36px 24px; } .s1-hero-kpis{ min-width:auto; width:100%; } }
+
+    /* Bande méta sous le hero */
+    .s1-hero-meta {
+      background:#ffffff;
+      display:grid; grid-template-columns:repeat(4,1fr);
+      border-top:1px solid rgba(15,23,42,0.06);
     }
 
-    .s1-meta-item {
-      padding: 22px 28px;
-      border-right: 1px solid rgba(15,23,42,0.06);
-      display: flex;
-      align-items: center;
-      gap: 14px;
+    .s1-meta {
+      padding:20px 24px;
+      border-right:1px solid rgba(15,23,42,0.06);
+      display:flex; align-items:center; gap:12px;
     }
 
-    .s1-meta-item:last-child { border-right: none; }
+    .s1-meta:last-child { border-right:none; }
 
-    .s1-meta-icon {
-      width: 40px; height: 40px;
-      border-radius: 10px;
-      background: rgba(40,114,250,0.08);
-      color: #2872fa;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+    .s1-meta-ico {
+      width:38px; height:38px; border-radius:10px;
+      background:var(--s1pl); color:var(--s1p);
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
     }
+    .s1-meta-ico svg { width:17px; height:17px; }
+    .s1-meta-lbl { font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px; }
+    .s1-meta-val { font-size:14px; font-weight:700; color:#0f172a; }
 
-    .s1-meta-icon svg { width: 18px; height: 18px; }
+    @media(max-width:800px){ .s1-hero-meta{ grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:480px){ .s1-hero-meta{ grid-template-columns:1fr; } .s1-meta{ border-right:none; border-bottom:1px solid rgba(15,23,42,0.06); } }
 
-    .s1-meta-label { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
-    .s1-meta-value { font-size: 14px; font-weight: 700; color: #1e293b; }
+    /* ── LAYOUT ── */
+    .s1-layout { display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:start; }
+    @media(max-width:960px){ .s1-layout{ grid-template-columns:1fr; } .s1-sidebar{ order:-1; } }
 
-    @media(max-width:900px){ .s1-header-bottom { grid-template-columns: repeat(2,1fr); } }
-    @media(max-width:560px){
-      .s1-header-top { padding: 28px 24px; }
-      .s1-header-bottom { grid-template-columns: 1fr 1fr; }
-      .s1-meta-item { padding: 16px 18px; }
-    }
-
-    /* ---- LAYOUT DEUX COLONNES ---- */
-    .s1-layout {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 24px;
-      align-items: start;
-    }
-
-    @media(max-width:960px){
-      .s1-layout { grid-template-columns: 1fr; }
-      .s1-sidebar { order: -1; }
-    }
-
-    /* ---- BLOCS GÉNÉRIQUES ---- */
+    /* ── CARD GÉNÉRIQUE ── */
     .s1-card {
-      background: #ffffff;
-      border-radius: 20px;
-      border: 1px solid rgba(15,23,42,0.07);
-      box-shadow: 0 6px 24px rgba(15,23,42,0.05);
-      padding: 28px 30px;
-      margin-bottom: 22px;
+      background:#ffffff;
+      border-radius:22px;
+      border:1px solid rgba(15,23,42,0.07);
+      box-shadow:0 6px 24px rgba(15,23,42,0.05);
+      padding:28px 32px;
+      margin-bottom:22px;
+    }
+    .s1-card:last-child { margin-bottom:0; }
+
+    .s1-card-head { display:flex; align-items:center; gap:14px; margin-bottom:6px; }
+    .s1-card-ico {
+      width:42px; height:42px; border-radius:12px;
+      background:var(--s1pl); color:var(--s1p);
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .s1-card-ico svg { width:19px; height:19px; }
+    .s1-card h2 { margin:0; font-size:17px; font-weight:800; color:#0f172a; }
+
+    .s1-bar {
+      width:40px; height:3px;
+      background:linear-gradient(90deg,var(--s1p),rgba(40,114,250,0.12));
+      border-radius:999px; margin:10px 0 18px;
     }
 
-    .s1-card:last-child { margin-bottom: 0; }
+    .s1-card p { margin:0 0 13px; font-size:15px; color:#475569; line-height:1.75; }
+    .s1-card p:last-child { margin-bottom:0; }
 
-    .s1-card-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 6px;
+    /* ── TABLE GÉNÉRIQUE ── */
+    .s1-table { width:100%; border-collapse:collapse; font-size:14px; }
+    .s1-table th {
+      text-align:left; padding:9px 14px;
+      background:var(--s1pl); color:var(--s1p);
+      font-size:11px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
+    }
+    .s1-table th:first-child { border-radius:8px 0 0 8px; }
+    .s1-table th:last-child  { border-radius:0 8px 8px 0; }
+    .s1-table td { padding:9px 14px; border-bottom:1px solid rgba(15,23,42,0.05); color:#334155; vertical-align:middle; }
+    .s1-table tr:last-child td { border-bottom:none; }
+    .s1-table td:first-child { font-weight:700; color:#0f172a; }
+
+    /* ── RESSOURCES GRID ── */
+    .s1-res-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:4px; }
+    @media(max-width:600px){ .s1-res-grid{ grid-template-columns:1fr; } }
+
+    .s1-res-block {
+      background:#f8fafc; border-radius:14px;
+      border:1px solid rgba(15,23,42,0.07); padding:16px;
+    }
+    .s1-res-title {
+      font-size:11px; font-weight:800; color:var(--s1p);
+      text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px;
+      display:flex; align-items:center; gap:7px;
+    }
+    .s1-res-title-dot { width:6px; height:6px; border-radius:50%; background:var(--s1p); flex-shrink:0; }
+    .s1-res-text { font-size:13px; color:#475569; line-height:1.6; }
+
+    /* ── ORGANIGRAMME ── */
+    .s1-org {
+      display:flex; flex-direction:column; align-items:center; gap:0; margin-top:8px;
     }
 
-    .s1-card-icon {
-      width: 40px; height: 40px;
-      border-radius: 11px;
-      background: rgba(40,114,250,0.08);
-      color: #2872fa;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+    .s1-org-top {
+      background:linear-gradient(135deg,var(--s1p),#1d4ed8);
+      color:#fff; border-radius:12px; padding:12px 24px;
+      font-weight:800; font-size:14px; text-align:center;
     }
 
-    .s1-card-icon svg { width: 18px; height: 18px; }
+    .s1-org-top-sub { font-size:11px; font-weight:500; opacity:.8; margin-top:3px; }
 
-    .s1-card h2 {
-      margin: 0;
-      font-size: 17px;
-      font-weight: 800;
-      color: #0f172a;
+    .s1-org-arrow {
+      width:2px; height:24px;
+      background:linear-gradient(180deg,var(--s1p),rgba(40,114,250,0.2));
     }
 
-    .s1-divider {
-      width: 48px; height: 3px;
-      background: linear-gradient(90deg, #2872fa, rgba(40,114,250,0.15));
-      border-radius: 999px;
-      margin: 10px 0 18px;
+    .s1-org-row {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:12px; width:100%;
     }
 
-    .s1-card p {
-      margin: 0 0 14px;
-      font-size: 15px;
-      color: #475569;
-      line-height: 1.75;
+    .s1-org-dept {
+      background:#f8fafc; border:1px solid var(--s1pb);
+      border-radius:12px; padding:14px 12px; text-align:center;
+    }
+    .s1-org-dept-name { font-size:12px; font-weight:800; color:#0f172a; margin-bottom:5px; }
+    .s1-org-dept-roles { font-size:11px; color:#64748b; line-height:1.5; }
+
+    /* ── SITUATIONS JURIDIQUES ── */
+    .s1-legal-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    @media(max-width:600px){ .s1-legal-grid{ grid-template-columns:1fr; } }
+
+    .s1-legal-block {
+      border-radius:14px; padding:18px 20px;
+      border-left:4px solid var(--s1p);
+      background:var(--s1pl);
+    }
+    .s1-legal-title { font-size:13px; font-weight:800; color:#0f172a; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+    .s1-legal-badge {
+      font-size:10px; font-weight:700; padding:2px 8px; border-radius:999px;
+      background:var(--s1p); color:#fff;
+    }
+    .s1-legal-text { font-size:13px; color:#475569; line-height:1.65; margin:0; }
+
+    /* ── MISSIONS 3 AXES ── */
+    .s1-axes { display:flex; flex-direction:column; gap:14px; }
+
+    .s1-axe {
+      display:flex; align-items:flex-start; gap:16px;
+      padding:18px 20px; border-radius:16px;
+      background:#f8fafc; border:1px solid rgba(15,23,42,0.07);
+      transition:background .15s, border-color .15s;
     }
 
-    .s1-card p:last-child { margin-bottom: 0; }
+    .s1-axe:hover { background:var(--s1pl); border-color:var(--s1pb); }
 
-    /* Missions */
-    .s1-missions {
-      list-style: none;
-      margin: 0; padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .s1-axe-num {
+      width:42px; height:42px; border-radius:12px; flex-shrink:0;
+      background:var(--s1p); color:#fff;
+      font-size:18px; font-weight:900;
+      display:flex; align-items:center; justify-content:center;
     }
 
-    .s1-missions li {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 13px 16px;
-      background: #f8fafc;
-      border-radius: 12px;
-      border: 1px solid rgba(15,23,42,0.06);
-      font-size: 14px;
-      color: #334155;
-      line-height: 1.55;
+    .s1-axe-title { font-size:14px; font-weight:800; color:#0f172a; margin-bottom:5px; }
+    .s1-axe-text  { font-size:13px; color:#475569; line-height:1.6; margin:0; }
+
+    /* ── BILAN ── */
+    .s1-bilan { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    @media(max-width:600px){ .s1-bilan{ grid-template-columns:1fr; } }
+
+    .s1-bilan-pos, .s1-bilan-neg {
+      border-radius:14px; padding:18px 20px;
+    }
+    .s1-bilan-pos { background:#f0fdf4; border:1px solid rgba(22,163,74,0.18); }
+    .s1-bilan-neg { background:#fff7ed; border:1px solid rgba(234,88,12,0.14); }
+
+    .s1-bilan-head {
+      display:flex; align-items:center; gap:8px;
+      font-size:12px; font-weight:800;
+      text-transform:uppercase; letter-spacing:.06em;
+      margin-bottom:10px;
     }
 
-    .s1-check {
-      width: 20px; height: 20px;
-      border-radius: 6px;
-      background: rgba(40,114,250,0.10);
-      color: #2872fa;
-      font-size: 11px;
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 1px;
+    .s1-bilan-pos .s1-bilan-head { color:#16a34a; }
+    .s1-bilan-neg .s1-bilan-head { color:#ea580c; }
+
+    .s1-bilan-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .s1-bilan-pos .s1-bilan-dot { background:#22c55e; }
+    .s1-bilan-neg .s1-bilan-dot { background:#f97316; }
+
+    .s1-bilan-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px; }
+    .s1-bilan-list li { font-size:13px; color:#334155; line-height:1.55; padding-left:12px; position:relative; }
+    .s1-bilan-list li::before {
+      content:''; position:absolute; left:0; top:7px;
+      width:5px; height:5px; border-radius:50%;
     }
+    .s1-bilan-pos .s1-bilan-list li::before { background:#22c55e; }
+    .s1-bilan-neg .s1-bilan-list li::before { background:#f97316; }
 
-    /* Schema image */
-    .s1-schema {
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid rgba(15,23,42,0.08);
-      background: #f1f5f9;
-      margin-top: 4px;
+    /* Conclusion */
+    .s1-conclusion {
+      display:flex; align-items:flex-start; gap:16px;
+      background:linear-gradient(135deg,#eff6ff,#eef2ff);
+      border:1px solid rgba(40,114,250,0.14);
+      border-radius:16px; padding:20px 22px; margin-top:18px;
     }
-
-    .s1-schema img {
-      display: block;
-      width: 100%;
-      height: auto;
+    .s1-conclusion-ico {
+      width:42px; height:42px; border-radius:12px;
+      background:rgba(40,114,250,0.12); color:var(--s1p);
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
     }
+    .s1-conclusion-ico svg { width:20px; height:20px; }
+    .s1-conclusion-title { font-size:13px; font-weight:800; color:#0f172a; margin-bottom:4px; }
+    .s1-conclusion-text  { font-size:13px; color:#475569; line-height:1.6; margin:0; }
 
-    .s1-schema-caption {
-      padding: 12px 16px;
-      font-size: 12px;
-      color: #94a3b8;
-      background: #f8fafc;
-      border-top: 1px solid rgba(15,23,42,0.06);
-      font-style: italic;
+    /* ── SIDEBAR ── */
+    .s1-sc {
+      background:#ffffff; border-radius:20px;
+      border:1px solid rgba(15,23,42,0.07);
+      box-shadow:0 6px 22px rgba(15,23,42,0.05);
+      padding:24px; margin-bottom:18px;
     }
+    .s1-sc:last-child { margin-bottom:0; }
 
-    .s1-schema-placeholder {
-      height: 220px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      color: #cbd5e1;
+    .s1-sc-title {
+      font-size:12px; font-weight:800; color:#0f172a;
+      text-transform:uppercase; letter-spacing:.07em;
+      margin-bottom:16px;
+      display:flex; align-items:center; gap:8px;
     }
+    .s1-sc-dot { width:6px; height:6px; border-radius:50%; background:var(--s1p); }
 
-    .s1-schema-placeholder svg { width: 48px; height: 48px; }
-    .s1-schema-placeholder span { font-size: 14px; }
-
-    /* Compétences tags */
-    .s1-skills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 4px;
+    /* Bouton rapport */
+    .s1-dl-btn {
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      width:100%; padding:14px 20px; border-radius:14px;
+      text-decoration:none; font-weight:800; font-size:14px; color:#fff;
+      background:linear-gradient(135deg,var(--s1p),#1d4ed8);
+      box-shadow:0 8px 20px var(--s1ps);
+      transition:transform .15s, box-shadow .15s;
     }
+    .s1-dl-btn:hover { transform:translateY(-2px); box-shadow:0 12px 28px var(--s1ps); }
+    .s1-dl-btn svg { width:17px; height:17px; }
 
-    .s1-skill {
-      font-size: 12px;
-      font-weight: 700;
-      padding: 5px 13px;
-      border-radius: 999px;
-      border: 1px solid rgba(40,114,250,0.18);
-      background: rgba(40,114,250,0.07);
-      color: #1d4ed8;
-    }
-
-    /* Bilan */
-    .s1-bilan-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    @media(max-width:560px){ .s1-bilan-grid { grid-template-columns: 1fr; } }
-
-    .s1-bilan-item {
-      padding: 14px 16px;
-      background: #f8fafc;
-      border-radius: 12px;
-      border: 1px solid rgba(15,23,42,0.06);
-    }
-
-    .s1-bilan-item-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 5px;
-    }
-
-    .s1-bilan-item p {
-      margin: 0;
-      font-size: 13px;
-      color: #334155;
-      line-height: 1.55;
-    }
-
-    /* ---- SIDEBAR ---- */
-    .s1-sidebar-card {
-      background: #ffffff;
-      border-radius: 20px;
-      border: 1px solid rgba(15,23,42,0.07);
-      box-shadow: 0 6px 24px rgba(15,23,42,0.05);
-      padding: 24px;
-      margin-bottom: 20px;
-    }
-
-    .s1-sidebar-card:last-child { margin-bottom: 0; }
-
-    .s1-sidebar-title {
-      font-size: 13px;
-      font-weight: 800;
-      color: #0f172a;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .s1-sidebar-title-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: #2872fa;
-    }
-
-    .s1-info-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
+    /* Info rows */
     .s1-info-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid rgba(15,23,42,0.05);
-      font-size: 13px;
+      display:flex; justify-content:space-between; align-items:flex-start;
+      gap:10px; padding:9px 0;
+      border-bottom:1px solid rgba(15,23,42,0.05); font-size:13px;
     }
+    .s1-info-row:last-child { border-bottom:none; padding-bottom:0; }
+    .s1-info-key { color:#94a3b8; font-weight:500; flex-shrink:0; }
+    .s1-info-val { color:#1e293b; font-weight:700; text-align:right; }
 
-    .s1-info-row:last-child { border-bottom: none; padding-bottom: 0; }
+    /* Barres compétences */
+    .s1-sk { margin-bottom:12px; }
+    .s1-sk:last-child { margin-bottom:0; }
+    .s1-sk label { display:flex; justify-content:space-between; font-size:12px; color:#475569; font-weight:600; margin-bottom:5px; }
+    .s1-sk-track { height:5px; background:#e2e8f0; border-radius:999px; overflow:hidden; }
+    .s1-sk-fill  { height:100%; border-radius:999px; background:linear-gradient(90deg,var(--s1p),#60a5fa); }
 
-    .s1-info-key { color: #94a3b8; font-weight: 500; flex-shrink: 0; }
-    .s1-info-val { color: #1e293b; font-weight: 700; text-align: right; }
-
-    /* Progress compétences */
-    .s1-skills-progress { display: flex; flex-direction: column; gap: 12px; }
-
-    .s1-skill-row label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: #475569;
-      font-weight: 600;
-      margin-bottom: 5px;
+    /* Tags */
+    .s1-tags { display:flex; flex-wrap:wrap; gap:7px; }
+    .s1-tag {
+      font-size:12px; font-weight:700;
+      padding:4px 12px; border-radius:999px;
+      background:var(--s1pl); color:#1d4ed8;
+      border:1px solid var(--s1pb);
     }
-
-    .s1-skill-bar {
-      height: 6px;
-      background: #f1f5f9;
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .s1-skill-bar-fill {
-      height: 100%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #2872fa, #60a5fa);
-      transition: width 0.8s ease;
-    }
-
-    /* CTA rapport */
-    .s1-rapport-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 14px 20px;
-      border-radius: 14px;
-      text-decoration: none;
-      font-weight: 800;
-      font-size: 14px;
-      color: #fff;
-      background: linear-gradient(135deg, #2872fa, #3e3960);
-      box-shadow: 0 8px 20px rgba(40,114,250,0.25);
-      transition: transform 0.18s, box-shadow 0.18s, filter 0.18s;
-      box-sizing: border-box;
-    }
-
-    .s1-rapport-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(40,114,250,0.32); filter: brightness(1.04); }
-    .s1-rapport-btn:active { transform: scale(0.97); }
-
-    .s1-rapport-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
 
     /* Nav bas */
-    .s1-nav-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 32px;
-      flex-wrap: wrap;
-      gap: 12px;
+    .s1-nav {
+      display:flex; justify-content:space-between; align-items:center;
+      margin-top:32px; flex-wrap:wrap; gap:12px;
     }
-
     .s1-nav-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      font-weight: 700;
-      color: #2872fa;
-      text-decoration: none;
-      padding: 10px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(40,114,250,0.2);
-      background: rgba(40,114,250,0.04);
-      transition: background 0.15s, border-color 0.15s;
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:14px; font-weight:700; color:var(--s1p);
+      text-decoration:none; padding:10px 18px; border-radius:999px;
+      border:1px solid var(--s1pb); background:var(--s1pl);
+      transition:background .15s, border-color .15s;
     }
-
-    .s1-nav-link:hover { background: rgba(40,114,250,0.10); border-color: rgba(40,114,250,0.35); }
+    .s1-nav-link:hover { background:rgba(40,114,250,0.14); border-color:rgba(40,114,250,0.35); }
   </style>
 
   <link rel="icon" href="../wp-content/uploads/2024/03/homme-150x150.png" sizes="32x32" />
@@ -520,7 +432,9 @@
   <meta name="msapplication-TileImage" content="../wp-content/uploads/2024/03/homme-300x300.png" />
 </head>
 
-<body class="page-template-default page wp-custom-logo wp-embed-responsive" data-link="type-2" data-prefix="single_page" data-header="type-1" data-footer="type-1" itemscope="itemscope" itemtype="https://schema.org/WebPage">
+<body class="page-template-default page wp-custom-logo wp-embed-responsive"
+  data-link="type-2" data-prefix="single_page" data-header="type-1" data-footer="type-1"
+  itemscope itemtype="https://schema.org/WebPage">
 
 <a class="skip-link screen-reader-text" href="#main">Passer au contenu</a>
 
@@ -577,20 +491,20 @@
 <div id="main-container">
 
   <!-- HEADER -->
-  <header id="header" class="ct-header" data-id="type-1" itemscope="" itemtype="https://schema.org/WPHeader">
+  <header id="header" class="ct-header" data-id="type-1" itemscope itemtype="https://schema.org/WPHeader">
     <div data-device="desktop">
       <div data-row="middle" data-column-set="2">
         <div class="ct-container">
           <div data-column="start" data-placements="1"><div data-items="primary">
-            <div class="site-branding" data-id="logo" data-logo="left" itemscope="itemscope" itemtype="https://schema.org/Organization">
+            <div class="site-branding" data-id="logo" data-logo="left" itemscope itemtype="https://schema.org/Organization">
               <a href="../index.html" class="site-logo-container" rel="home" itemprop="url">
-                <img width="512" height="512" src="../wp-content/uploads/2024/03/homme.png" class="default-logo" alt="Logo du portfolio de Chahine Aouizir" decoding="async" fetchpriority="high" srcset="../wp-content/uploads/2024/03/homme.png 512w, ../wp-content/uploads/2024/03/homme-300x300.png 300w, ../wp-content/uploads/2024/03/homme-150x150.png 150w" sizes="(max-width:512px) 100vw, 512px" />
+                <img width="512" height="512" src="../wp-content/uploads/2024/03/homme.png" class="default-logo" alt="Logo du portfolio de Chahine Aouizir" decoding="async" fetchpriority="high" srcset="../wp-content/uploads/2024/03/homme.png 512w, ../wp-content/uploads/2024/03/homme-300x300.png 300w, ../wp-content/uploads/2024/03/homme-150x150.png 150w" sizes="(max-width:512px) 100vw,512px" />
               </a>
               <div class="site-title-container"><span class="site-title" itemprop="name"><a href="../index.html" rel="home" itemprop="url">PORTFOLIO AOUIZIR CHAHINE</a></span></div>
             </div>
           </div></div>
           <div data-column="end" data-placements="1"><div data-items="primary">
-            <nav id="header-menu-1" class="header-menu-1 menu-container" data-id="menu" data-interaction="hover" data-menu="type-1" data-dropdown="type-1:simple" data-responsive="no" itemscope="" itemtype="https://schema.org/SiteNavigationElement" aria-label="menu 1">
+            <nav id="header-menu-1" class="header-menu-1 menu-container" data-id="menu" data-interaction="hover" data-menu="type-1" data-dropdown="type-1:simple" data-responsive="no" itemscope itemtype="https://schema.org/SiteNavigationElement" aria-label="menu 1">
               <ul id="menu-menu-1" class="menu">
                 <li class="menu-item"><a href="../index.html" class="ct-menu-link">A PROPOS</a></li>
                 <li class="menu-item menu-item-has-children animated-submenu-block">
@@ -632,8 +546,8 @@
         <div class="ct-container">
           <div data-column="start" data-placements="1"><div data-items="primary">
             <div class="site-branding" data-id="logo" data-logo="left">
-              <a href="../index.html" class="site-logo-container" rel="home" itemprop="url">
-                <img width="512" height="512" src="../wp-content/uploads/2024/03/homme.png" class="default-logo" alt="Logo du portfolio de Chahine Aouizir" decoding="async" srcset="../wp-content/uploads/2024/03/homme.png 512w, ../wp-content/uploads/2024/03/homme-300x300.png 300w, ../wp-content/uploads/2024/03/homme-150x150.png 150w" sizes="(max-width:512px) 100vw, 512px" />
+              <a href="../index.html" class="site-logo-container" rel="home">
+                <img width="512" height="512" src="../wp-content/uploads/2024/03/homme.png" class="default-logo" alt="Logo du portfolio de Chahine Aouizir" decoding="async" srcset="../wp-content/uploads/2024/03/homme.png 512w, ../wp-content/uploads/2024/03/homme-300x300.png 300w, ../wp-content/uploads/2024/03/homme-150x150.png 150w" sizes="(max-width:512px) 100vw,512px" />
               </a>
               <div class="site-title-container"><span class="site-title"><a href="../index.html" rel="home">PORTFOLIO AOUIZIR CHAHINE</a></span></div>
             </div>
@@ -656,64 +570,85 @@
     <div class="ct-container-full" data-content="normal" data-vertical-spacing="top:bottom">
       <article class="page type-page status-publish hentry">
         <div class="entry-content is-layout-constrained">
-          <section class="s1-wrap">
+          <section class="s1-page">
 
             <!-- BREADCRUMB -->
-            <nav class="s1-breadcrumb" aria-label="Fil d'ariane">
+            <nav class="s1-bread" aria-label="Fil d'ariane">
               <a href="../index.html">Accueil</a>
-              <span class="s1-breadcrumb-sep">›</span>
+              <span class="s1-bread-sep">›</span>
               <a href="../stages/index.html">Stages</a>
-              <span class="s1-breadcrumb-sep">›</span>
+              <span class="s1-bread-sep">›</span>
               <span>Stage 1re année</span>
             </nav>
 
-            <!-- HEADER CARD -->
-            <div class="s1-header">
-              <div class="s1-header-top">
-                <div class="s1-header-top-inner">
-                  <div class="s1-number-badge">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-                    Stage N°1 — BTS SIO SISR
+            <!-- HERO -->
+            <div class="s1-hero">
+              <div class="s1-hero-top">
+                <div class="s1-hero-left">
+                  <div class="s1-chip">Stage N°1 — BTS SIO SISR</div>
+                  <h1>Immersion chez<br><strong>SAFO</strong></h1>
+                  <p>Première expérience professionnelle dans le domaine des réseaux de fibre optique — maintenance, documentation technique et interventions terrain à Montreuil.</p>
+                </div>
+                <div class="s1-hero-kpis">
+                  <div class="s1-kpi">
+                    <div class="s1-kpi-ico">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <div class="s1-kpi-val">6</div>
+                    <div class="s1-kpi-lbl">Semaines</div>
                   </div>
-                  <h1>Immersion chez <em>SAFO</em></h1>
-                  <p>Fibre optique, maintenance réseau et rédaction technique — mon premier stage en entreprise dans le secteur des infrastructures.</p>
+                  <div class="s1-kpi">
+                    <div class="s1-kpi-ico">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    </div>
+                    <div class="s1-kpi-val">3</div>
+                    <div class="s1-kpi-lbl">Axes mission</div>
+                  </div>
+                  <div class="s1-kpi">
+                    <div class="s1-kpi-ico">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <div class="s1-kpi-val">2023</div>
+                    <div class="s1-kpi-lbl">Année</div>
+                  </div>
+                  <div class="s1-kpi">
+                    <div class="s1-kpi-ico">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg>
+                    </div>
+                    <div class="s1-kpi-val">SARL</div>
+                    <div class="s1-kpi-lbl">Forme juridique</div>
+                  </div>
                 </div>
               </div>
-              <div class="s1-header-bottom">
-                <div class="s1-meta-item">
-                  <div class="s1-meta-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  </div>
+
+              <!-- Méta bande -->
+              <div class="s1-hero-meta">
+                <div class="s1-meta">
+                  <div class="s1-meta-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
                   <div>
-                    <div class="s1-meta-label">Durée</div>
-                    <div class="s1-meta-value">6 semaines</div>
+                    <div class="s1-meta-lbl">Entreprise</div>
+                    <div class="s1-meta-val">SAFO — Montreuil (93100)</div>
                   </div>
                 </div>
-                <div class="s1-meta-item">
-                  <div class="s1-meta-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  </div>
+                <div class="s1-meta">
+                  <div class="s1-meta-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
                   <div>
-                    <div class="s1-meta-label">Entreprise</div>
-                    <div class="s1-meta-value">SAFO</div>
+                    <div class="s1-meta-lbl">Tuteur de stage</div>
+                    <div class="s1-meta-val">Essid Samir</div>
                   </div>
                 </div>
-                <div class="s1-meta-item">
-                  <div class="s1-meta-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                  </div>
+                <div class="s1-meta">
+                  <div class="s1-meta-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
                   <div>
-                    <div class="s1-meta-label">Secteur</div>
-                    <div class="s1-meta-value">Fibre optique</div>
+                    <div class="s1-meta-lbl">Période</div>
+                    <div class="s1-meta-val">27 mai — 24 juin 2024</div>
                   </div>
                 </div>
-                <div class="s1-meta-item">
-                  <div class="s1-meta-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  </div>
+                <div class="s1-meta">
+                  <div class="s1-meta-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg></div>
                   <div>
-                    <div class="s1-meta-label">Année</div>
-                    <div class="s1-meta-value">2023 – 2024</div>
+                    <div class="s1-meta-lbl">Secteur</div>
+                    <div class="s1-meta-val">Fibre optique — Réseaux</div>
                   </div>
                 </div>
               </div>
@@ -723,93 +658,209 @@
             <div class="s1-layout">
 
               <!-- COLONNE PRINCIPALE -->
-              <div class="s1-main">
+              <div>
 
-                <!-- Contexte -->
+                <!-- 1. Présentation de l'organisation -->
                 <div class="s1-card">
-                  <div class="s1-card-title">
-                    <div class="s1-card-icon">
-                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                    </div>
-                    <h2>Contexte du stage</h2>
+                  <div class="s1-card-head">
+                    <div class="s1-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+                    <h2>1. Présentation de l'organisation</h2>
                   </div>
-                  <div class="s1-divider"></div>
-                  <p>Au cours de ma première année de BTS SIO option SISR, j'ai effectué mon stage chez <strong>SAFO</strong>, une entreprise spécialisée dans l'installation et la maintenance de réseaux en fibre optique.</p>
-                  <p>Intégré à l'équipe technique pendant <strong>six semaines</strong>, j'ai participé à des interventions terrain, découvert le fonctionnement d'une entreprise de maintenance réseau, et appliqué mes connaissances en infrastructure.</p>
+                  <div class="s1-bar"></div>
+
+                  <p>SAFO est une entreprise privée spécialisée dans la <strong>réparation de réseaux de fibre optique</strong>, structurée sous forme de SARL. Son objectif principal est d'assurer la continuité et l'efficacité des réseaux de communication en offrant des services de maintenance préventive, de détection et correction des pannes, et d'interventions d'urgence.</p>
+
+                  <!-- Infos clés -->
+                  <table class="s1-table" style="margin-bottom:20px;">
+                    <thead>
+                      <tr>
+                        <th>Propriété</th>
+                        <th>Détail</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>Raison sociale</td><td>SAFO</td></tr>
+                      <tr><td>Forme juridique</td><td>SARL (Société à Responsabilité Limitée)</td></tr>
+                      <tr><td>Siège social</td><td>Montreuil, 93100</td></tr>
+                      <tr><td>Tuteur de stage</td><td>Essid Samir</td></tr>
+                      <tr><td>Période de stage</td><td>27 mai – 24 juin 2024</td></tr>
+                    </tbody>
+                  </table>
+
+                  <!-- Ressources -->
+                  <p style="font-weight:700;color:#0f172a;margin-bottom:12px;">Ressources de l'entreprise</p>
+                  <div class="s1-res-grid">
+                    <div class="s1-res-block">
+                      <div class="s1-res-title"><div class="s1-res-title-dot"></div>Humaines</div>
+                      <div class="s1-res-text">Techniciens spécialisés, ingénieurs réseaux, personnel administratif</div>
+                    </div>
+                    <div class="s1-res-block">
+                      <div class="s1-res-title"><div class="s1-res-title-dot"></div>Matérielles</div>
+                      <div class="s1-res-text">Véhicules d'intervention, outils de diagnostic et réparation, équipements de sécurité</div>
+                    </div>
+                    <div class="s1-res-block">
+                      <div class="s1-res-title"><div class="s1-res-title-dot"></div>Financières</div>
+                      <div class="s1-res-text">Capitaux propres, subventions éventuelles, revenus des prestations de services</div>
+                    </div>
+                  </div>
                 </div>
 
-                <!-- Mission principale -->
+                <!-- Parc informatique -->
                 <div class="s1-card">
-                  <div class="s1-card-title">
-                    <div class="s1-card-icon">
-                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 11H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>
-                    </div>
-                    <h2>Mission principale</h2>
+                  <div class="s1-card-head">
+                    <div class="s1-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+                    <h2>Parc informatique</h2>
                   </div>
-                  <div class="s1-divider"></div>
-                  <p>Ma mission principale a consisté à <strong>créer un plan et un rapport détaillé de l'infrastructure réseau</strong> de l'entreprise, en intégrant :</p>
-                  <ul class="s1-missions">
-                    <li><span class="s1-check">✓</span> L'inventaire et la gestion des équipements informatiques et de diagnostic</li>
-                    <li><span class="s1-check">✓</span> L'accompagnement lors des interventions terrain pour la maintenance et la réparation des réseaux de fibre optique</li>
-                    <li><span class="s1-check">✓</span> La rédaction de rapports d'intervention et de guides expliquant les procédures standard</li>
-                    <li><span class="s1-check">✓</span> L'audit de bon fonctionnement des équipements chez les clients</li>
-                  </ul>
+                  <div class="s1-bar"></div>
+                  <p>Le parc informatique de SAFO couvre à la fois les besoins opérationnels terrain et les besoins administratifs du siège.</p>
+                  <table class="s1-table">
+                    <thead>
+                      <tr>
+                        <th>Équipement</th>
+                        <th>Quantité</th>
+                        <th>Système / Version</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>Ordinateurs portables</td><td>30</td><td>Windows 10</td></tr>
+                      <tr><td>Ordinateurs de bureau</td><td>20</td><td>Windows 10</td></tr>
+                      <tr><td>Serveurs</td><td>5</td><td>Windows Server 2016</td></tr>
+                      <tr><td>Routeurs Cisco</td><td>10</td><td>Dernière génération</td></tr>
+                    </tbody>
+                  </table>
                 </div>
 
-                <!-- Schéma réseau -->
+                <!-- Structure -->
                 <div class="s1-card">
-                  <div class="s1-card-title">
-                    <div class="s1-card-icon">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="5" r="1.5"/><circle cx="5" cy="19" r="1.5"/><circle cx="19" cy="19" r="1.5"/><line x1="12" y1="6.5" x2="12" y2="13"/><line x1="12" y1="13" x2="5" y2="17.5"/><line x1="12" y1="13" x2="19" y2="17.5"/></svg>
-                    </div>
-                    <h2>Schéma de l'infrastructure réseau</h2>
+                  <div class="s1-card-head">
+                    <div class="s1-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                    <h2>Structure & organisation</h2>
                   </div>
-                  <div class="s1-divider"></div>
-                  <div class="s1-schema">
-                    <img src="../wp-content/uploads/2024/schema.png" alt="Schéma de l'infrastructure réseau SAFO"
-                      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                    <div class="s1-schema-placeholder" style="display:none;">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <rect x="2" y="2" width="20" height="20" rx="2"/><path d="M8 10h8M8 14h4"/>
-                      </svg>
-                      <span>Schéma disponible dans le rapport de stage</span>
+                  <div class="s1-bar"></div>
+                  <p>L'organigramme de SAFO s'articule autour de quatre pôles, coordonnés par supervision directe et standardisation des procédés d'intervention.</p>
+
+                  <div class="s1-org">
+                    <div class="s1-org-top">
+                      Direction Générale
+                      <div class="s1-org-top-sub">Essid Samir — Pilotage stratégique</div>
                     </div>
-                    <div class="s1-schema-caption">Schéma du plan réseau réalisé pendant le stage — infrastructure fibre optique SAFO</div>
+                    <div class="s1-org-arrow"></div>
+                    <div class="s1-org-row">
+                      <div class="s1-org-dept">
+                        <div class="s1-org-dept-name">Département Technique</div>
+                        <div class="s1-org-dept-roles">Ingénieurs réseaux<br>Techniciens de maintenance</div>
+                      </div>
+                      <div class="s1-org-dept">
+                        <div class="s1-org-dept-name">Département Administratif</div>
+                        <div class="s1-org-dept-roles">Personnel administratif<br>Ressources humaines</div>
+                      </div>
+                      <div class="s1-org-dept">
+                        <div class="s1-org-dept-name">Département Commercial</div>
+                        <div class="s1-org-dept-roles">Équipe de vente<br>Support client</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Situations juridiques -->
+                <div class="s1-card">
+                  <div class="s1-card-head">
+                    <div class="s1-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                    <h2>2. Situations juridiques rencontrées</h2>
+                  </div>
+                  <div class="s1-bar"></div>
+                  <p>Au cours du stage, deux situations juridiques significatives ont permis d'appréhender les aspects réglementaires liés à l'activité de l'entreprise.</p>
+                  <div class="s1-legal-grid">
+                    <div class="s1-legal-block">
+                      <div class="s1-legal-title">
+                        <span>Contrats de maintenance</span>
+                        <span class="s1-legal-badge">Droit des contrats</span>
+                      </div>
+                      <p class="s1-legal-text">Participation à la rédaction et à la révision des contrats conclus avec les clients pour la maintenance des infrastructures de fibre optique. Compréhension des obligations et enjeux contractuels entre les parties prenantes.</p>
+                    </div>
+                    <div class="s1-legal-block">
+                      <div class="s1-legal-title">
+                        <span>Conformité RGPD</span>
+                        <span class="s1-legal-badge">Protection des données</span>
+                      </div>
+                      <p class="s1-legal-text">Vérification de la conformité des données clients stockées par SAFO au regard du RGPD, assurant la protection et la confidentialité des informations personnelles traitées par l'entreprise.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mission / Projet -->
+                <div class="s1-card">
+                  <div class="s1-card-head">
+                    <div class="s1-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+                    <h2>3. Ma mission — 3 axes</h2>
+                  </div>
+                  <div class="s1-bar"></div>
+                  <p>Ma mission principale au sein de SAFO s'est articulée autour de <strong>trois axes complémentaires</strong>, allant du terrain à la documentation :</p>
+                  <div class="s1-axes">
+                    <div class="s1-axe">
+                      <div class="s1-axe-num">1</div>
+                      <div>
+                        <div class="s1-axe-title">Assistance aux techniciens</div>
+                        <p class="s1-axe-text">Participation active aux interventions de maintenance et de réparation sur le terrain, aux côtés de techniciens expérimentés. Découverte des procédures réelles d'intervention sur des réseaux fibre optique en service.</p>
+                      </div>
+                    </div>
+                    <div class="s1-axe">
+                      <div class="s1-axe-num">2</div>
+                      <div>
+                        <div class="s1-axe-title">Gestion des équipements</div>
+                        <p class="s1-axe-text">Réalisation de l'inventaire complet et suivi du parc informatique et des outils de diagnostic mis à disposition des équipes. Identification des équipements, mise à jour des fiches de suivi.</p>
+                      </div>
+                    </div>
+                    <div class="s1-axe">
+                      <div class="s1-axe-num">3</div>
+                      <div>
+                        <div class="s1-axe-title">Documentation technique</div>
+                        <p class="s1-axe-text">Rédaction de rapports d'intervention et de guides techniques destinés à standardiser les procédures internes. Création d'un plan et d'un rapport détaillé de l'infrastructure réseau de l'entreprise.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <!-- Bilan -->
                 <div class="s1-card">
-                  <div class="s1-card-title">
-                    <div class="s1-card-icon">
-                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
-                    </div>
-                    <h2>Bilan du stage</h2>
+                  <div class="s1-card-head">
+                    <div class="s1-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="16 12 12 8 8 12"/><line x1="12" y1="16" x2="12" y2="8"/></svg></div>
+                    <h2>4. Bilan du stage</h2>
                   </div>
-                  <div class="s1-divider"></div>
-                  <p>Ce stage m'a permis d'acquérir une expérience pratique précieuse dans le domaine des infrastructures réseau. J'ai pu développer mes compétences techniques et ma capacité à travailler en équipe sur le terrain.</p>
-                  <div class="s1-bilan-grid">
-                    <div class="s1-bilan-item">
-                      <div class="s1-bilan-item-label">Point fort</div>
-                      <p>Immersion complète sur des interventions réelles en fibre optique</p>
+                  <div class="s1-bar"></div>
+                  <div class="s1-bilan">
+                    <div class="s1-bilan-pos">
+                      <div class="s1-bilan-head"><div class="s1-bilan-dot"></div>Points positifs</div>
+                      <ul class="s1-bilan-list">
+                        <li>Acquisition de compétences techniques en réparation de fibre optique</li>
+                        <li>Travail en équipe avec des professionnels expérimentés</li>
+                        <li>Apprentissage des aspects juridiques (contrats, conformité RGPD)</li>
+                        <li>Immersion concrète dans les opérations d'une entreprise de réseaux</li>
+                      </ul>
                     </div>
-                    <div class="s1-bilan-item">
-                      <div class="s1-bilan-item-label">Compétences développées</div>
-                      <p>Diagnostic réseau, documentation technique, autonomie sur le terrain</p>
+                    <div class="s1-bilan-neg">
+                      <div class="s1-bilan-head"><div class="s1-bilan-dot"></div>Points d'amélioration</div>
+                      <ul class="s1-bilan-list">
+                        <li>Charge de travail intense lors des interventions d'urgence</li>
+                        <li>Complexité de certaines procédures techniques et administratives</li>
+                        <li>S'adapter rapidement à des environnements clients très variés</li>
+                      </ul>
                     </div>
-                    <div class="s1-bilan-item">
-                      <div class="s1-bilan-item-label">Défi rencontré</div>
-                      <p>S'adapter rapidement aux environnements clients très variés</p>
+                  </div>
+
+                  <div class="s1-conclusion">
+                    <div class="s1-conclusion-ico">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
-                    <div class="s1-bilan-item">
-                      <div class="s1-bilan-item-label">Apport humain</div>
-                      <p>Travail en équipe, communication professionnelle, rigueur</p>
+                    <div>
+                      <div class="s1-conclusion-title">Conclusion</div>
+                      <p class="s1-conclusion-text">Ce stage chez SAFO m'a offert une immersion concrète dans le domaine des réseaux de fibre optique et m'a permis de mettre en pratique les connaissances acquises en première année de BTS SIO option SISR. Les compétences techniques, organisationnelles et juridiques développées constituent un socle solide pour la suite de ma formation et de ma carrière professionnelle.</p>
                     </div>
                   </div>
                 </div>
 
-                <!-- Navigation bas -->
-                <div class="s1-nav-bottom">
+                <!-- Nav bas -->
+                <div class="s1-nav">
                   <a href="../stages/index.html" class="s1-nav-link">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"/></svg>
                     Retour aux stages
@@ -826,95 +877,75 @@
               <div class="s1-sidebar">
 
                 <!-- Télécharger rapport -->
-                <div class="s1-sidebar-card">
-                  <div class="s1-sidebar-title">
-                    <div class="s1-sidebar-title-dot"></div>
-                    Document
-                  </div>
-                  <a href="../wp-content/uploads/2024/stage1/Rapport_de_Stage_SIO_Aouizir_Chahine 1.pdf" class="s1-rapport-btn" target="_blank" rel="noopener">
+                <div class="s1-sc">
+                  <div class="s1-sc-title"><div class="s1-sc-dot"></div>Document</div>
+                  <a href="../wp-content/uploads/2024/Rapport_Stage_Aouizir_Chahinee.pdf"
+                     class="s1-dl-btn" target="_blank" rel="noopener" download>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                       <polyline points="14 2 14 8 20 8"/>
                       <line x1="12" y1="18" x2="12" y2="12"/>
                       <polyline points="9 15 12 18 15 15"/>
                     </svg>
-                    Télécharger le rapport
+                    Télécharger le rapport PDF
                   </a>
                 </div>
 
-                <!-- Infos rapides -->
-                <div class="s1-sidebar-card">
-                  <div class="s1-sidebar-title">
-                    <div class="s1-sidebar-title-dot"></div>
-                    Informations
+                <!-- Infos -->
+                <div class="s1-sc">
+                  <div class="s1-sc-title"><div class="s1-sc-dot"></div>Informations</div>
+                  <div class="s1-info-row"><span class="s1-info-key">Entreprise</span><span class="s1-info-val">SAFO</span></div>
+                  <div class="s1-info-row"><span class="s1-info-key">Forme juridique</span><span class="s1-info-val">SARL</span></div>
+                  <div class="s1-info-row"><span class="s1-info-key">Localisation</span><span class="s1-info-val">Montreuil (93100)</span></div>
+                  <div class="s1-info-row"><span class="s1-info-key">Tuteur</span><span class="s1-info-val">Essid Samir</span></div>
+                  <div class="s1-info-row"><span class="s1-info-key">Période</span><span class="s1-info-val">27 mai – 24 juin</span></div>
+                  <div class="s1-info-row"><span class="s1-info-key">Durée</span><span class="s1-info-val">6 semaines</span></div>
+                  <div class="s1-info-row"><span class="s1-info-key">Secteur</span><span class="s1-info-val">Fibre optique</span></div>
+                  <div class="s1-info-row"><span class="s1-info-key">Année BTS</span><span class="s1-info-val">1re année</span></div>
+                </div>
+
+                <!-- Compétences -->
+                <div class="s1-sc">
+                  <div class="s1-sc-title"><div class="s1-sc-dot"></div>Compétences développées</div>
+                  <div class="s1-sk">
+                    <label><span>Fibre optique / maintenance</span><span>75%</span></label>
+                    <div class="s1-sk-track"><div class="s1-sk-fill" style="width:75%"></div></div>
                   </div>
-                  <div class="s1-info-list">
-                    <div class="s1-info-row">
-                      <span class="s1-info-key">Entreprise</span>
-                      <span class="s1-info-val">SAFO</span>
-                    </div>
-                    <div class="s1-info-row">
-                      <span class="s1-info-key">Localisation</span>
-                      <span class="s1-info-val">Montreuil (93100)</span>
-                    </div>
-                    <div class="s1-info-row">
-                      <span class="s1-info-key">Durée</span>
-                      <span class="s1-info-val">6 semaines</span>
-                    </div>
-                    <div class="s1-info-row">
-                      <span class="s1-info-key">Année</span>
-                      <span class="s1-info-val">BTS 1re année</span>
-                    </div>
-                    <div class="s1-info-row">
-                      <span class="s1-info-key">Domaine</span>
-                      <span class="s1-info-val">Fibre optique / Réseaux</span>
-                    </div>
+                  <div class="s1-sk">
+                    <label><span>Documentation technique</span><span>85%</span></label>
+                    <div class="s1-sk-track"><div class="s1-sk-fill" style="width:85%"></div></div>
+                  </div>
+                  <div class="s1-sk">
+                    <label><span>Diagnostic réseau</span><span>70%</span></label>
+                    <div class="s1-sk-track"><div class="s1-sk-fill" style="width:70%"></div></div>
+                  </div>
+                  <div class="s1-sk">
+                    <label><span>Travail en équipe</span><span>90%</span></label>
+                    <div class="s1-sk-track"><div class="s1-sk-fill" style="width:90%"></div></div>
+                  </div>
+                  <div class="s1-sk">
+                    <label><span>Conformité RGPD (bases)</span><span>65%</span></label>
+                    <div class="s1-sk-track"><div class="s1-sk-fill" style="width:65%"></div></div>
+                  </div>
+                  <div class="s1-sk">
+                    <label><span>Autonomie terrain</span><span>72%</span></label>
+                    <div class="s1-sk-track"><div class="s1-sk-fill" style="width:72%"></div></div>
                   </div>
                 </div>
 
-                <!-- Compétences acquises -->
-                <div class="s1-sidebar-card">
-                  <div class="s1-sidebar-title">
-                    <div class="s1-sidebar-title-dot"></div>
-                    Compétences acquises
-                  </div>
-                  <div class="s1-skills-progress">
-                    <div class="s1-skill-row">
-                      <label><span>Diagnostic réseau</span><span>80%</span></label>
-                      <div class="s1-skill-bar"><div class="s1-skill-bar-fill" style="width:80%"></div></div>
-                    </div>
-                    <div class="s1-skill-row">
-                      <label><span>Documentation technique</span><span>85%</span></label>
-                      <div class="s1-skill-bar"><div class="s1-skill-bar-fill" style="width:85%"></div></div>
-                    </div>
-                    <div class="s1-skill-row">
-                      <label><span>Fibre optique</span><span>70%</span></label>
-                      <div class="s1-skill-bar"><div class="s1-skill-bar-fill" style="width:70%"></div></div>
-                    </div>
-                    <div class="s1-skill-row">
-                      <label><span>Travail en équipe</span><span>90%</span></label>
-                      <div class="s1-skill-bar"><div class="s1-skill-bar-fill" style="width:90%"></div></div>
-                    </div>
-                    <div class="s1-skill-row">
-                      <label><span>Autonomie terrain</span><span>75%</span></label>
-                      <div class="s1-skill-bar"><div class="s1-skill-bar-fill" style="width:75%"></div></div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Mots-clés -->
-                <div class="s1-sidebar-card">
-                  <div class="s1-sidebar-title">
-                    <div class="s1-sidebar-title-dot"></div>
-                    Technologies & outils
-                  </div>
-                  <div class="s1-skills">
-                    <span class="s1-skill">Fibre optique</span>
-                    <span class="s1-skill">Infrastructure réseau</span>
-                    <span class="s1-skill">Maintenance préventive</span>
-                    <span class="s1-skill">Rapport d'intervention</span>
-                    <span class="s1-skill">Diagnostic terrain</span>
-                    <span class="s1-skill">Documentation</span>
+                <!-- Tags -->
+                <div class="s1-sc">
+                  <div class="s1-sc-title"><div class="s1-sc-dot"></div>Technologies & outils</div>
+                  <div class="s1-tags">
+                    <span class="s1-tag">Fibre optique</span>
+                    <span class="s1-tag">Infrastructure réseau</span>
+                    <span class="s1-tag">Windows Server 2016</span>
+                    <span class="s1-tag">Routeurs Cisco</span>
+                    <span class="s1-tag">Maintenance préventive</span>
+                    <span class="s1-tag">Rapport d'intervention</span>
+                    <span class="s1-tag">RGPD</span>
+                    <span class="s1-tag">Documentation</span>
+                    <span class="s1-tag">Inventaire parc info</span>
                   </div>
                 </div>
 
@@ -927,7 +958,7 @@
     </div>
   </main>
 
-  <footer id="footer" class="ct-footer" data-id="type-1" itemscope="" itemtype="https://schema.org/WPFooter">
+  <footer id="footer" class="ct-footer" data-id="type-1" itemscope itemtype="https://schema.org/WPFooter">
     <div data-row="bottom"><div class="ct-container"><div data-column="copyright">
       <div class="ct-footer-copyright" data-id="copyright"><p>Copyright © 2025 - AOUIZIR Chahine.</p></div>
     </div></div></div>
@@ -935,7 +966,9 @@
 
 </div>
 
-<span aria-hidden="true" id="to_top_scrollup" class="dashicons dashicons-arrow-up-alt2"><span class="screen-reader-text">Défiler vers le haut</span></span>
+<span aria-hidden="true" id="to_top_scrollup" class="dashicons dashicons-arrow-up-alt2">
+  <span class="screen-reader-text">Défiler vers le haut</span>
+</span>
 
 <script src="../wp-includes/js/jquery/jquery.minf43b.js?ver=3.7.1" id="jquery-core-js"></script>
 <script src="../wp-includes/js/jquery/jquery-migrate.min5589.js?ver=3.4.1" id="jquery-migrate-js"></script>
