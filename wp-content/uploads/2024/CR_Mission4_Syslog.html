@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Mission 4 — Centralisation des journaux Syslog — CRASH</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  @media print {
+    body { margin: 0; background: white; padding: 0; }
+    .page { page-break-after: always; page-break-inside: avoid; box-shadow: none; margin: 0; }
+    .page:last-child { page-break-after: auto; }
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #e5e7eb; padding: 20px; font-size: 14px; color: #334155;
+  }
+  .page {
+    width: 210mm; min-height: 297mm; background: white;
+    margin: 0 auto 20px;
+    display: flex; flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15); overflow: hidden;
+  }
+  /* HEADER */
+  .pg-header {
+    background: #0a1628; padding: 10px 20px;
+    display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+  }
+  .pg-header-left  { font-size: 9px; font-weight: 700; color: white; letter-spacing: .04em; }
+  .pg-header-right { font-size: 8px; color: #94a3b8; }
+  .pg-header-accent { height: 3px; background: linear-gradient(90deg, #16a34a, #22d3ee); }
+  .pg-body {
+    flex: 1; padding: 18px 22px 14px;
+    display: flex; flex-direction: column; gap: 11px;
+  }
+  .pg-footer {
+    background: #f1f5f9; border-top: 1px solid #e2e8f0;
+    padding: 6px 22px; text-align: center; font-size: 8px; color: #94a3b8; flex-shrink: 0;
+  }
+  /* COVER */
+  .cover-block {
+    background: #0a1628; border-radius: 12px;
+    padding: 26px 28px 20px; position: relative; overflow: hidden;
+  }
+  .cover-block::before {
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(22,163,74,0.22), transparent 70%);
+  }
+  .cover-block::after {
+    content: ''; position: absolute; bottom: -30px; left: 15%;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(34,211,238,0.12), transparent 70%);
+  }
+  .cover-tag   { font-size: 9px; font-weight: 700; color: #6ee7b7; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 10px; }
+  .cover-title { font-size: 26px; font-weight: 800; color: white; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .cover-title span { color: #6ee7b7; }
+  .cover-sub   { font-size: 10px; color: #64748b; margin-bottom: 16px; }
+  .cover-meta  { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .cover-meta .lbl { font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+  .cover-meta .val { font-size: 11px; font-weight: 700; color: white; }
+  /* PALETTE */
+  :root {
+    --grn:  #16a34a; --grnlt: #f0fdf4;
+    --teal: #0d9488; --tellt: #f0fdfa;
+    --cyan: #0891b2; --cyanlt:#ecfeff;
+    --blue: #2872fa; --bluelt:#eff6ff;
+    --amb:  #d97706; --amblt: #fffbeb;
+    --purp: #7c3aed; --purplt:#f5f3ff;
+    --red:  #dc2626; --redlt: #fef2f2;
+  }
+  /* SECTIONS */
+  .sec { display: flex; align-items: center; gap: 10px; }
+  .sec-num {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: var(--grn); color: white;
+    font-size: 11px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .sec-num.teal { background: var(--teal); }
+  .sec-num.cyan { background: var(--cyan); }
+  .sec-num.blue { background: var(--blue); }
+  .sec-num.amb  { background: var(--amb); }
+  .sec-num.purp { background: var(--purp); }
+  .sec-num.red  { background: var(--red); }
+  .sec-title { font-size: 15px; font-weight: 800; color: #0f172a; }
+  .sec-line  { flex: 1; height: 2px; background: linear-gradient(90deg, var(--grn), transparent); border-radius: 1px; }
+  .sec-line.teal { background: linear-gradient(90deg, var(--teal), transparent); }
+  .sec-line.cyan { background: linear-gradient(90deg, var(--cyan), transparent); }
+  .sec-line.blue { background: linear-gradient(90deg, var(--blue), transparent); }
+  .sec-line.amb  { background: linear-gradient(90deg, var(--amb), transparent); }
+  .sec-line.purp { background: linear-gradient(90deg, var(--purp), transparent); }
+  /* THEORY */
+  .theory {
+    background: var(--amblt); border: 1px solid var(--amb);
+    border-left: 4px solid var(--amb); border-radius: 8px; padding: 11px 14px;
+  }
+  .theory.grn  { background: var(--grnlt);  border-color: var(--grn);  border-left-color: var(--grn); }
+  .theory.teal { background: var(--tellt);  border-color: var(--teal); border-left-color: var(--teal); }
+  .theory.cyan { background: var(--cyanlt); border-color: var(--cyan); border-left-color: var(--cyan); }
+  .theory.blue { background: var(--bluelt); border-color: var(--blue); border-left-color: var(--blue); }
+  .theory.purp { background: var(--purplt); border-color: var(--purp); border-left-color: var(--purp); }
+  .theory-title { font-size: 10px; font-weight: 800; color: var(--amb); margin-bottom: 6px; }
+  .theory.grn  .theory-title { color: var(--grn); }
+  .theory.teal .theory-title { color: var(--teal); }
+  .theory.cyan .theory-title { color: var(--cyan); }
+  .theory.blue .theory-title { color: var(--blue); }
+  .theory.purp .theory-title { color: var(--purp); }
+  .theory p { font-size: 10px; color: #475569; line-height: 1.65; margin-bottom: 3px; }
+  .theory p:last-child { margin-bottom: 0; }
+  /* FIGURE LABEL */
+  .fig-label {
+    display: inline-flex; align-items: center;
+    background: var(--grn); color: white;
+    font-size: 9px; font-weight: 700;
+    padding: 4px 12px; border-radius: 6px; margin-bottom: 4px;
+  }
+  .fig-label.teal { background: var(--teal); }
+  .fig-label.cyan { background: var(--cyan); }
+  .fig-label.blue { background: var(--blue); }
+  .fig-label.amb  { background: var(--amb); }
+  .fig-label.purp { background: var(--purp); }
+  /* CODE */
+  .code-wrap { position: relative; }
+  .code-badge { position: absolute; top: 6px; right: 10px; font-size: 7.5px; font-weight: 700; color: #64748b; font-family: monospace; }
+  pre {
+    background: #0f172a; border-radius: 8px;
+    padding: 13px 13px 9px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 9px; line-height: 1.65; overflow: hidden;
+  }
+  .kw  { color: #a78bfa; font-weight: bold; }
+  .val { color: #86efac; }
+  .cmt { color: #64748b; font-style: italic; }
+  .ti  { color: #38bdf8; font-weight: bold; }
+  .tx  { color: #e2e8f0; }
+  .ok  { color: #86efac; font-weight: bold; }
+  .err { color: #fca5a5; }
+  .cy  { color: #67e8f9; font-weight: bold; }
+  .grn { color: #6ee7b7; font-weight: bold; }
+  /* EXPLICATION */
+  .expl {
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-left: 4px solid var(--grn); border-radius: 8px;
+    padding: 11px 14px; display: flex; flex-direction: column; gap: 7px;
+  }
+  .expl.teal { border-left-color: var(--teal); }
+  .expl.cyan { border-left-color: var(--cyan); }
+  .expl.blue { border-left-color: var(--blue); }
+  .expl.amb  { border-left-color: var(--amb); }
+  .expl.purp { border-left-color: var(--purp); }
+  .expl-label     { font-size: 9px; font-weight: 800; }
+  .expl-label.cmd { color: var(--grn); }
+  .expl-label.cmd.teal { color: var(--teal); }
+  .expl-label.cmd.cyan { color: var(--cyan); }
+  .expl-label.cmd.blue { color: var(--blue); }
+  .expl-label.cmd.amb  { color: var(--amb); }
+  .expl-label.why { color: var(--amb); }
+  .expl-label.res { color: var(--grn); }
+  .expl-cmd  { font-family: monospace; font-size: 9px; font-weight: 700; color: #0f172a; background: #e2e8f0; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-top: 2px; }
+  .expl-text { font-size: 9.5px; color: #475569; line-height: 1.6; }
+  .expl-row  { display: flex; flex-direction: column; gap: 2px; }
+  /* ENV GRID */
+  .env-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .env-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 10px; }
+  .env-lbl  { font-size: 8px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+  .env-val  { font-size: 10px; font-weight: 700; color: #0f172a; }
+  /* ARCHITECTURE SCHEMA */
+  .archi {
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 10px; padding: 16px 18px;
+    display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
+  }
+  .archi-block {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    text-align: center; min-width: 85px;
+  }
+  .archi-ico {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .archi-ico.grn  { background: var(--grnlt); }
+  .archi-ico.teal { background: var(--tellt); }
+  .archi-ico.cyan { background: var(--cyanlt); }
+  .archi-ico.blue { background: var(--bluelt); }
+  .archi-ico.amb  { background: var(--amblt); }
+  .archi-name { font-size: 9px; font-weight: 800; color: #0f172a; }
+  .archi-sub  { font-size: 8px; color: #64748b; font-family: monospace; }
+  .archi-arrow { font-size: 18px; color: #cbd5e1; }
+  /* SEVERITY LEVELS */
+  .severity-table { width: 100%; border-collapse: collapse; font-size: 9px; }
+  .severity-table thead tr { background: var(--grn); color: white; }
+  .severity-table thead th { padding: 6px 8px; text-align: left; font-weight: 700; }
+  .severity-table tbody tr:nth-child(even) { background: #f8fafc; }
+  .severity-table tbody td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+  .sev-badge {
+    display: inline-block; font-size: 8px; font-weight: 700;
+    padding: 2px 7px; border-radius: 99px; color: white; white-space: nowrap;
+  }
+  .sev-0 { background: #7f1d1d; }
+  .sev-1 { background: #991b1b; }
+  .sev-2 { background: var(--red); }
+  .sev-3 { background: var(--amb); }
+  .sev-4 { background: #ca8a04; }
+  .sev-5 { background: var(--grn); }
+  .sev-6 { background: var(--teal); }
+  .sev-7 { background: var(--cyan); }
+  .sev-selected { background: #fef9c3; border: 2px solid #eab308; }
+  /* CMD LIST */
+  .cmd-list { display: flex; flex-direction: column; gap: 7px; }
+  .cmd-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 8px 12px; background: #f8fafc;
+    border: 1px solid #e2e8f0; border-radius: 7px;
+  }
+  .cmd-item-code { font-family: monospace; font-size: 8.5px; font-weight: 700; color: var(--grn); background: var(--grnlt); padding: 2px 7px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+  .cmd-item-code.teal { color: var(--teal); background: var(--tellt); }
+  .cmd-item-code.cyan { color: var(--cyan); background: var(--cyanlt); }
+  .cmd-item-code.amb  { color: var(--amb);  background: var(--amblt); }
+  .cmd-item-desc { font-size: 9px; color: #475569; line-height: 1.55; }
+  /* EQUIP TABS */
+  .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .equip-block { border-radius: 8px; padding: 12px 14px; border: 1px solid; }
+  .equip-block.routeur { background: var(--bluelt); border-color: #bfdbfe; }
+  .equip-block.switch  { background: var(--tellt);  border-color: #99f6e4; }
+  .equip-title { font-size: 10px; font-weight: 800; margin-bottom: 6px; }
+  .equip-block.routeur .equip-title { color: var(--blue); }
+  .equip-block.switch  .equip-title { color: var(--teal); }
+  .equip-cmd { font-family: monospace; font-size: 8.5px; color: #0f172a; margin-bottom: 3px; }
+  /* TABLE RECAP */
+  table { width: 100%; border-collapse: collapse; font-size: 9px; }
+  thead tr { background: var(--grn); color: white; }
+  thead th  { padding: 7px 8px; text-align: left; font-weight: 700; }
+  tbody tr:nth-child(even) { background: #f8fafc; }
+  tbody td  { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: top; }
+  tbody td:first-child { font-weight: 800; color: var(--grn); }
+  .td-ok  { color: var(--grn); font-weight: 700; }
+  /* RESULT */
+  .result-box { background: var(--grnlt); border: 2px solid var(--grn); border-radius: 10px; padding: 14px; text-align: center; }
+  .result-box .r-title { font-size: 13px; font-weight: 800; color: var(--grn); margin-bottom: 6px; }
+  .result-box p { font-size: 9.5px; color: #475569; line-height: 1.6; }
+  .result-box .r-sub { font-size: 9.5px; font-weight: 700; color: var(--teal); margin-top: 6px; }
+  /* WARN */
+  .warn { background: var(--amblt); border: 1px solid var(--amb); border-left: 4px solid var(--amb); border-radius: 8px; padding: 10px 14px; }
+  .warn-title { font-size: 10px; font-weight: 800; color: var(--amb); margin-bottom: 4px; }
+  .warn p { font-size: 9.5px; color: #475569; line-height: 1.55; }
+  /* TEST GRID */
+  .tests-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .test-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 7px; border: 1px solid; }
+  .test-item.pass { background: var(--grnlt); border-color: #bbf7d0; }
+  .test-ico  { font-size: 15px; flex-shrink: 0; }
+  .test-text { font-size: 9px; color: #0f172a; line-height: 1.5; }
+  .test-text strong { display: block; font-weight: 700; }
+  .intro-text { font-size: 10px; color: #475569; line-height: 1.7; }
+  code { font-family: monospace; font-size: 9px; background: #f1f5f9; padding: 1px 5px; border-radius: 3px; color: #0f172a; }
+</style>
+</head>
+<body>
+
+<!-- ════════ PAGE 1 — COVER + CONTEXTE + ARCHITECTURE ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 4 — CENTRALISATION DES JOURNAUX SYSLOG — CRASH</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <div class="cover-block">
+      <div class="cover-tag">Projet CRASH — BTS SIO 2e Année — Compte Rendu Professionnel</div>
+      <div class="cover-title">Mission 4 — <span>Centralisation Syslog</span><br>Supervision du réseau CRASH</div>
+      <div class="cover-sub">Journaux centralisés sur Ubuntu Server (rsyslog + LogAnalyzer) — 4 équipements Cisco configurés</div>
+      <div class="cover-meta">
+        <div><div class="lbl">Étudiant</div><div class="val">Aouizir Chahine</div></div>
+        <div><div class="lbl">Serveur Syslog</div><div class="val">172.17.10.20</div></div>
+        <div><div class="lbl">Service</div><div class="val">rsyslog + LogAnalyzer</div></div>
+        <div><div class="lbl">Équipements</div><div class="val">4 Cisco (Routeur + 3 Sw)</div></div>
+      </div>
+    </div>
+
+    <!-- Section 1 — Contexte -->
+    <div class="sec"><div class="sec-num">1</div><div class="sec-title">Contexte et objectif de la mission</div><div class="sec-line"></div></div>
+
+    <div class="theory grn">
+      <div class="theory-title">Pourquoi centraliser les journaux Syslog ?</div>
+      <p>Sans centralisation, les journaux sont <strong>stockés localement sur chaque équipement</strong> — mémoire limitée, perte en cas de redémarrage, consultation équipement par équipement.</p>
+      <p>Avec un serveur Syslog central, <strong>tous les événements réseau</strong> (erreurs, connexions, changements d'état) sont regroupés en un seul endroit, visibles en temps réel.</p>
+      <p>Objectifs : faciliter le <strong>diagnostic des incidents</strong>, assurer la <strong>traçabilité</strong> et permettre à tout administrateur de reprendre l'exploitation en cas d'absence.</p>
+    </div>
+
+    <!-- Section 2 — Architecture -->
+    <div class="sec"><div class="sec-num teal">2</div><div class="sec-title">Architecture de la solution</div><div class="sec-line teal"></div></div>
+
+    <div class="archi">
+      <div class="archi-block">
+        <div class="archi-ico blue">🔀</div>
+        <div class="archi-name">Routeur CRASH</div>
+        <div class="archi-sub">Cisco IOS<br>G0/0 → source</div>
+      </div>
+      <div class="archi-arrow">→</div>
+      <div class="archi-block">
+        <div class="archi-ico teal">🔀</div>
+        <div class="archi-name">SwitchIntra</div>
+        <div class="archi-sub">Cisco IOS<br>VLAN 1 → source</div>
+      </div>
+      <div class="archi-arrow">→</div>
+      <div class="archi-block">
+        <div class="archi-ico teal">🔀</div>
+        <div class="archi-name">SwitchLigues</div>
+        <div class="archi-sub">Cisco IOS<br>VLAN 1 → source</div>
+      </div>
+      <div class="archi-arrow">→</div>
+      <div class="archi-block">
+        <div class="archi-ico teal">🔀</div>
+        <div class="archi-name">SwitchDMZ</div>
+        <div class="archi-sub">Cisco IOS<br>VLAN 1 → source</div>
+      </div>
+      <div class="archi-arrow">→</div>
+      <div class="archi-block">
+        <div class="archi-ico grn">🖥️</div>
+        <div class="archi-name">Serveur Syslog</div>
+        <div class="archi-sub">Ubuntu Server<br>172.17.10.20</div>
+      </div>
+    </div>
+
+    <div class="env-grid">
+      <div class="env-item"><div class="env-lbl">Serveur OS</div><div class="env-val">Ubuntu Server</div></div>
+      <div class="env-item"><div class="env-lbl">Service Syslog</div><div class="env-val">rsyslog</div></div>
+      <div class="env-item"><div class="env-lbl">Interface Web</div><div class="env-val">LogAnalyzer</div></div>
+      <div class="env-item"><div class="env-lbl">IP serveur</div><div class="env-val">172.17.10.20</div></div>
+      <div class="env-item"><div class="env-lbl">Accès console</div><div class="env-val">PuTTY — Serial COM1 9600</div></div>
+      <div class="env-item"><div class="env-lbl">URL LogAnalyzer</div><div class="env-val">http://localhost/loganalyzer</div></div>
+    </div>
+
+    <!-- Section 3 — Principe Syslog -->
+    <div class="sec"><div class="sec-num cyan">3</div><div class="sec-title">Principe et niveaux de sévérité Syslog</div><div class="sec-line cyan"></div></div>
+
+    <div class="theory cyan">
+      <div class="theory-title">Comment fonctionne Syslog ?</div>
+      <p>Syslog est un protocole standard (UDP port 514) qui permet aux équipements d'envoyer leurs messages de journalisation vers un serveur central.</p>
+      <p>Chaque message a un <strong>niveau de sévérité</strong> de 0 (urgence maximale) à 7 (débogage). La commande <code>logging trap</code> définit le niveau minimum à envoyer.</p>
+    </div>
+
+    <table class="severity-table">
+      <thead><tr><th>Niveau</th><th>Nom</th><th>Description</th><th>Utilisé ici</th></tr></thead>
+      <tbody>
+        <tr><td><span class="sev-badge sev-0">0</span></td><td>Emergencies</td><td>Système inutilisable</td><td>—</td></tr>
+        <tr><td><span class="sev-badge sev-1">1</span></td><td>Alerts</td><td>Action immédiate requise</td><td>—</td></tr>
+        <tr><td><span class="sev-badge sev-2">2</span></td><td>Critical</td><td>Conditions critiques</td><td>—</td></tr>
+        <tr><td><span class="sev-badge sev-3">3</span></td><td>Errors</td><td>Erreurs (lien down, etc.)</td><td>—</td></tr>
+        <tr><td><span class="sev-badge sev-4">4</span></td><td>Warnings</td><td>Avertissements</td><td>—</td></tr>
+        <tr class="sev-selected"><td><span class="sev-badge sev-5">5</span></td><td><strong>Informational</strong></td><td>Messages d'information — niveau choisi dans ce TP</td><td>✅ logging trap informational</td></tr>
+        <tr><td><span class="sev-badge sev-6">6</span></td><td>Notifications</td><td>Conditions normales mais significatives</td><td>—</td></tr>
+        <tr><td><span class="sev-badge sev-7">7</span></td><td>Debugging</td><td>Messages de débogage (très verbeux)</td><td>—</td></tr>
+      </tbody>
+    </table>
+
+    <p class="intro-text" style="margin-top:4px;">Le niveau <strong>informational (5)</strong> capture les niveaux 0 à 5 — suffisant pour surveiller les événements importants (changements d'état, redémarrages, connexions) sans être trop verbeux comme le niveau debug.</p>
+
+  </div>
+  <div class="pg-footer">Compte rendu Mission 4 — Syslog — Configuration sur matériel Cisco réel — Page 1 / 3</div>
+</div>
+
+<!-- ════════ PAGE 2 — CONFIGURATION CISCO ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 4 — CENTRALISATION DES JOURNAUX SYSLOG — CRASH</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <!-- Section 4 — Configuration Cisco -->
+    <div class="sec"><div class="sec-num">4</div><div class="sec-title">Configuration Syslog sur les équipements Cisco</div><div class="sec-line"></div></div>
+
+    <div class="theory grn">
+      <div class="theory-title">Même configuration sur les 4 équipements (avec une différence pour l'interface source)</div>
+      <p>Toutes les commandes sont identiques sur le routeur et les 3 switches — seule la commande <code>logging source-interface</code> diffère :</p>
+      <p>Routeur : <strong>g0/0</strong> (interface physique LAN) | Switches : <strong>vlan 1</strong> (interface de management).</p>
+    </div>
+
+    <div>
+      <div class="fig-label">Capture 1 — Configuration Syslog complète sur chaque équipement Cisco</div>
+      <div class="code-wrap">
+        <div class="code-badge">Équipements Cisco — Syslog</div>
+        <pre><span class="cmt">! Accès via PuTTY Serial COM1 9600 baud</span>
+<span class="tx">Switch> </span><span class="kw">enable</span>
+<span class="tx">Switch# </span><span class="kw">configure terminal</span>
+
+<span class="cmt">! 1. Horodatage précis des logs (avec millisecondes)</span>
+<span class="tx">Switch(config)# </span><span class="val">service timestamps log datetime msec</span>
+
+<span class="cmt">! 2. Déclarer l'adresse IP du serveur Syslog</span>
+<span class="tx">Switch(config)# </span><span class="val">logging host 172.17.10.20</span>
+
+<span class="cmt">! 3. Niveau de journalisation : informational (niveaux 0 à 5)</span>
+<span class="tx">Switch(config)# </span><span class="val">logging trap informational</span>
+
+<span class="cmt">! 4. Activer Syslog</span>
+<span class="tx">Switch(config)# </span><span class="kw">logging on</span>
+
+<span class="cmt">! 5. Buffer local de 64 Ko pour stocker les logs en mémoire</span>
+<span class="tx">Switch(config)# </span><span class="val">logging buffered 64000</span>
+
+<span class="cmt">! 6a. Interface source — SUR LE ROUTEUR uniquement :</span>
+<span class="tx">Router(config)# </span><span class="kw">logging source-interface g0/0</span>
+
+<span class="cmt">! 6b. Interface source — SUR LES SWITCHES uniquement :</span>
+<span class="tx">Switch(config)# </span><span class="kw">logging source-interface vlan 1</span>
+
+<span class="cmt">! 7. Désactiver les logs sur la console (évite les interruptions pendant les configs)</span>
+<span class="tx">Switch(config)# </span><span class="val">no logging console</span>
+
+<span class="tx">Switch(config)# exit</span>
+<span class="cy">Switch# write memory     ! Sauvegarder — CRUCIAL sur matériel réel</span></pre>
+      </div>
+    </div>
+
+    <!-- Explication commande par commande -->
+    <div class="cmd-list">
+      <div class="cmd-item">
+        <div class="cmd-item-code">service timestamps log datetime msec</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Ajoute la date et l'heure précise (avec ms) à chaque message de log. Sans ça, les logs arrivent sans timestamp → impossible de corréler les événements entre équipements.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-item-code">logging host 172.17.10.20</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Désigne l'adresse IP du serveur Syslog vers lequel envoyer les logs. Les messages sont transmis en UDP sur le port 514 — le serveur rsyslog écoute sur ce port.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-item-code">logging trap informational</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Définit le seuil de sévérité des messages envoyés au serveur distant. Le niveau 5 (informational) capture tous les événements importants (liaison down, connexion SSH, redémarrage) sans inonder le serveur de messages debug.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-item-code cyan">logging source-interface g0/0 / vlan 1</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Définit l'interface dont l'IP sera utilisée comme adresse source des paquets Syslog. Permet au serveur de savoir quel équipement a envoyé le message. Routeur → G0/0 (IP LAN). Switch → VLAN 1 (IP de management).</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-item-code">logging buffered 64000</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Stocke localement les 64 Ko de logs les plus récents en mémoire RAM de l'équipement. Utile pour consulter les logs en cas de perte de connectivité avec le serveur Syslog.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-item-code amb">no logging console</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Désactive l'affichage des logs sur la console. Sans ça, les messages de log interrompent les commandes tapées en console — très perturbant lors des configurations via PuTTY.</div>
+      </div>
+    </div>
+
+    <div class="expl">
+      <div class="expl-row"><div class="expl-label cmd">⌨ Différence Routeur vs Switch — Interface source</div></div>
+      <div class="equip-grid" style="margin-top:6px;">
+        <div class="equip-block routeur">
+          <div class="equip-title">🔀 Routeur CRASH</div>
+          <div class="equip-cmd">logging source-interface <strong>g0/0</strong></div>
+          <div style="font-size:9px;color:#475569;margin-top:4px;">Le routeur envoie les logs depuis son interface LAN physique G0/0 — c'est cette IP qui apparaîtra comme source dans LogAnalyzer.</div>
+        </div>
+        <div class="equip-block switch">
+          <div class="equip-title">🔀 SwitchIntra / SwitchLigues / SwitchDMZ</div>
+          <div class="equip-cmd">logging source-interface <strong>vlan 1</strong></div>
+          <div style="font-size:9px;color:#475569;margin-top:4px;">Les switches n'ont pas d'interface physique avec IP — ils utilisent l'interface logique VLAN 1 (interface de management) comme source des logs.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu Mission 4 — Syslog — Configuration sur matériel Cisco réel — Page 2 / 3</div>
+</div>
+
+<!-- ════════ PAGE 3 — VLAN 1 + TESTS + VÉRIFICATION + CONCLUSION ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 4 — CENTRALISATION DES JOURNAUX SYSLOG — CRASH</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <!-- Section 5 — Config VLAN 1 switch -->
+    <div class="sec"><div class="sec-num teal">5</div><div class="sec-title">Configuration VLAN 1 — IP de management des switches</div><div class="sec-line teal"></div></div>
+
+    <div class="theory teal">
+      <div class="theory-title">Pourquoi configurer une IP sur VLAN 1 des switches ?</div>
+      <p>Un switch sans IP ne peut pas <strong>envoyer de paquets UDP Syslog</strong> vers le serveur — il n'a pas d'adresse source.</p>
+      <p>L'interface VLAN 1 est l'interface de management standard sur les switches Cisco — elle reçoit une IP pour permettre la communication IP du switch lui-même.</p>
+    </div>
+
+    <div>
+      <div class="fig-label teal">Capture 2 — Configuration IP sur VLAN 1 et activation</div>
+      <div class="code-wrap">
+        <div class="code-badge">Switch — Interface management</div>
+        <pre><span class="cmt">! Configurer l'IP de management sur le VLAN 1</span>
+<span class="tx">Switch(config)# </span><span class="kw">interface vlan 1</span>
+<span class="tx">Switch(config-if)# </span><span class="val">ip address 172.17.10.X 255.255.0.0</span>
+<span class="cmt">! Remplacer X par l'IP attribuée à chaque switch :</span>
+<span class="cmt">! SwitchIntra   → 172.17.10.21</span>
+<span class="cmt">! SwitchLigues  → 172.17.10.22</span>
+<span class="cmt">! SwitchDMZ     → 172.17.10.23</span>
+
+<span class="cmt">! Activer l'interface VLAN 1 (désactivée par défaut)</span>
+<span class="tx">Switch(config-if)# </span><span class="kw">no shutdown</span>
+<span class="tx">Switch(config-if)# exit</span>
+
+<span class="cmt">! Définir la passerelle par défaut pour joindre le serveur Syslog</span>
+<span class="tx">Switch(config)# </span><span class="val">ip default-gateway 172.17.0.1</span>
+
+<span class="cy">Switch# write memory</span>
+
+<span class="cmt">! Tester la connectivité vers le serveur Syslog</span>
+<span class="tx">Switch# </span><span class="kw">ping 172.17.10.20</span>
+<span class="ok">!!!!!  ← 5 points d'exclamation = ping réussi → switch joignable</span></pre>
+      </div>
+    </div>
+
+    <div class="expl teal">
+      <div class="expl-row"><div class="expl-label cmd teal">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">interface vlan 1  /  ip address  /  no shutdown  /  ip default-gateway</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi ip default-gateway sur un switch ?</div><div class="expl-text">Un switch de couche 2 ne fait pas de routage — il ne sait pas comment atteindre des réseaux différents. <code>ip default-gateway</code> lui dit "pour tout ce qui n'est pas ton réseau local, envoie au routeur". Sans ça, le switch peut pinger des machines du même VLAN mais pas le serveur Syslog s'il est sur un autre sous-réseau.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Le switch a une IP de management — il peut envoyer des paquets UDP Syslog vers 172.17.10.20. Le ping vers le serveur doit retourner 5 <code>!</code>.</div></div>
+    </div>
+
+    <!-- Section 6 — Tests et vérification -->
+    <div class="sec"><div class="sec-num cyan">6</div><div class="sec-title">Tests de fonctionnement et vérification</div><div class="sec-line cyan"></div></div>
+
+    <div class="tests-grid">
+      <div class="test-item pass">
+        <div class="test-ico">🔌</div>
+        <div class="test-text"><strong>Test : shutdown / no shutdown sur G0/0</strong>Simule un changement d'état d'interface → génère un log LINEPROTO → visible dans LogAnalyzer</div>
+      </div>
+      <div class="test-item pass">
+        <div class="test-ico">📤</div>
+        <div class="test-text"><strong>Test : message manuel</strong>Commande <code>send log TEST SYSLOG CRASH</code> → envoie un log de test directement vers le serveur</div>
+      </div>
+      <div class="test-item pass">
+        <div class="test-ico">📋</div>
+        <div class="test-text"><strong>Vérification locale</strong>Commande <code>show logging</code> → liste les logs stockés en buffer local sur l'équipement</div>
+      </div>
+      <div class="test-item pass">
+        <div class="test-ico">🌐</div>
+        <div class="test-text"><strong>Vérification LogAnalyzer</strong>http://localhost/loganalyzer → interface web avec tous les logs centralisés, filtrables par source</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="fig-label cyan">Capture — Vérification avec show logging</div>
+      <div class="code-wrap">
+        <div class="code-badge">Commande de vérification</div>
+        <pre><span class="cmt">! Vérifier la configuration Syslog et les logs stockés en local</span>
+<span class="tx">Switch# </span><span class="kw">show logging</span>
+
+<span class="cmt">! Résultat attendu dans la capture :</span>
+<span class="ti">Syslog logging: enabled (0 messages dropped, 0 flushes, 0 overruns)</span>
+<span class="ti">    Console logging: disabled</span>
+<span class="ti">    Monitor logging: level debugging, 0 messages logged</span>
+<span class="ti">    Buffer logging:  level debugging, 42 messages logged</span>
+<span class="ok">    Trap logging:    level informational, 42 message lines logged</span>
+<span class="ok">        Logging to 172.17.10.20  (udp port 514, audit disabled, link up)</span>
+<span class="ok">        42 message lines logged</span>
+
+<span class="cmt">! Extrait des logs dans le buffer :</span>
+<span class="grn">*May  4 09:15:32.123: %LINK-3-UPDOWN: Interface GigabitEthernet0/0, changed state to down</span>
+<span class="grn">*May  4 09:15:35.456: %LINK-3-UPDOWN: Interface GigabitEthernet0/0, changed state to up</span>
+<span class="grn">*May  4 09:16:00.789: %SYS-5-LOG_CONFIG_CHANGE: Buffer logging: level debugging, xml disabled</span></pre>
+      </div>
+    </div>
+
+    <div class="expl cyan">
+      <div class="expl-row"><div class="expl-label cmd cyan">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">show logging  /  send log &lt;message&gt;  /  shutdown + no shutdown</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Comment lire le résultat de show logging ?</div><div class="expl-text"><code>Trap logging: level informational</code> → confirme que le niveau informational est actif.<br><code>Logging to 172.17.10.20 (udp port 514, link up)</code> → le serveur est joignable et reçoit les logs.<br><code>42 message lines logged</code> → nombre de messages envoyés depuis la dernière réinitialisation.<br>Les logs commençant par <code>*May 4</code> prouvent que l'horodatage fonctionne correctement.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Les logs apparaissent dans LogAnalyzer avec l'IP source de l'équipement, la date, l'heure et le message d'événement.</div></div>
+    </div>
+
+    <!-- Tableau récap -->
+    <div class="sec" style="margin-top:4px;"><div class="sec-num">7</div><div class="sec-title">Récapitulatif — Configuration Syslog complète</div><div class="sec-line"></div></div>
+
+    <table>
+      <thead><tr><th>#</th><th>Commande</th><th>Rôle</th><th>Équipement</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>service timestamps log datetime msec</td><td>Horodater les logs avec précision</td><td>Tous</td></tr>
+        <tr><td>2</td><td>logging host 172.17.10.20</td><td>Déclarer le serveur Syslog distant</td><td>Tous</td></tr>
+        <tr><td>3</td><td>logging trap informational</td><td>Envoyer les niveaux 0 à 5</td><td>Tous</td></tr>
+        <tr><td>4</td><td>logging on</td><td>Activer l'envoi Syslog</td><td>Tous</td></tr>
+        <tr><td>5</td><td>logging buffered 64000</td><td>Stocker les logs localement (64 Ko)</td><td>Tous</td></tr>
+        <tr><td>6</td><td>logging source-interface g0/0</td><td>IP source des logs = interface LAN</td><td>Routeur uniquement</td></tr>
+        <tr><td>7</td><td>logging source-interface vlan 1</td><td>IP source des logs = IP management</td><td>Switches uniquement</td></tr>
+        <tr><td>8</td><td>no logging console</td><td>Désactiver les logs en console</td><td>Tous</td></tr>
+        <tr><td>9</td><td>ip default-gateway 172.17.0.1</td><td>Passerelle pour joindre le serveur</td><td>Switches uniquement</td></tr>
+        <tr><td>10</td><td>show logging</td><td>Vérifier la config + les logs locaux</td><td>Tous</td></tr>
+      </tbody>
+    </table>
+
+    <div class="result-box">
+      <div class="r-title">✅ Résultat final — Supervision centralisée opérationnelle</div>
+      <p>Les 4 équipements Cisco (Routeur CRASH + 3 switches) envoient leurs journaux vers le serveur Ubuntu 172.17.10.20.<br>
+      Les événements sont visibles en temps réel dans LogAnalyzer avec horodatage, source et niveau de sévérité.<br>
+      Tout administrateur peut consulter l'historique des incidents sans accéder à chaque équipement individuellement.</p>
+      <div class="r-sub">📊 4 équipements supervisés · rsyslog UDP 514 · LogAnalyzer · Traçabilité complète</div>
+    </div>
+
+    <div class="warn">
+      <div class="warn-title">⚠️ Rappels importants</div>
+      <p><strong>write memory</strong> → obligatoire après chaque modification sur chaque équipement — la configuration est perdue au redémarrage sinon.</p>
+      <p><strong>NTP recommandé</strong> → pour une corrélation parfaite des logs entre équipements, configurer la même source NTP sur tous les équipements (<code>ntp server &lt;ip&gt;</code>).</p>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu Mission 4 — Syslog — Configuration sur matériel Cisco réel — Page 3 / 3</div>
+</div>
+
+</body>
+</html>

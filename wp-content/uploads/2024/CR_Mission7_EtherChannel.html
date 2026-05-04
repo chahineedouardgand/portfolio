@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Mission 7 — EtherChannel — Agrégation de liens CRASH</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @media print {
+    body { margin: 0; background: white; padding: 0; }
+    .page { page-break-after: always; page-break-inside: avoid; box-shadow: none; margin: 0; }
+    .page:last-child { page-break-after: auto; }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #e5e7eb;
+    padding: 20px;
+    font-size: 14px;
+    color: #334155;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    background: white;
+    margin: 0 auto 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+
+  /* ── HEADER ── */
+  .pg-header {
+    background: #0a1628;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .pg-header-left  { font-size: 9px; font-weight: 700; color: white; letter-spacing: .04em; }
+  .pg-header-right { font-size: 8px; color: #94a3b8; }
+  .pg-header-accent { height: 3px; background: linear-gradient(90deg, #d97706, #f59e0b); }
+
+  .pg-body {
+    flex: 1;
+    padding: 18px 22px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pg-footer {
+    background: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+    padding: 6px 22px;
+    text-align: center;
+    font-size: 8px;
+    color: #94a3b8;
+    flex-shrink: 0;
+  }
+
+  /* ── COVER ── */
+  .cover-block {
+    background: #0a1628;
+    border-radius: 12px;
+    padding: 26px 28px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover-block::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(217,119,6,0.25), transparent 70%);
+  }
+  .cover-block::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: 15%;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,158,11,0.12), transparent 70%);
+  }
+  .cover-tag   { font-size: 9px; font-weight: 700; color: #fcd34d; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 10px; }
+  .cover-title { font-size: 26px; font-weight: 800; color: white; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .cover-title span { color: #fcd34d; }
+  .cover-sub   { font-size: 10px; color: #64748b; margin-bottom: 16px; }
+  .cover-meta  { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .cover-meta .lbl { font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+  .cover-meta .val { font-size: 11px; font-weight: 700; color: white; }
+
+  /* ── PALETTE ── */
+  :root {
+    --amb:   #d97706;
+    --amblt: #fffbeb;
+    --oran:  #ea580c;
+    --oranlt:#fff7ed;
+    --teal:  #0d9488;
+    --teallt:#f0fdfa;
+    --green: #16a34a;
+    --grnlt: #f0fdf4;
+    --blue:  #2872fa;
+    --bluelt:#eff6ff;
+    --purp:  #7c3aed;
+    --purplt:#f5f3ff;
+  }
+
+  /* ── SECTIONS ── */
+  .sec { display: flex; align-items: center; gap: 10px; }
+  .sec-num {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: var(--amb); color: white;
+    font-size: 11px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .sec-num.oran  { background: var(--oran); }
+  .sec-num.teal  { background: var(--teal); }
+  .sec-num.green { background: var(--green); }
+  .sec-num.blue  { background: var(--blue); }
+  .sec-num.purp  { background: var(--purp); }
+  .sec-title { font-size: 15px; font-weight: 800; color: #0f172a; }
+  .sec-line  { flex: 1; height: 2px; background: linear-gradient(90deg, var(--amb), transparent); border-radius: 1px; }
+  .sec-line.oran  { background: linear-gradient(90deg, var(--oran), transparent); }
+  .sec-line.teal  { background: linear-gradient(90deg, var(--teal), transparent); }
+  .sec-line.green { background: linear-gradient(90deg, var(--green), transparent); }
+  .sec-line.blue  { background: linear-gradient(90deg, var(--blue), transparent); }
+  .sec-line.purp  { background: linear-gradient(90deg, var(--purp), transparent); }
+
+  /* ── THEORY ── */
+  .theory {
+    background: var(--amblt);
+    border: 1px solid var(--amb);
+    border-left: 4px solid var(--amb);
+    border-radius: 8px;
+    padding: 11px 14px;
+  }
+  .theory.teal  { background: var(--teallt); border-color: var(--teal); border-left-color: var(--teal); }
+  .theory.green { background: var(--grnlt);  border-color: var(--green); border-left-color: var(--green); }
+  .theory.blue  { background: var(--bluelt); border-color: var(--blue); border-left-color: var(--blue); }
+  .theory.oran  { background: var(--oranlt); border-color: var(--oran); border-left-color: var(--oran); }
+  .theory-title { font-size: 10px; font-weight: 800; color: var(--amb); margin-bottom: 6px; }
+  .theory.teal  .theory-title { color: var(--teal); }
+  .theory.green .theory-title { color: var(--green); }
+  .theory.blue  .theory-title { color: var(--blue); }
+  .theory.oran  .theory-title { color: var(--oran); }
+  .theory p { font-size: 10px; color: #475569; line-height: 1.65; margin-bottom: 3px; }
+  .theory p:last-child { margin-bottom: 0; }
+
+  /* ── FIGURE LABEL ── */
+  .fig-label {
+    display: inline-flex; align-items: center;
+    background: var(--amb); color: white;
+    font-size: 9px; font-weight: 700;
+    padding: 4px 12px; border-radius: 6px; margin-bottom: 4px;
+  }
+  .fig-label.oran  { background: var(--oran); }
+  .fig-label.teal  { background: var(--teal); }
+  .fig-label.green { background: var(--green); }
+  .fig-label.blue  { background: var(--blue); }
+  .fig-label.purp  { background: var(--purp); }
+
+  /* ── CODE ── */
+  .code-wrap { position: relative; }
+  .code-badge { position: absolute; top: 6px; right: 10px; font-size: 7.5px; font-weight: 700; color: #64748b; font-family: monospace; }
+  pre {
+    background: #0f172a;
+    border-radius: 8px;
+    padding: 13px 13px 9px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 9px;
+    line-height: 1.65;
+    overflow: hidden;
+  }
+  .kw   { color: #a78bfa; font-weight: bold; }
+  .val  { color: #86efac; }
+  .cmt  { color: #64748b; font-style: italic; }
+  .ti   { color: #38bdf8; font-weight: bold; }
+  .tx   { color: #e2e8f0; }
+  .ok   { color: #86efac; font-weight: bold; }
+  .err  { color: #fca5a5; }
+  .amb  { color: #fcd34d; font-weight: bold; }
+
+  /* ── EXPLICATION ── */
+  .expl {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid var(--amb);
+    border-radius: 8px;
+    padding: 11px 14px;
+    display: flex; flex-direction: column; gap: 7px;
+  }
+  .expl.teal  { border-left-color: var(--teal); }
+  .expl.green { border-left-color: var(--green); }
+  .expl.blue  { border-left-color: var(--blue); }
+  .expl.oran  { border-left-color: var(--oran); }
+  .expl-label     { font-size: 9px; font-weight: 800; }
+  .expl-label.cmd { color: var(--amb); }
+  .expl-label.cmd.teal  { color: var(--teal); }
+  .expl-label.cmd.green { color: var(--green); }
+  .expl-label.cmd.blue  { color: var(--blue); }
+  .expl-label.cmd.oran  { color: var(--oran); }
+  .expl-label.why { color: var(--oran); }
+  .expl-label.res { color: var(--green); }
+  .expl-cmd  { font-family: monospace; font-size: 9px; font-weight: 700; color: #0f172a; background: #e2e8f0; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-top: 2px; }
+  .expl-text { font-size: 9.5px; color: #475569; line-height: 1.6; }
+  .expl-row  { display: flex; flex-direction: column; gap: 2px; }
+
+  /* ── ENV ── */
+  .env-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .env-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 10px; }
+  .env-lbl  { font-size: 8px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+  .env-val  { font-size: 10px; font-weight: 700; color: #0f172a; }
+
+  /* ── SCHÉMA ETHERCHANNEL ── */
+  .ec-schema {
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 10px; padding: 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+  .ec-switches {
+    display: flex; align-items: center; justify-content: center; gap: 0; width: 100%;
+  }
+  .ec-switch {
+    background: var(--amblt); border: 2px solid var(--amb);
+    border-radius: 10px; padding: 12px 20px;
+    text-align: center; min-width: 130px;
+  }
+  .ec-switch-ico  { font-size: 24px; margin-bottom: 4px; }
+  .ec-switch-name { font-size: 11px; font-weight: 800; color: #0f172a; }
+  .ec-switch-port { font-family: monospace; font-size: 9px; color: #64748b; margin-top: 3px; }
+  .ec-links {
+    flex: 1;
+    display: flex; flex-direction: column; gap: 6px;
+    align-items: center; padding: 0 12px;
+  }
+  .ec-link {
+    display: flex; align-items: center; width: 100%; gap: 6px;
+  }
+  .ec-wire {
+    flex: 1; height: 3px; border-radius: 99px;
+  }
+  .ec-wire.fa1 { background: var(--amb); }
+  .ec-wire.fa2 { background: var(--oran); }
+  .ec-link-label {
+    font-family: monospace; font-size: 8px; font-weight: 700;
+    color: #475569; white-space: nowrap;
+  }
+  .ec-po {
+    background: linear-gradient(135deg, var(--amb), var(--oran));
+    color: white; border-radius: 8px; padding: 8px 20px;
+    font-size: 10px; font-weight: 800; text-align: center;
+  }
+  .ec-po-sub { font-size: 8px; font-weight: 500; opacity: .85; margin-top: 2px; }
+
+  /* ── AVANTAGES ── */
+  .avantages { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .av-block {
+    border-radius: 8px; padding: 12px;
+    border-left: 4px solid;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .av-block.perf  { background: var(--oranlt); border-color: var(--oran); }
+  .av-block.redond{ background: var(--grnlt);  border-color: var(--green); }
+  .av-block.charge{ background: var(--bluelt); border-color: var(--blue); }
+  .av-block.topo  { background: var(--teallt); border-color: var(--teal); }
+  .av-ico  { font-size: 20px; flex-shrink: 0; }
+  .av-title { font-size: 10px; font-weight: 800; margin-bottom: 3px; }
+  .av-block.perf  .av-title { color: var(--oran); }
+  .av-block.redond .av-title { color: var(--green); }
+  .av-block.charge .av-title { color: var(--blue); }
+  .av-block.topo   .av-title { color: var(--teal); }
+  .av-text { font-size: 9px; color: #475569; line-height: 1.55; }
+
+  /* ── LACP vs PAGP ── */
+  .proto-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .proto-block {
+    border-radius: 8px; padding: 12px 14px; border: 1px solid;
+  }
+  .proto-block.lacp { background: var(--grnlt); border-color: #bbf7d0; }
+  .proto-block.pagp { background: var(--amblt); border-color: #fde68a; }
+  .proto-title { font-size: 11px; font-weight: 800; margin-bottom: 4px; }
+  .proto-block.lacp .proto-title { color: var(--green); }
+  .proto-block.pagp .proto-title { color: var(--amb); }
+  .proto-badge {
+    display: inline-block; font-size: 8px; font-weight: 700;
+    padding: 2px 8px; border-radius: 99px; margin-bottom: 6px;
+  }
+  .proto-block.lacp .proto-badge { background: var(--green); color: white; }
+  .proto-block.pagp .proto-badge { background: var(--amb);   color: white; }
+  .proto-block p { font-size: 9px; color: #475569; line-height: 1.55; margin-bottom: 3px; }
+  .proto-modes { margin-top: 6px; }
+  .proto-mode-row { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; }
+  .proto-mode-name { font-family: monospace; font-size: 8.5px; font-weight: 700; background: #e2e8f0; padding: 1px 6px; border-radius: 3px; color: #0f172a; white-space: nowrap; }
+  .proto-mode-desc { font-size: 8.5px; color: #475569; }
+
+  /* ── CMD LIST ── */
+  .cmd-list { display: flex; flex-direction: column; gap: 7px; }
+  .cmd-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 8px 12px; background: #f8fafc;
+    border: 1px solid #e2e8f0; border-radius: 7px;
+  }
+  .cmd-item-code { font-family: monospace; font-size: 8.5px; font-weight: 700; color: var(--amb); background: var(--amblt); padding: 2px 7px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+  .cmd-item-code.teal { color: var(--teal); background: var(--teallt); }
+  .cmd-item-desc { font-size: 9px; color: #475569; line-height: 1.55; }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; font-size: 9px; }
+  thead tr { background: var(--amb); color: white; }
+  thead th  { padding: 7px 8px; text-align: left; font-weight: 700; }
+  tbody tr:nth-child(even) { background: #f8fafc; }
+  tbody td  { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: top; }
+  tbody td:first-child { font-weight: 800; color: var(--amb); }
+  .td-ok  { color: var(--green); font-weight: 700; }
+  .td-act { color: var(--oran);  font-weight: 700; }
+
+  /* ── RESULT ── */
+  .result-box { background: var(--grnlt); border: 2px solid var(--green); border-radius: 10px; padding: 14px; text-align: center; }
+  .result-box .r-title { font-size: 13px; font-weight: 800; color: var(--green); margin-bottom: 6px; }
+  .result-box p { font-size: 9.5px; color: #475569; line-height: 1.6; }
+  .result-box .r-sub { font-size: 9.5px; font-weight: 700; color: var(--amb); margin-top: 6px; }
+
+  /* ── WARN ── */
+  .warn { background: var(--amblt); border: 1px solid var(--amb); border-left: 4px solid var(--amb); border-radius: 8px; padding: 10px 14px; }
+  .warn-title { font-size: 10px; font-weight: 800; color: var(--amb); margin-bottom: 4px; }
+  .warn p { font-size: 9.5px; color: #475569; line-height: 1.55; }
+
+  .intro-text { font-size: 10px; color: #475569; line-height: 1.7; }
+  code { font-family: monospace; font-size: 9px; background: #f1f5f9; padding: 1px 5px; border-radius: 3px; color: #0f172a; }
+</style>
+</head>
+<body>
+
+<!-- ════════ PAGE 1 — COVER + PRINCIPE + AVANTAGES ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 7 — ETHERCHANNEL — AGRÉGATION DE LIENS CRASH</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <div class="cover-block">
+      <div class="cover-tag">Projet CRASH — BTS SIO 2e Année — Compte Rendu Technique</div>
+      <div class="cover-title">Mission 7 — <span>EtherChannel</span><br>Agrégation de liens inter-switches</div>
+      <div class="cover-sub">Regroupement de plusieurs liens physiques en un seul lien logique — Protocole LACP — Configuration Cisco réelle</div>
+      <div class="cover-meta">
+        <div><div class="lbl">Étudiant</div><div class="val">Aouizir Chahine</div></div>
+        <div><div class="lbl">Ports agrégés</div><div class="val">Fa0/1 + Fa0/2</div></div>
+        <div><div class="lbl">Protocole</div><div class="val">LACP (mode active)</div></div>
+        <div><div class="lbl">Port-Channel</div><div class="val">Po1 (Port-channel 1)</div></div>
+      </div>
+    </div>
+
+    <!-- Section 1 — Principe -->
+    <div class="sec"><div class="sec-num">1</div><div class="sec-title">Principe de l'EtherChannel</div><div class="sec-line"></div></div>
+
+    <div class="theory blue">
+      <div class="theory-title">Qu'est-ce que l'EtherChannel ?</div>
+      <p>L'EtherChannel regroupe <strong>plusieurs interfaces physiques</strong> entre deux switches pour créer un <strong>seul lien logique</strong> appelé Port-Channel.</p>
+      <p>Du point de vue du réseau, ce lien logique est traité comme une seule interface — le Spanning Tree Protocol (STP) ne bloque donc pas les ports redondants.</p>
+      <p>Ici : <strong>Fa0/1 + Fa0/2</strong> → <strong>Port-Channel 1 (Po1)</strong> — bande passante cumulée : 2 × 100 Mbit/s = <strong>200 Mbit/s</strong>.</p>
+    </div>
+
+    <!-- Schéma visuel EtherChannel -->
+    <div class="ec-schema">
+      <div class="ec-switches">
+        <div class="ec-switch">
+          <div class="ec-switch-ico">🔀</div>
+          <div class="ec-switch-name">Switch A</div>
+          <div class="ec-switch-port">Fa0/1 — Fa0/2</div>
+        </div>
+        <div class="ec-links">
+          <div class="ec-link">
+            <div class="ec-link-label">Fa0/1</div>
+            <div class="ec-wire fa1"></div>
+            <div class="ec-link-label">Fa0/1</div>
+          </div>
+          <div class="ec-link">
+            <div class="ec-link-label">Fa0/2</div>
+            <div class="ec-wire fa2"></div>
+            <div class="ec-link-label">Fa0/2</div>
+          </div>
+        </div>
+        <div class="ec-switch">
+          <div class="ec-switch-ico">🔀</div>
+          <div class="ec-switch-name">Switch B</div>
+          <div class="ec-switch-port">Fa0/1 — Fa0/2</div>
+        </div>
+      </div>
+      <div class="ec-po">
+        Port-Channel 1 (Po1) — Lien logique agrégé
+        <div class="ec-po-sub">2 liens physiques → 1 interface logique → 200 Mbit/s cumulés · Redondance automatique</div>
+      </div>
+    </div>
+
+    <!-- Avantages -->
+    <div class="sec"><div class="sec-num oran">2</div><div class="sec-title">Avantages de l'EtherChannel</div><div class="sec-line oran"></div></div>
+
+    <div class="avantages">
+      <div class="av-block perf">
+        <div class="av-ico">⚡</div>
+        <div>
+          <div class="av-title">Bande passante augmentée</div>
+          <div class="av-text">2 liens de 100 Mbit/s cumulés = 200 Mbit/s de capacité totale entre les deux switches. Idéal pour les liens inter-switches à fort trafic.</div>
+        </div>
+      </div>
+      <div class="av-block redond">
+        <div class="av-ico">🛡️</div>
+        <div>
+          <div class="av-title">Tolérance aux pannes</div>
+          <div class="av-text">Si Fa0/1 tombe en panne, Fa0/2 continue de transporter le trafic automatiquement — aucune interruption de service.</div>
+        </div>
+      </div>
+      <div class="av-block charge">
+        <div class="av-ico">⚖️</div>
+        <div>
+          <div class="av-title">Répartition de charge</div>
+          <div class="av-text">Le trafic est réparti automatiquement entre les liens physiques selon un algorithme (source/destination MAC ou IP).</div>
+        </div>
+      </div>
+      <div class="av-block topo">
+        <div class="av-ico">🗺️</div>
+        <div>
+          <div class="av-title">Topologie simplifiée</div>
+          <div class="av-text">STP voit un seul lien logique au lieu de 2 — pas de port bloqué, pas de boucle. Infrastructure plus robuste et plus facile à gérer.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3 — LACP vs PAgP -->
+    <div class="sec"><div class="sec-num teal">3</div><div class="sec-title">Protocoles d'agrégation — LACP vs PAgP</div><div class="sec-line teal"></div></div>
+
+    <div class="proto-compare">
+      <div class="proto-block lacp">
+        <div class="proto-title">LACP — Link Aggregation Control Protocol</div>
+        <span class="proto-badge">✅ Standard IEEE 802.3ad — Recommandé</span>
+        <p>Protocole <strong>ouvert et standard</strong> — compatible avec tous les équipements réseau (Cisco, HP, Juniper…).</p>
+        <p>Utilisé dans ce TP car le réseau CRASH peut inclure des équipements de marques différentes.</p>
+        <div class="proto-modes">
+          <div class="proto-mode-row"><div class="proto-mode-name">active</div><div class="proto-mode-desc">→ Envoie activement des PDU LACP — initie la négociation</div></div>
+          <div class="proto-mode-row"><div class="proto-mode-name">passive</div><div class="proto-mode-desc">→ Attend les PDU LACP — répond à la négociation</div></div>
+        </div>
+      </div>
+      <div class="proto-block pagp">
+        <div class="proto-title">PAgP — Port Aggregation Protocol</div>
+        <span class="proto-badge">⚠️ Propriétaire Cisco uniquement</span>
+        <p>Protocole <strong>propriétaire Cisco</strong> — fonctionne uniquement entre équipements Cisco.</p>
+        <p>Non utilisé ici car moins interopérable, mais syntaxe similaire.</p>
+        <div class="proto-modes">
+          <div class="proto-mode-row"><div class="proto-mode-name">desirable</div><div class="proto-mode-desc">→ Équivalent de "active" pour PAgP</div></div>
+          <div class="proto-mode-row"><div class="proto-mode-name">auto</div><div class="proto-mode-desc">→ Équivalent de "passive" pour PAgP</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu Mission 7 — EtherChannel — Configuration Cisco réelle — Page 1 / 3</div>
+</div>
+
+<!-- ════════ PAGE 2 — CÂBLAGE + CONFIGURATION ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 7 — ETHERCHANNEL — AGRÉGATION DE LIENS CRASH</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <!-- Section 4 — Câblage physique -->
+    <div class="sec"><div class="sec-num">4</div><div class="sec-title">Câblage physique entre les deux commutateurs</div><div class="sec-line"></div></div>
+
+    <div class="theory">
+      <div class="theory-title">Pourquoi le câblage physique est-il la première étape indispensable ?</div>
+      <p>EtherChannel ne fonctionne que si les ports <strong>des deux switches sont connectés ensemble</strong> — les ports Fa0/1 des deux switches entre eux, idem pour Fa0/2.</p>
+      <p>Si les câbles sont croisés (Fa0/1 Switch A → Fa0/2 Switch B), l'agrégation ne pourra pas se former.</p>
+      <p>Avant la configuration logicielle, <strong>la topologie physique doit être vérifiée</strong>.</p>
+    </div>
+
+    <div>
+      <div class="fig-label">Figure 1 — Double liaison Ethernet entre les deux switches</div>
+      <div class="code-wrap">
+        <div class="code-badge">Câblage physique requis</div>
+        <pre><span class="cmt">! Connexions physiques à réaliser AVANT la configuration :</span>
+
+<span class="ti">Switch A  Fa0/1  ←————————→  Fa0/1  Switch B</span>
+<span class="ti">Switch A  Fa0/2  ←————————→  Fa0/2  Switch B</span>
+
+<span class="cmt">! Vérifier que les LEDs des ports sont allumées (lien physique actif)</span>
+<span class="cmt">! Commande de vérification du lien physique :</span>
+<span class="tx">Switch# </span><span class="kw">show interfaces fa0/1</span>
+<span class="ok">FastEthernet0/1 is up, line protocol is up</span>
+<span class="tx">Switch# </span><span class="kw">show interfaces fa0/2</span>
+<span class="ok">FastEthernet0/2 is up, line protocol is up</span></pre>
+      </div>
+    </div>
+
+    <div class="expl">
+      <div class="expl-row"><div class="expl-label cmd">⌨ Vérification physique</div><div class="expl-cmd">show interfaces fa0/1  /  show interfaces fa0/2</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi vérifier avant de configurer ?</div><div class="expl-text">Si un lien physique est down, EtherChannel refusera de se former ou sera incomplet. <code>is up, line protocol is up</code> confirme que le câble est branché et que le lien Ethernet est opérationnel des deux côtés.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Les deux ports Fa0/1 et Fa0/2 sont physiquement connectés et actifs — la configuration EtherChannel peut commencer.</div></div>
+    </div>
+
+    <!-- Section 5 — Configuration EtherChannel -->
+    <div class="sec"><div class="sec-num oran">5</div><div class="sec-title">Configuration EtherChannel — LACP mode active</div><div class="sec-line oran"></div></div>
+
+    <div class="theory oran">
+      <div class="theory-title">Règle importante : même configuration sur les deux switches</div>
+      <p>Les commandes ci-dessous doivent être <strong>identiques sur Switch A et Switch B</strong>.</p>
+      <p>Si un côté est en mode <code>active</code> et l'autre en <code>passive</code> → EtherChannel se forme. Si les deux sont en <code>passive</code> → aucun ne prend l'initiative → pas d'agrégation.</p>
+    </div>
+
+    <div>
+      <div class="fig-label oran">Capture 1 — Configuration sur Switch A (identique sur Switch B)</div>
+      <div class="code-wrap">
+        <div class="code-badge">Switch Cisco — EtherChannel LACP</div>
+        <pre><span class="cmt">! Entrer en mode configuration globale</span>
+<span class="tx">Switch> </span><span class="kw">enable</span>
+<span class="tx">Switch# </span><span class="kw">configure terminal</span>
+
+<span class="cmt">! Sélectionner les deux ports à agréger en même temps</span>
+<span class="tx">Switch(config)# </span><span class="kw">interface range fa0/1 - 2</span>
+
+<span class="cmt">! Créer le Port-Channel 1 avec le protocole LACP en mode active</span>
+<span class="tx">Switch(config-if-range)# </span><span class="val">channel-group 1 mode active</span>
+
+<span class="cmt">! S'assurer que les ports ne sont pas désactivés</span>
+<span class="tx">Switch(config-if-range)# </span><span class="kw">no shutdown</span>
+<span class="tx">Switch(config-if-range)# exit</span>
+
+<span class="cmt">! Sauvegarder la configuration — OBLIGATOIRE sur matériel réel</span>
+<span class="val">Switch# write memory</span>
+
+<span class="cmt">! Faire exactement la même configuration sur Switch B</span></pre>
+      </div>
+    </div>
+
+    <!-- Explication commande par commande -->
+    <div class="cmd-list">
+      <div class="cmd-item">
+        <div class="cmd-item-code">interface range fa0/1 - 2</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Sélectionne simultanément les interfaces Fa0/1 et Fa0/2. Toutes les commandes suivantes s'appliquent aux deux ports en même temps — gain de temps et garantie de cohérence de configuration.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-item-code">channel-group 1 mode active</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Crée le <strong>Port-Channel 1</strong> (Po1) et active le protocole LACP en mode <code>active</code> → ce switch envoie des PDU LACP pour négocier l'agrégation avec l'autre switch. Le Port-Channel 1 apparaît automatiquement dans la liste des interfaces.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-item-code">no shutdown</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> S'assure que les ports physiques sont bien activés. Un port en shutdown ne peut pas participer à un EtherChannel.</div>
+      </div>
+    </div>
+
+    <div class="expl oran">
+      <div class="expl-row"><div class="expl-label cmd oran">⌨ Commandes clés à retenir</div><div class="expl-cmd">interface range fa0/1 - 2  +  channel-group 1 mode active  +  no shutdown</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi "mode active" et pas "mode passive" sur les deux ?</div><div class="expl-text">LACP nécessite qu'au moins un des deux switches soit en mode <code>active</code> pour initier la négociation. Si les deux sont en <code>passive</code>, personne n'envoie de PDU → pas d'agrégation. Mettre les deux en <code>active</code> fonctionne aussi et est plus simple.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Le Port-Channel Po1 se forme automatiquement — Fa0/1 et Fa0/2 sont agrégés en un seul lien logique de 200 Mbit/s.</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu Mission 7 — EtherChannel — Configuration Cisco réelle — Page 2 / 3</div>
+</div>
+
+<!-- ════════ PAGE 3 — VÉRIFICATION + CONCLUSION ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 7 — ETHERCHANNEL — AGRÉGATION DE LIENS CRASH</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <!-- Section 6 — Vérification -->
+    <div class="sec"><div class="sec-num green">6</div><div class="sec-title">Vérification du fonctionnement — show etherchannel summary</div><div class="sec-line green"></div></div>
+
+    <div>
+      <div class="fig-label green">Figure 2 — Vérification EtherChannel actif</div>
+      <div class="code-wrap">
+        <div class="code-badge">Commande de vérification</div>
+        <pre><span class="cmt">! Vérifier l'état de l'EtherChannel et de ses membres</span>
+<span class="tx">Switch# </span><span class="kw">show etherchannel summary</span>
+
+<span class="cmt">! Résultat attendu dans la capture d'écran :</span>
+<span class="ti">Flags:  D - down        P - bundled in port-channel</span>
+<span class="ti">        I - stand-alone s - suspended</span>
+<span class="ti">        H - Hot-standby (LACP only)</span>
+<span class="ti">        R - Layer3      S - Layer2</span>
+<span class="ti">        U - in use      f - failed to allocate aggregator</span>
+
+<span class="ti">Number of channel-groups in use: 1</span>
+<span class="ti">Group  Port-channel  Protocol    Ports</span>
+<span class="ok">------+-------------+-----------+-----------------------------</span>
+<span class="ok">1      Po1(SU)       LACP        Fa0/1(P)   Fa0/2(P)</span>
+
+<span class="cmt">! Interprétation des flags :</span>
+<span class="amb">! SU = S(Layer2) + U(in use) → Port-channel actif en couche 2</span>
+<span class="amb">! P  = bundled in port-channel → interface bien agrégée</span></pre>
+      </div>
+    </div>
+
+    <div class="expl green">
+      <div class="expl-row"><div class="expl-label cmd green">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">show etherchannel summary</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Comment lire le résultat ?</div><div class="expl-text"><code>Po1(SU)</code> → Port-Channel 1 est <strong>actif (U = in use)</strong> en couche 2 (S = Layer2).<br><code>Fa0/1(P)</code> et <code>Fa0/2(P)</code> → les deux interfaces physiques sont bien <strong>bundled (agrégées)</strong> dans le Port-Channel.<br>Si un port affichait <code>(I)</code> (stand-alone) → problème de configuration : les deux côtés ne sont pas compatibles.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Po1(SU) avec Fa0/1(P) et Fa0/2(P) → EtherChannel opérationnel, les deux liens physiques sont actifs et agrégés.</div></div>
+    </div>
+
+    <!-- Autres commandes de vérification -->
+    <div>
+      <div class="fig-label green">Commandes de vérification complémentaires</div>
+      <div class="code-wrap">
+        <div class="code-badge">Vérifications détaillées</div>
+        <pre><span class="cmt">! Détails complets du Port-Channel et de ses membres</span>
+<span class="tx">Switch# </span><span class="kw">show etherchannel detail</span>
+
+<span class="cmt">! Vérifier l'état de l'interface logique Po1</span>
+<span class="tx">Switch# </span><span class="kw">show interfaces port-channel 1</span>
+<span class="ok">Port-channel1 is up, line protocol is up</span>
+<span class="ok">  Hardware is EtherChannel, address is ...</span>
+<span class="ok">  MTU 1500 bytes, BW 200000 Kbit/sec</span>
+
+<span class="cmt">! Vérifier la négociation LACP sur chaque port</span>
+<span class="tx">Switch# </span><span class="kw">show lacp neighbor</span>
+
+<span class="cmt">! Vérifier que STP voit bien Po1 comme un seul lien</span>
+<span class="tx">Switch# </span><span class="kw">show spanning-tree</span>
+<span class="ok">Po1      Desg FWD ...</span></pre>
+      </div>
+    </div>
+
+    <div class="expl green">
+      <div class="expl-row"><div class="expl-label cmd green">⌨ Commandes complémentaires importantes</div><div class="expl-cmd">show interfaces port-channel 1  /  show lacp neighbor  /  show spanning-tree</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi ces vérifications supplémentaires ?</div><div class="expl-text"><code>show interfaces po1</code> → confirme la bande passante cumulée (<strong>BW 200000 Kbit/sec</strong> = 200 Mbit/s).<br><code>show lacp neighbor</code> → confirme que les deux switches se voient mutuellement via LACP.<br><code>show spanning-tree</code> → vérifie que STP considère Po1 comme un seul port (et ne bloque pas un des liens).</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">BW 200000 Kbit/sec sur Po1 — les deux liens physiques sont visibles dans LACP — STP voit un seul port Po1 en forwarding.</div></div>
+    </div>
+
+    <!-- Tableau récap -->
+    <div class="sec" style="margin-top:4px;"><div class="sec-num">7</div><div class="sec-title">Récapitulatif complet — EtherChannel LACP</div><div class="sec-line"></div></div>
+
+    <table>
+      <thead>
+        <tr><th>#</th><th>Étape</th><th>Commande clé</th><th>Sur quel équipement</th><th>Résultat</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Câblage physique</td><td>Fa0/1↔Fa0/1 + Fa0/2↔Fa0/2</td><td>Physique</td><td class="td-ok">Liens up/up</td></tr>
+        <tr><td>2</td><td>Sélection des ports</td><td>interface range fa0/1 - 2</td><td>Switch A + B</td><td class="td-act">Ports sélectionnés</td></tr>
+        <tr><td>3</td><td>Création EtherChannel</td><td>channel-group 1 mode active</td><td>Switch A + B</td><td class="td-act">Po1 créé (LACP)</td></tr>
+        <tr><td>4</td><td>Activation ports</td><td>no shutdown</td><td>Switch A + B</td><td class="td-ok">Ports actifs</td></tr>
+        <tr><td>5</td><td>Sauvegarde</td><td>write memory</td><td>Switch A + B</td><td class="td-ok">Config sauvegardée</td></tr>
+        <tr><td>6</td><td>Vérif résumé</td><td>show etherchannel summary</td><td>Switch A ou B</td><td class="td-ok">Po1(SU) Fa0/1(P) Fa0/2(P)</td></tr>
+        <tr><td>7</td><td>Vérif bande passante</td><td>show interfaces port-channel 1</td><td>Switch A ou B</td><td class="td-ok">BW 200000 Kbit/sec</td></tr>
+      </tbody>
+    </table>
+
+    <div class="result-box">
+      <div class="r-title">✅ Résultat final — EtherChannel opérationnel</div>
+      <p>Les interfaces Fa0/1 et Fa0/2 sont agrégées en un seul lien logique <strong>Po1</strong> grâce au protocole <strong>LACP (mode active)</strong>.<br>
+      La bande passante entre les deux switches est <strong>doublée à 200 Mbit/s</strong> — la redondance est assurée automatiquement.<br>
+      STP voit un seul lien logique — aucun port n'est bloqué — infrastructure plus robuste et performante.</p>
+      <div class="r-sub">🔀 2 liens physiques → 1 lien logique · 200 Mbit/s · Tolérance aux pannes automatique</div>
+    </div>
+
+    <div class="warn">
+      <div class="warn-title">⚠️ Points importants à retenir</div>
+      <p><strong>write memory</strong> → toujours sauvegarder sur les deux switches — la config est perdue au redémarrage sinon.</p>
+      <p><strong>Symétrie obligatoire</strong> → la configuration doit être identique sur les deux switches (même numéro de channel-group, même mode, mêmes ports).</p>
+      <p><strong>active + passive</strong> → combinaison valide. <strong>passive + passive</strong> → EtherChannel ne se forme pas (personne n'initie).</p>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu Mission 7 — EtherChannel — Configuration Cisco réelle — Page 3 / 3</div>
+</div>
+
+</body>
+</html>
