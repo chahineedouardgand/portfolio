@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Mission 6 — VLAN, VTP, Routage Inter-VLAN</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @media print {
+    body { margin: 0; }
+    .page { page-break-after: always; page-break-inside: avoid; }
+    .page:last-child { page-break-after: auto; }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #e5e7eb;
+    padding: 20px;
+    font-size: 14px;
+    color: #334155;
+  }
+
+  /* ── PAGE A4 ── */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    background: white;
+    margin: 0 auto 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+
+  /* ── HEADER ── */
+  .pg-header {
+    background: #0a1628;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .pg-header-left { font-size: 9px; font-weight: 700; color: white; letter-spacing: .04em; }
+  .pg-header-right { font-size: 8px; color: #94a3b8; }
+  .pg-header-accent { height: 3px; background: linear-gradient(90deg, #2872fa, #0d9488); }
+
+  /* ── BODY ── */
+  .pg-body {
+    flex: 1;
+    padding: 18px 22px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* ── FOOTER ── */
+  .pg-footer {
+    background: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+    padding: 6px 22px;
+    text-align: center;
+    font-size: 8px;
+    color: #94a3b8;
+    flex-shrink: 0;
+  }
+
+  /* ── COVER ── */
+  .cover-block {
+    background: #0a1628;
+    border-radius: 12px;
+    padding: 28px 28px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover-block::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(40,114,250,0.2), transparent 70%);
+  }
+  .cover-tag { font-size: 9px; font-weight: 700; color: #60a5fa; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 10px; }
+  .cover-title { font-size: 30px; font-weight: 800; color: white; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .cover-title span { color: #60a5fa; }
+  .cover-sub { font-size: 10px; color: #64748b; margin-bottom: 18px; }
+  .cover-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .cover-meta-item { }
+  .cover-meta-item .lbl { font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+  .cover-meta-item .val { font-size: 11px; font-weight: 700; color: white; }
+
+  /* ── SECTION TITLE ── */
+  .sec {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sec-num {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: #2872fa; color: white;
+    font-size: 11px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-num.teal { background: #0d9488; }
+  .sec-num.purple { background: #4f46e5; }
+  .sec-title { font-size: 16px; font-weight: 800; color: #0f172a; }
+  .sec-line { flex: 1; height: 2px; background: linear-gradient(90deg, #2872fa, transparent); border-radius: 1px; }
+  .sec-line.teal { background: linear-gradient(90deg, #0d9488, transparent); }
+  .sec-line.purple { background: linear-gradient(90deg, #4f46e5, transparent); }
+
+  /* ── THEORY BOX ── */
+  .theory {
+    background: #fffbeb;
+    border: 1px solid #d97706;
+    border-left: 4px solid #d97706;
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .theory-title { font-size: 10px; font-weight: 800; color: #d97706; margin-bottom: 6px; }
+  .theory p { font-size: 10px; color: #475569; line-height: 1.6; margin-bottom: 3px; }
+  .theory p:last-child { margin-bottom: 0; }
+
+  /* ── FIGURE LABEL ── */
+  .fig-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #2872fa;
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+  }
+  .fig-label.teal { background: #0d9488; }
+  .fig-label.purple { background: #4f46e5; }
+  .fig-label.green { background: #16a34a; }
+
+  /* ── CODE BLOCK ── */
+  .code-wrap { position: relative; }
+  .code-badge {
+    position: absolute;
+    top: 6px; right: 10px;
+    font-size: 7.5px; font-weight: 700;
+    color: #64748b; font-family: monospace;
+  }
+  pre {
+    background: #0f172a;
+    border-radius: 8px;
+    padding: 14px 14px 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 9.5px;
+    line-height: 1.6;
+    overflow: hidden;
+  }
+  .kw  { color: #a78bfa; font-weight: bold; }
+  .val { color: #86efac; }
+  .cmt { color: #64748b; font-style: italic; }
+  .ti  { color: #38bdf8; font-weight: bold; }
+  .tx  { color: #e2e8f0; }
+
+  /* ── EXPLICATION BOX ── */
+  .expl {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #2872fa;
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .expl.teal { border-left-color: #0d9488; }
+  .expl.purple { border-left-color: #4f46e5; }
+
+  .expl-row { display: flex; flex-direction: column; gap: 3px; }
+  .expl-label { font-size: 9px; font-weight: 800; }
+  .expl-label.cmd { color: #2872fa; }
+  .expl-label.cmd.teal { color: #0d9488; }
+  .expl-label.cmd.purple { color: #4f46e5; }
+  .expl-label.why { color: #d97706; }
+  .expl-label.res { color: #16a34a; }
+  .expl-cmd { font-family: monospace; font-size: 9.5px; font-weight: 700; color: #0f172a; background: #e2e8f0; padding: 3px 8px; border-radius: 4px; display: inline-block; }
+  .expl-text { font-size: 9.5px; color: #475569; line-height: 1.55; }
+
+  /* ── OBJECTIF BLOCS ── */
+  .obj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .obj-block { border-radius: 8px; padding: 12px; border-top: 4px solid; }
+  .obj-block.blue { background: #eff6ff; border-color: #2872fa; }
+  .obj-block.teal { background: #f0fdfa; border-color: #0d9488; }
+  .obj-block.purple { background: #f5f3ff; border-color: #4f46e5; }
+  .obj-block-title { font-size: 10px; font-weight: 800; margin-bottom: 5px; }
+  .obj-block.blue .obj-block-title { color: #2872fa; }
+  .obj-block.teal .obj-block-title { color: #0d9488; }
+  .obj-block.purple .obj-block-title { color: #4f46e5; }
+  .obj-block p { font-size: 9px; color: #475569; line-height: 1.55; }
+
+  /* ── ENV GRID ── */
+  .env-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .env-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 10px; }
+  .env-lbl { font-size: 8px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+  .env-val { font-size: 10px; font-weight: 700; color: #0f172a; }
+
+  /* ── RECAP TABLE ── */
+  table { width: 100%; border-collapse: collapse; font-size: 9px; }
+  thead tr { background: #2872fa; color: white; }
+  thead th { padding: 7px 8px; text-align: left; font-weight: 700; }
+  tbody tr:nth-child(even) { background: #f8fafc; }
+  tbody td { padding: 7px 8px; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: top; }
+  tbody td:first-child { font-weight: 800; color: #2872fa; }
+  tbody td:nth-child(3) { font-family: monospace; font-size: 8.5px; color: #4f46e5; }
+
+  /* ── RESULT BOX ── */
+  .result-box {
+    background: #f0fdf4;
+    border: 2px solid #16a34a;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .result-box .r-title { font-size: 13px; font-weight: 800; color: #16a34a; margin-bottom: 6px; }
+  .result-box p { font-size: 10px; color: #475569; line-height: 1.6; }
+  .result-box .r-ping { font-size: 10px; font-weight: 700; color: #0d9488; margin-top: 6px; }
+
+  /* ── WARNING ── */
+  .warn {
+    background: #fffbeb;
+    border: 1px solid #d97706;
+    border-left: 4px solid #d97706;
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+  .warn-title { font-size: 10px; font-weight: 800; color: #d97706; margin-bottom: 4px; }
+  .warn p { font-size: 9.5px; color: #475569; line-height: 1.55; }
+
+  /* intro text */
+  .intro-text { font-size: 10px; color: #475569; line-height: 1.65; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════ PAGE 1 — COVER + OBJECTIF ════════════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 6 — VLAN, VTP ET ROUTAGE INTER-VLAN</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <!-- Cover -->
+    <div class="cover-block">
+      <div class="cover-tag">Projet CRASH — BTS SIO 2e Année — Compte Rendu Technique</div>
+      <div class="cover-title">Mission 6 — VLAN, VTP<br><span>& Routage Inter-VLAN</span></div>
+      <div class="cover-sub">Configuration réelle sur équipements Cisco — Switch Catalyst + Routeur 2901</div>
+      <div class="cover-meta">
+        <div class="cover-meta-item"><div class="lbl">Étudiant</div><div class="val">Aouizir Chahine</div></div>
+        <div class="cover-meta-item"><div class="lbl">Matériel</div><div class="val">Cisco réel</div></div>
+        <div class="cover-meta-item"><div class="lbl">Réseau</div><div class="val">172.17.0.0/16</div></div>
+        <div class="cover-meta-item"><div class="lbl">Option</div><div class="val">BTS SIO SISR</div></div>
+      </div>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="sec"><div class="sec-num">1</div><div class="sec-title">Objectif de la mission</div><div class="sec-line"></div></div>
+    <p class="intro-text">Cette mission a pour objectif de <strong>segmenter le réseau interne du projet CRASH</strong> à l'aide de VLAN, de centraliser leur gestion grâce au protocole VTP, et de mettre en place un routage Inter-VLAN via le routeur Cisco 2901. Cette architecture est utilisée en entreprise pour améliorer la sécurité, les performances et l'organisation du réseau.</p>
+
+    <div class="obj-grid">
+      <div class="obj-block blue">
+        <div class="obj-block-title">Segmentation VLAN</div>
+        <p>Créer des réseaux logiques isolés (Escrime / Volley) sur le même switch physique.</p>
+      </div>
+      <div class="obj-block teal">
+        <div class="obj-block-title">Gestion VTP</div>
+        <p>Synchroniser automatiquement les VLAN entre tous les switches du réseau.</p>
+      </div>
+      <div class="obj-block purple">
+        <div class="obj-block-title">Routage Inter-VLAN</div>
+        <p>Faire communiquer les VLAN grâce à la méthode Router-on-a-Stick sur le Cisco 2901.</p>
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="sec"><div class="sec-num">2</div><div class="sec-title">Environnement technique</div><div class="sec-line"></div></div>
+    <div class="env-grid">
+      <div class="env-item"><div class="env-lbl">Accès console</div><div class="env-val">PuTTY — Serial COM1 9600 baud</div></div>
+      <div class="env-item"><div class="env-lbl">Switch</div><div class="env-val">Cisco Catalyst</div></div>
+      <div class="env-item"><div class="env-lbl">Routeur</div><div class="env-val">Cisco 2901</div></div>
+      <div class="env-item"><div class="env-lbl">Réseau interne</div><div class="env-val">172.17.0.0/16</div></div>
+      <div class="env-item"><div class="env-lbl">Liaison physique</div><div class="env-val">GigabitEthernet0/1</div></div>
+      <div class="env-item"><div class="env-lbl">Protocole trunk</div><div class="env-val">802.1Q (dot1Q)</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu technique — Configuration sur matériel Cisco réel — Page 1 / 6</div>
+</div>
+
+<!-- ════════════════ PAGE 2 — CRÉATION VLAN ════════════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 6 — VLAN, VTP ET ROUTAGE INTER-VLAN</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <div class="sec"><div class="sec-num">3</div><div class="sec-title">Création des VLAN sur le switch</div><div class="sec-line"></div></div>
+
+    <div class="theory">
+      <div class="theory-title">Qu'est-ce qu'un VLAN ?</div>
+      <p>Un VLAN (Virtual LAN) crée des <strong>réseaux logiques séparés</strong> sur le même switch physique.</p>
+      <p><strong>VLAN 10 = Ligue Escrime</strong> | <strong>VLAN 20 = Ligue Volley</strong> → chaque ligue est isolée du reste.</p>
+    </div>
+
+    <div>
+      <div class="fig-label">Figure 1 — Commandes de création des VLAN</div>
+      <div class="code-wrap">
+        <div class="code-badge">Switch Cisco — Création VLAN</div>
+        <pre><span class="cmt">! Entrer en mode privilégié puis configuration globale</span>
+<span class="tx">Switch> </span><span class="kw">enable</span>
+<span class="tx">Switch# </span><span class="kw">configure terminal</span>
+
+<span class="cmt">! Créer le VLAN 10 et lui donner un nom</span>
+<span class="tx">Switch(config)# </span><span class="kw">vlan 10</span>
+<span class="tx">Switch(config-vlan)# </span><span class="val">name Escrime</span>
+<span class="tx">Switch(config-vlan)# exit</span>
+
+<span class="cmt">! Créer le VLAN 20 et lui donner un nom</span>
+<span class="tx">Switch(config)# </span><span class="kw">vlan 20</span>
+<span class="tx">Switch(config-vlan)# </span><span class="val">name Volley</span>
+<span class="tx">Switch(config-vlan)# exit</span>
+<span class="val">Switch# write memory     ! Toujours sauvegarder !</span></pre>
+      </div>
+    </div>
+
+    <div class="expl">
+      <div class="expl-row"><div class="expl-label cmd">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">vlan 10 / vlan 20 / name &lt;nom&gt;</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi cette commande ?</div><div class="expl-text">La commande <code>vlan</code> crée le VLAN dans la base de données du switch.<br><code>name</code> lui donne un nom lisible pour identifier facilement le service auquel il appartient.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Deux réseaux logiques isolés (Escrime / Volley) créés sur le même switch physique.</div></div>
+    </div>
+
+    <div>
+      <div class="fig-label green">Figure 2 — Vérification des VLAN (show vlan brief)</div>
+      <div class="code-wrap">
+        <div class="code-badge">Vérification</div>
+        <pre><span class="cmt">! Vérifier que les VLAN sont bien créés et actifs</span>
+<span class="tx">Switch# </span><span class="kw">show vlan brief</span>
+
+<span class="cmt">! Résultat attendu dans la capture d'écran :</span>
+<span class="ti">VLAN  Name         Status    Ports</span>
+<span class="val">10    Escrime      active</span>
+<span class="val">20    Volley       active</span></pre>
+      </div>
+    </div>
+
+    <div class="expl">
+      <div class="expl-row"><div class="expl-label cmd">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">show vlan brief</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi cette commande ?</div><div class="expl-text">Liste tous les VLAN existants avec leur statut. Si un VLAN n'apparaît pas ici → il n'existe pas et aucun trafic ne l'utilisera.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">VLAN 10 (Escrime) et VLAN 20 (Volley) apparaissent en statut <strong>active</strong>.</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu technique — Configuration sur matériel Cisco réel — Page 2 / 6</div>
+</div>
+
+<!-- ════════════════ PAGE 3 — VTP ════════════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 6 — VLAN, VTP ET ROUTAGE INTER-VLAN</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <div class="sec"><div class="sec-num purple">4</div><div class="sec-title">Mise en place du protocole VTP</div><div class="sec-line purple"></div></div>
+
+    <div class="theory">
+      <div class="theory-title">Pourquoi VTP ?</div>
+      <p>VTP (VLAN Trunking Protocol) <strong>synchronise automatiquement les VLAN</strong> entre tous les switches.</p>
+      <p>Sans VTP → il faut créer chaque VLAN manuellement sur chaque switch du réseau.</p>
+      <p>Avec VTP mode Server → un seul switch centralise et diffuse la liste des VLAN à tous les autres.</p>
+    </div>
+
+    <div>
+      <div class="fig-label purple">Figure 3 — Configuration du domaine VTP — mode serveur</div>
+      <div class="code-wrap">
+        <div class="code-badge">VTP — Switch Serveur</div>
+        <pre><span class="cmt">! Ce switch sera le serveur VTP (il diffuse les VLAN)</span>
+<span class="tx">Switch(config)# </span><span class="kw">vtp mode server</span>
+
+<span class="cmt">! Définir le domaine VTP — MÊME nom sur tous les switches !</span>
+<span class="tx">Switch(config)# </span><span class="val">vtp domain CRASH</span>
+
+<span class="cmt">! Définir la version VTP (recommandé : version 2)</span>
+<span class="tx">Switch(config)# vtp version 2</span>
+<span class="val">Switch# write memory</span></pre>
+      </div>
+    </div>
+
+    <div class="expl purple">
+      <div class="expl-row"><div class="expl-label cmd purple">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">vtp mode server / vtp domain CRASH</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi cette commande ?</div><div class="expl-text"><code>vtp mode server</code> → ce switch est l'autorité qui diffuse la liste des VLAN.<br><code>vtp domain CRASH</code> → tous les switches configurés avec ce même domaine reçoivent automatiquement les VLAN.<br>Les switches en mode client appliquent les changements sans configuration manuelle.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Un seul switch à configurer pour propager les VLAN sur tout le réseau.</div></div>
+    </div>
+
+    <div>
+      <div class="fig-label green">Figure 4 — Vérification du statut VTP</div>
+      <div class="code-wrap">
+        <div class="code-badge">Vérification VTP</div>
+        <pre><span class="cmt">! Vérifier le mode et le domaine VTP</span>
+<span class="tx">Switch# </span><span class="kw">show vtp status</span>
+
+<span class="cmt">! Résultat attendu dans la capture d'écran :</span>
+<span class="val">VTP Operating Mode      : Server</span>
+<span class="val">VTP Domain Name         : CRASH</span>
+<span class="tx">Number of existing VLANs: 2</span></pre>
+      </div>
+    </div>
+
+    <div class="expl purple">
+      <div class="expl-row"><div class="expl-label cmd purple">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">show vtp status</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi cette commande ?</div><div class="expl-text">Confirme que le switch est bien en mode <strong>Server</strong> dans le bon domaine. Si <em>Number of existing VLANs = 2</em> → les VLAN 10 et 20 sont correctement synchronisés.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Le switch diffuse correctement VLAN 10 et VLAN 20 sur tout le réseau.</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu technique — Configuration sur matériel Cisco réel — Page 3 / 6</div>
+</div>
+
+<!-- ════════════════ PAGE 4 — TRUNK ════════════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 6 — VLAN, VTP ET ROUTAGE INTER-VLAN</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <div class="sec"><div class="sec-num teal">5</div><div class="sec-title">Configuration du port Trunk vers le routeur</div><div class="sec-line teal"></div></div>
+
+    <div class="theory">
+      <div class="theory-title">Pourquoi un port trunk est-il indispensable ?</div>
+      <p>Un port trunk transporte <strong>plusieurs VLAN sur un seul câble physique</strong> grâce à l'encapsulation 802.1Q.</p>
+      <p>Sans trunk → le routeur ne verrait qu'un seul VLAN → routage Inter-VLAN impossible.</p>
+      <p>Chaque trame est taguée avec son numéro de VLAN → le routeur sait à quel VLAN elle appartient.</p>
+    </div>
+
+    <div>
+      <div class="fig-label teal">Figure 5 — Activation du mode trunk — GigabitEthernet0/1</div>
+      <div class="code-wrap">
+        <div class="code-badge">Switch — Trunk 802.1Q</div>
+        <pre><span class="cmt">! Sélectionner le port physique connecté au routeur</span>
+<span class="tx">Switch(config)# </span><span class="kw">interface GigabitEthernet0/1</span>
+
+<span class="cmt">! Autoriser uniquement les VLAN 10 et 20 à transiter</span>
+<span class="tx">Switch(config-if)# </span><span class="val">switchport trunk allowed vlan 10,20</span>
+
+<span class="cmt">! Activer le mode trunk (encapsulation 802.1Q)</span>
+<span class="tx">Switch(config-if)# </span><span class="kw">switchport mode trunk</span>
+<span class="tx">Switch(config-if)# no shutdown</span>
+<span class="tx">Switch(config-if)# exit</span>
+<span class="val">Switch# write memory     ! CRUCIAL sur matériel réel !</span></pre>
+      </div>
+    </div>
+
+    <div class="expl teal">
+      <div class="expl-row"><div class="expl-label cmd teal">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">switchport trunk allowed vlan 10,20 + switchport mode trunk</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi cette commande ?</div><div class="expl-text"><code>switchport trunk allowed vlan 10,20</code> → seuls ces VLAN passent sur le câble, les autres sont bloqués.<br><code>switchport mode trunk</code> → active le tag 802.1Q : chaque trame est marquée avec son numéro de VLAN.<br><code>write memory</code> → CRUCIAL sur matériel réel : sinon la config est perdue au redémarrage !</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Les VLAN 10 et 20 peuvent maintenant circuler physiquement vers le routeur Cisco 2901.</div></div>
+    </div>
+
+    <div>
+      <div class="fig-label green">Figure 6 — Vérification du port trunk</div>
+      <div class="code-wrap">
+        <div class="code-badge">Vérification Trunk</div>
+        <pre><span class="cmt">! Vérifier que le port est bien en mode trunk</span>
+<span class="tx">Switch# </span><span class="kw">show interfaces trunk</span>
+
+<span class="cmt">! Résultat attendu dans la capture d'écran :</span>
+<span class="ti">Port     Mode    Encapsulation  Status</span>
+<span class="val">Gi0/1    on      802.1q         trunking</span>
+
+<span class="val">VLANs allowed and active: 10, 20</span></pre>
+      </div>
+    </div>
+
+    <div class="expl teal">
+      <div class="expl-row"><div class="expl-label cmd teal">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">show interfaces trunk</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi cette commande ?</div><div class="expl-text">Confirme que le port est en mode <strong>trunking</strong> avec l'encapsulation 802.1q.<br>"VLANs allowed and active: 10, 20" prouve que les deux VLAN transitent bien sur ce câble.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Le trunk est opérationnel — le routeur peut recevoir et distinguer les VLAN 10 et 20.</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu technique — Configuration sur matériel Cisco réel — Page 4 / 6</div>
+</div>
+
+<!-- ════════════════ PAGE 5 — INTER-VLAN ════════════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 6 — VLAN, VTP ET ROUTAGE INTER-VLAN</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <div class="sec"><div class="sec-num purple">6</div><div class="sec-title">Routage Inter-VLAN — Router-on-a-Stick</div><div class="sec-line purple"></div></div>
+
+    <div class="theory">
+      <div class="theory-title">Qu'est-ce que le Router-on-a-Stick ?</div>
+      <p>Par défaut, deux VLAN différents <strong>NE peuvent PAS communiquer</strong> entre eux.</p>
+      <p>Solution : créer des <strong>sous-interfaces</strong> sur le routeur — une par VLAN — sur un seul câble physique.</p>
+      <p><code>Gi0/1.10</code> → passerelle VLAN 10 (172.17.10.1) &nbsp;|&nbsp; <code>Gi0/1.20</code> → passerelle VLAN 20 (172.17.20.1)</p>
+      <p>Le routeur lit le tag 802.1Q et sait vers quel sous-réseau router chaque paquet.</p>
+    </div>
+
+    <div>
+      <div class="fig-label purple">Figure 7 — Sous-interfaces VLAN sur le routeur Cisco 2901</div>
+      <div class="code-wrap">
+        <div class="code-badge">Routeur Cisco 2901</div>
+        <pre><span class="cmt">! Activer l'interface physique principale (sans IP directe)</span>
+<span class="tx">Router(config)# </span><span class="kw">interface GigabitEthernet0/1</span>
+<span class="tx">Router(config-if)# no shutdown</span>
+<span class="tx">Router(config-if)# exit</span>
+
+<span class="cmt">! Sous-interface VLAN 10 — passerelle des machines Escrime</span>
+<span class="tx">Router(config)# </span><span class="kw">interface GigabitEthernet0/1.10</span>
+<span class="tx">Router(config-subif)# </span><span class="val">encapsulation dot1Q 10</span>
+<span class="tx">Router(config-subif)# </span><span class="val">ip address 172.17.10.1 255.255.255.0</span>
+<span class="tx">Router(config-subif)# no shutdown</span>
+
+<span class="cmt">! Sous-interface VLAN 20 — passerelle des machines Volley</span>
+<span class="tx">Router(config)# </span><span class="kw">interface GigabitEthernet0/1.20</span>
+<span class="tx">Router(config-subif)# </span><span class="val">encapsulation dot1Q 20</span>
+<span class="tx">Router(config-subif)# </span><span class="val">ip address 172.17.20.1 255.255.255.0</span>
+<span class="tx">Router(config-subif)# no shutdown</span>
+<span class="val">Router# write memory     ! Sauvegarder la configuration !</span></pre>
+      </div>
+    </div>
+
+    <div class="expl purple">
+      <div class="expl-row"><div class="expl-label cmd purple">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">interface Gi0/1.10 + encapsulation dot1Q 10 + ip address 172.17.10.1</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi cette commande ?</div><div class="expl-text"><code>interface Gi0/1.10</code> → crée une sous-interface logique dédiée au VLAN 10.<br><code>encapsulation dot1Q 10</code> → les trames taguées VLAN 10 arrivent sur cette interface.<br><code>ip address 172.17.10.1</code> → c'est la passerelle par défaut des machines du VLAN 10.<br>Même principe pour le VLAN 20 avec l'IP 172.17.20.1.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Le routeur connaît les 2 sous-réseaux et peut router les paquets de l'un vers l'autre.</div></div>
+    </div>
+
+    <div>
+      <div class="fig-label green">Figure 8 — Vérification des interfaces du routeur</div>
+      <div class="code-wrap">
+        <div class="code-badge">Vérification Routeur</div>
+        <pre><span class="cmt">! Vérifier que les sous-interfaces sont actives</span>
+<span class="tx">Router# </span><span class="kw">show ip interface brief</span>
+
+<span class="cmt">! Résultat attendu dans la capture d'écran :</span>
+<span class="ti">Interface              IP-Address     OK? Status   Protocol</span>
+<span class="tx">GigabitEthernet0/1     unassigned     YES up        up</span>
+<span class="val">GigabitEthernet0/1.10  172.17.10.1    YES up        up</span>
+<span class="val">GigabitEthernet0/1.20  172.17.20.1    YES up        up</span></pre>
+      </div>
+    </div>
+
+    <div class="expl purple">
+      <div class="expl-row"><div class="expl-label cmd purple">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">show ip interface brief</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi cette commande ?</div><div class="expl-text">Affiche toutes les interfaces avec leur IP et leur statut. Si <code>Gi0/1.10</code> et <code>Gi0/1.20</code> sont <strong>up/up</strong> avec leurs IP → le routage Inter-VLAN est actif.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Les deux sous-interfaces sont actives → VLAN 10 et VLAN 20 peuvent maintenant communiquer.</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu technique — Configuration sur matériel Cisco réel — Page 5 / 6</div>
+</div>
+
+<!-- ════════════════ PAGE 6 — CONCLUSION ════════════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 6 — VLAN, VTP ET ROUTAGE INTER-VLAN</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <div class="sec"><div class="sec-num">7</div><div class="sec-title">Conclusion & tableau récapitulatif</div><div class="sec-line"></div></div>
+
+    <p class="intro-text">La Mission 6 a permis de mettre en place une infrastructure réseau <strong>segmentée, centralisée et routée</strong> — architecture professionnelle reproduite sur du matériel Cisco réel en salle de TP.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Étape</th>
+          <th>Commande(s) clé(s)</th>
+          <th>Pourquoi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Création VLAN</td><td>vlan 10 / vlan 20 / name</td><td>Créer des réseaux logiques isolés</td></tr>
+        <tr><td>2</td><td>Vérif VLAN</td><td>show vlan brief</td><td>Confirmer que les VLAN existent et sont actifs</td></tr>
+        <tr><td>3</td><td>Config VTP</td><td>vtp mode server / vtp domain CRASH</td><td>Synchroniser les VLAN automatiquement</td></tr>
+        <tr><td>4</td><td>Vérif VTP</td><td>show vtp status</td><td>Contrôler le mode et le domaine VTP</td></tr>
+        <tr><td>5</td><td>Port Trunk</td><td>switchport mode trunk / allowed vlan 10,20</td><td>Transporter les VLAN vers le routeur</td></tr>
+        <tr><td>6</td><td>Vérif Trunk</td><td>show interfaces trunk</td><td>Confirmer que le trunk 802.1Q est actif</td></tr>
+        <tr><td>7</td><td>Sous-interfaces</td><td>interface Gi0/1.10 / encapsulation dot1Q / ip address</td><td>Créer les passerelles par VLAN</td></tr>
+        <tr><td>8</td><td>Vérif routeur</td><td>show ip interface brief</td><td>Valider que le routage Inter-VLAN est actif</td></tr>
+      </tbody>
+    </table>
+
+    <div class="result-box">
+      <div class="r-title">✅ Résultat final — Infrastructure opérationnelle</div>
+      <p>VLAN 10 (Escrime) et VLAN 20 (Volley) sont segmentés, synchronisés par VTP,<br>transportés par le trunk 802.1Q, et routés par le Cisco 2901.</p>
+      <div class="r-ping">Validation : ping depuis un PC VLAN 10 vers un PC VLAN 20 → succès ✓</div>
+    </div>
+
+    <div class="warn">
+      <div class="warn-title">⚠️ Rappel important : write memory</div>
+      <p>Sur du matériel Cisco réel : toujours terminer par <code>write memory</code> (ou <code>wr</code>) pour sauvegarder.</p>
+      <p>Sans cette commande, toute la configuration est <strong>perdue au redémarrage</strong> du switch ou du routeur.</p>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu technique — Configuration sur matériel Cisco réel — Page 6 / 6</div>
+</div>
+
+</body>
+</html>
