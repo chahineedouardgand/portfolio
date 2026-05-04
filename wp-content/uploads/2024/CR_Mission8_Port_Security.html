@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Mission 8 — Port Security</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @media print {
+    body { margin: 0; background: white; padding: 0; }
+    .page { page-break-after: always; page-break-inside: avoid; box-shadow: none; margin: 0; }
+    .page:last-child { page-break-after: auto; }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #e5e7eb;
+    padding: 20px;
+    font-size: 14px;
+    color: #334155;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    background: white;
+    margin: 0 auto 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+
+  /* ── HEADER ── */
+  .pg-header {
+    background: #0a1628;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .pg-header-left  { font-size: 9px; font-weight: 700; color: white; letter-spacing: .04em; }
+  .pg-header-right { font-size: 8px; color: #94a3b8; }
+  .pg-header-accent { height: 3px; background: linear-gradient(90deg, #dc2626, #f97316); }
+
+  /* ── BODY ── */
+  .pg-body {
+    flex: 1;
+    padding: 18px 22px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* ── FOOTER ── */
+  .pg-footer {
+    background: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+    padding: 6px 22px;
+    text-align: center;
+    font-size: 8px;
+    color: #94a3b8;
+    flex-shrink: 0;
+  }
+
+  /* ── COVER ── */
+  .cover-block {
+    background: #0a1628;
+    border-radius: 12px;
+    padding: 28px 28px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover-block::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(220,38,38,0.2), transparent 70%);
+  }
+  .cover-tag   { font-size: 9px; font-weight: 700; color: #fca5a5; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 10px; }
+  .cover-title { font-size: 28px; font-weight: 800; color: white; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .cover-title span { color: #fca5a5; }
+  .cover-sub   { font-size: 10px; color: #64748b; margin-bottom: 18px; }
+  .cover-meta  { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .cover-meta .lbl { font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+  .cover-meta .val { font-size: 11px; font-weight: 700; color: white; }
+
+  /* ── SECTION ── */
+  .sec { display: flex; align-items: center; gap: 10px; }
+  .sec-num {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: #dc2626; color: white;
+    font-size: 11px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-num.orange { background: #ea580c; }
+  .sec-num.green  { background: #16a34a; }
+  .sec-num.amber  { background: #d97706; }
+  .sec-title { font-size: 16px; font-weight: 800; color: #0f172a; }
+  .sec-line  { flex: 1; height: 2px; background: linear-gradient(90deg, #dc2626, transparent); border-radius: 1px; }
+  .sec-line.orange { background: linear-gradient(90deg, #ea580c, transparent); }
+  .sec-line.green  { background: linear-gradient(90deg, #16a34a, transparent); }
+  .sec-line.amber  { background: linear-gradient(90deg, #d97706, transparent); }
+
+  /* ── THEORY BOX ── */
+  .theory {
+    background: #fff7ed;
+    border: 1px solid #d97706;
+    border-left: 4px solid #d97706;
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .theory.red {
+    background: #fef2f2;
+    border-color: #dc2626;
+    border-left-color: #dc2626;
+  }
+  .theory.green {
+    background: #f0fdf4;
+    border-color: #16a34a;
+    border-left-color: #16a34a;
+  }
+  .theory-title       { font-size: 10px; font-weight: 800; color: #d97706; margin-bottom: 6px; }
+  .theory.red   .theory-title  { color: #dc2626; }
+  .theory.green .theory-title  { color: #16a34a; }
+  .theory p { font-size: 10px; color: #475569; line-height: 1.65; margin-bottom: 3px; }
+  .theory p:last-child { margin-bottom: 0; }
+  .theory strong { color: #0f172a; }
+
+  /* ── FIGURE LABEL ── */
+  .fig-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #dc2626; color: white;
+    font-size: 9px; font-weight: 700;
+    padding: 4px 12px; border-radius: 6px; margin-bottom: 4px;
+  }
+  .fig-label.orange { background: #ea580c; }
+  .fig-label.green  { background: #16a34a; }
+  .fig-label.amber  { background: #d97706; }
+
+  /* ── CODE ── */
+  .code-wrap { position: relative; }
+  .code-badge {
+    position: absolute; top: 6px; right: 10px;
+    font-size: 7.5px; font-weight: 700; color: #64748b; font-family: monospace;
+  }
+  pre {
+    background: #0f172a;
+    border-radius: 8px;
+    padding: 14px 14px 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 9.5px;
+    line-height: 1.65;
+    overflow: hidden;
+  }
+  .kw  { color: #a78bfa; font-weight: bold; }
+  .val { color: #86efac; }
+  .cmt { color: #64748b; font-style: italic; }
+  .ti  { color: #38bdf8; font-weight: bold; }
+  .tx  { color: #e2e8f0; }
+  .err { color: #fca5a5; font-weight: bold; }
+  .ok  { color: #86efac; font-weight: bold; }
+
+  /* ── EXPLICATION ── */
+  .expl {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #dc2626;
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .expl.orange { border-left-color: #ea580c; }
+  .expl.green  { border-left-color: #16a34a; }
+  .expl.amber  { border-left-color: #d97706; }
+
+  .expl-label     { font-size: 9px; font-weight: 800; }
+  .expl-label.cmd { color: #dc2626; }
+  .expl-label.cmd.orange { color: #ea580c; }
+  .expl-label.cmd.green  { color: #16a34a; }
+  .expl-label.cmd.amber  { color: #d97706; }
+  .expl-label.why { color: #d97706; }
+  .expl-label.res { color: #16a34a; }
+  .expl-cmd  { font-family: monospace; font-size: 9.5px; font-weight: 700; color: #0f172a; background: #e2e8f0; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-top: 3px; }
+  .expl-text { font-size: 9.5px; color: #475569; line-height: 1.6; }
+  .expl-row  { display: flex; flex-direction: column; gap: 3px; }
+
+  /* ── OBJ GRID ── */
+  .obj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .obj-block { border-radius: 8px; padding: 12px; border-top: 4px solid; }
+  .obj-block.red    { background: #fef2f2; border-color: #dc2626; }
+  .obj-block.orange { background: #fff7ed; border-color: #ea580c; }
+  .obj-block.amber  { background: #fffbeb; border-color: #d97706; }
+  .obj-block-title  { font-size: 10px; font-weight: 800; margin-bottom: 5px; }
+  .obj-block.red    .obj-block-title { color: #dc2626; }
+  .obj-block.orange .obj-block-title { color: #ea580c; }
+  .obj-block.amber  .obj-block-title { color: #d97706; }
+  .obj-block p { font-size: 9px; color: #475569; line-height: 1.55; }
+
+  /* ── ENV GRID ── */
+  .env-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .env-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 10px; }
+  .env-lbl  { font-size: 8px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+  .env-val  { font-size: 10px; font-weight: 700; color: #0f172a; }
+
+  /* ── VIOLATION SCHEMA ── */
+  .schema {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 10px;
+  }
+  .schema-step {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    text-align: center; flex: 1;
+  }
+  .schema-ico {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .schema-ico.red    { background: #fef2f2; }
+  .schema-ico.orange { background: #fff7ed; }
+  .schema-ico.green  { background: #f0fdf4; }
+  .schema-label { font-size: 9px; font-weight: 700; color: #0f172a; }
+  .schema-sub   { font-size: 8px; color: #64748b; }
+  .schema-arrow { font-size: 18px; color: #94a3b8; flex-shrink: 0; }
+
+  /* ── TABLE RECAP ── */
+  table { width: 100%; border-collapse: collapse; font-size: 9px; }
+  thead tr { background: #dc2626; color: white; }
+  thead th  { padding: 7px 8px; text-align: left; font-weight: 700; }
+  tbody tr:nth-child(even) { background: #f8fafc; }
+  tbody td  { padding: 7px 8px; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: top; }
+  tbody td:first-child { font-weight: 800; color: #dc2626; }
+  tbody td:nth-child(3) { font-family: monospace; font-size: 8.5px; color: #4f46e5; }
+
+  /* ── RESULT BOX ── */
+  .result-box {
+    background: #f0fdf4; border: 2px solid #16a34a; border-radius: 10px; padding: 16px; text-align: center;
+  }
+  .result-box .r-title { font-size: 13px; font-weight: 800; color: #16a34a; margin-bottom: 6px; }
+  .result-box p { font-size: 10px; color: #475569; line-height: 1.6; }
+  .result-box .r-sub { font-size: 10px; font-weight: 700; color: #ea580c; margin-top: 6px; }
+
+  /* ── WARN ── */
+  .warn {
+    background: #fef2f2; border: 1px solid #dc2626; border-left: 4px solid #dc2626;
+    border-radius: 8px; padding: 10px 14px;
+  }
+  .warn-title { font-size: 10px; font-weight: 800; color: #dc2626; margin-bottom: 4px; }
+  .warn p { font-size: 9.5px; color: #475569; line-height: 1.55; }
+
+  .intro-text { font-size: 10px; color: #475569; line-height: 1.65; }
+
+  /* ── CMD LIST ── */
+  .cmd-list { display: flex; flex-direction: column; gap: 8px; }
+  .cmd-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 10px 12px; background: #f8fafc;
+    border: 1px solid #e2e8f0; border-radius: 8px;
+  }
+  .cmd-item-code {
+    font-family: monospace; font-size: 9.5px; font-weight: 700;
+    color: #4f46e5; background: #ede9fe;
+    padding: 2px 8px; border-radius: 4px;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .cmd-item-desc { font-size: 9.5px; color: #475569; line-height: 1.55; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════ PAGE 1 — COVER + POURQUOI ════════════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 8 — PORT SECURITY — SÉCURISATION DES PORTS</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <!-- Cover -->
+    <div class="cover-block">
+      <div class="cover-tag">Projet CRASH — BTS SIO 2e Année — Compte Rendu Technique</div>
+      <div class="cover-title">Mission 8 — <span>Port Security</span><br>Sécurisation des ports</div>
+      <div class="cover-sub">Limiter les connexions autorisées par port switch — Configuration sur matériel Cisco réel</div>
+      <div class="cover-meta">
+        <div><div class="lbl">Étudiant</div><div class="val">Aouizir Chahine</div></div>
+        <div><div class="lbl">Matériel</div><div class="val">Cisco réel</div></div>
+        <div><div class="lbl">Port ciblé</div><div class="val">FastEthernet0/3</div></div>
+        <div><div class="lbl">Option</div><div class="val">BTS SIO SISR</div></div>
+      </div>
+    </div>
+
+    <!-- Section 1 — Pourquoi -->
+    <div class="sec"><div class="sec-num">1</div><div class="sec-title">Pourquoi mettre en place le Port-Security ?</div><div class="sec-line"></div></div>
+
+    <div class="theory red">
+      <div class="theory-title">Le problème sans Port-Security</div>
+      <p>N'importe qui peut brancher un PC non autorisé, un hub, ou lancer une <strong>attaque MAC flooding</strong> pour saturer la table CAM du switch.</p>
+      <p>Une attaque MAC flooding remplit la table des adresses MAC → le switch se comporte comme un hub → tout le trafic est diffusé à tous les ports → interception possible.</p>
+    </div>
+
+    <div class="obj-grid">
+      <div class="obj-block red">
+        <div class="obj-block-title">🚫 Branchements sauvages</div>
+        <p>Empêcher les PC non autorisés de se connecter au réseau sans permission.</p>
+      </div>
+      <div class="obj-block orange">
+        <div class="obj-block-title">⚡ MAC Flooding</div>
+        <p>Bloquer les attaques qui saturent la table CAM pour intercepter le trafic réseau.</p>
+      </div>
+      <div class="obj-block amber">
+        <div class="obj-block-title">🔒 1 MAC par port</div>
+        <p>Dans le projet CRASH, chaque port utilisateur est limité à une seule adresse MAC autorisée.</p>
+      </div>
+    </div>
+
+    <p class="intro-text">
+      <strong>Principe :</strong> si une autre machine est branchée sur le port, celui-ci est automatiquement bloqué (<code>err-disabled</code>).
+      Cette configuration est essentielle en entreprise pour garantir la <strong>sécurité physique du réseau</strong>.
+    </p>
+
+    <!-- Section 2 — Env -->
+    <div class="sec"><div class="sec-num orange">2</div><div class="sec-title">Environnement technique</div><div class="sec-line orange"></div></div>
+    <div class="env-grid">
+      <div class="env-item"><div class="env-lbl">Accès console</div><div class="env-val">PuTTY — Serial COM1</div></div>
+      <div class="env-item"><div class="env-lbl">Switch</div><div class="env-val">Cisco Catalyst</div></div>
+      <div class="env-item"><div class="env-lbl">Port ciblé</div><div class="env-val">FastEthernet0/3</div></div>
+      <div class="env-item"><div class="env-lbl">Nb MAC autorisé</div><div class="env-val">Maximum 1</div></div>
+      <div class="env-item"><div class="env-lbl">Mode apprentissage</div><div class="env-val">Sticky (automatique)</div></div>
+      <div class="env-item"><div class="env-lbl">Mode violation</div><div class="env-val">Shutdown (err-disabled)</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu technique — Port Security sur matériel Cisco réel — Page 1 / 4</div>
+</div>
+
+<!-- ════════════════ PAGE 2 — CONFIGURATION ════════════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 8 — PORT SECURITY — SÉCURISATION DES PORTS</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <div class="sec"><div class="sec-num">3</div><div class="sec-title">Configuration du Port-Security</div><div class="sec-line"></div></div>
+
+    <div class="theory">
+      <div class="theory-title">Comment fonctionne le mode Sticky ?</div>
+      <p>Le mode <strong>sticky</strong> permet au switch d'<strong>apprendre automatiquement</strong> la première adresse MAC branchée sur le port.</p>
+      <p>Cette MAC est ensuite mémorisée dans la configuration en cours — pas besoin de la saisir manuellement.</p>
+      <p>Si une MAC différente tente de se connecter → violation détectée → port coupé automatiquement.</p>
+    </div>
+
+    <div>
+      <div class="fig-label">Figure 1 — Configuration complète du Port-Security sur Fa0/3</div>
+      <div class="code-wrap">
+        <div class="code-badge">Switch Cisco — Port Security</div>
+        <pre><span class="cmt">! Entrer en mode configuration sur le port Fa0/3</span>
+<span class="tx">Switch> </span><span class="kw">enable</span>
+<span class="tx">Switch# </span><span class="kw">configure terminal</span>
+<span class="tx">Switch(config)# </span><span class="kw">interface fastEthernet0/3</span>
+
+<span class="cmt">! Forcer le port en mode access (obligatoire pour Port-Security)</span>
+<span class="tx">Switch(config-if)# </span><span class="val">switchport mode access</span>
+
+<span class="cmt">! Activer le Port-Security sur ce port</span>
+<span class="tx">Switch(config-if)# </span><span class="kw">switchport port-security</span>
+
+<span class="cmt">! Autoriser une seule adresse MAC sur ce port</span>
+<span class="tx">Switch(config-if)# </span><span class="val">switchport port-security maximum 1</span>
+
+<span class="cmt">! Apprentissage automatique de la MAC branchée (mode sticky)</span>
+<span class="tx">Switch(config-if)# </span><span class="val">switchport port-security mac-address sticky</span>
+
+<span class="cmt">! En cas de violation : couper le port (err-disabled)</span>
+<span class="tx">Switch(config-if)# </span><span class="kw">switchport port-security violation shutdown</span>
+
+<span class="tx">Switch(config-if)# exit</span>
+<span class="val">Switch# write memory     ! Sauvegarder — CRUCIAL sur matériel réel !</span></pre>
+      </div>
+    </div>
+
+    <!-- Explication commande par commande -->
+    <div class="cmd-list">
+      <div class="cmd-item">
+        <div class="cmd-item-code">switchport mode access</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Le Port-Security ne fonctionne QUE sur les ports en mode access. Un port trunk ne peut pas être sécurisé par cette méthode.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-item-code">switchport port-security</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Active la fonctionnalité Port-Security sur ce port. Sans cette ligne, toutes les autres commandes port-security sont ignorées.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-item-code">maximum 1</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Limite à une seule adresse MAC autorisée. Si un hub ou un switch non autorisé est branché (plusieurs MACs), violation immédiate.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-item-code">mac-address sticky</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Le switch apprend automatiquement la première MAC branchée et la mémorise. Évite de saisir manuellement l'adresse MAC de chaque machine.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-item-code">violation shutdown</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> En cas de violation détectée (MAC non autorisée), le port passe en état <code>err-disabled</code> — coupure totale, aucune communication n'est possible.</div>
+      </div>
+    </div>
+
+    <div class="expl">
+      <div class="expl-row"><div class="expl-label cmd">⌨ Commandes clés à retenir</div><div class="expl-cmd">switchport port-security + maximum 1 + mac-address sticky + violation shutdown</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi cette configuration ?</div><div class="expl-text">Ces 4 commandes ensemble forment un bouclier : le port n'accepte qu'une seule machine (celle qui a été branchée en premier). Toute autre machine est automatiquement rejetée et le port est coupé.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Le port Fa0/3 est sécurisé — il apprend automatiquement la MAC de la machine autorisée et bloque toute autre connexion.</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu technique — Port Security sur matériel Cisco réel — Page 2 / 4</div>
+</div>
+
+<!-- ════════════════ PAGE 3 — VÉRIFICATIONS + TEST ════════════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 8 — PORT SECURITY — SÉCURISATION DES PORTS</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <!-- Section 4 — Vérification MAC sticky -->
+    <div class="sec"><div class="sec-num green">4</div><div class="sec-title">Vérification de la MAC sécurisée (Sticky)</div><div class="sec-line green"></div></div>
+
+    <div>
+      <div class="fig-label green">Figure 2 — Table des adresses MAC sécurisées</div>
+      <div class="code-wrap">
+        <div class="code-badge">Vérification Port-Security</div>
+        <pre><span class="cmt">! Vérifier que la MAC a bien été apprise en mode sticky</span>
+<span class="tx">Switch# </span><span class="kw">show port-security address</span>
+
+<span class="cmt">! Résultat attendu dans la capture d'écran :</span>
+<span class="ti">Vlan    Mac Address       Type         Ports   Remaining Age (mins)</span>
+<span class="val">   1    00aa.bbcc.ddee    SecureSticky  Fa0/3       -</span>
+
+<span class="cmt">! Ou pour voir le détail d'un port spécifique :</span>
+<span class="tx">Switch# </span><span class="kw">show port-security interface fastEthernet0/3</span>
+
+<span class="cmt">! Résultat attendu :</span>
+<span class="ti">Port Security              : Enabled</span>
+<span class="val">Port Status                : Secure-up</span>
+<span class="val">Violation Mode             : Shutdown</span>
+<span class="ok">Maximum MAC Addresses      : 1</span>
+<span class="ok">Total MAC Addresses        : 1</span>
+<span class="ok">Security Violation Count   : 0</span></pre>
+      </div>
+    </div>
+
+    <div class="expl green">
+      <div class="expl-row"><div class="expl-label cmd green">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">show port-security address / show port-security interface fa0/3</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi cette commande ?</div><div class="expl-text">Confirme que le Port-Security est actif (<code>Enabled</code>), que le port est en état <code>Secure-up</code> (fonctionnel), et que la MAC a bien été apprise en mode sticky. <code>Security Violation Count: 0</code> → aucune intrusion détectée pour l'instant.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">La MAC de la machine autorisée est bien mémorisée en type <strong>SecureSticky</strong> sur le port Fa0/3.</div></div>
+    </div>
+
+    <!-- Section 5 — Test violation -->
+    <div class="sec" style="margin-top:4px;"><div class="sec-num">5</div><div class="sec-title">Test de sécurité — Détection d'intrusion</div><div class="sec-line"></div></div>
+
+    <!-- Schéma violation -->
+    <div class="schema">
+      <div class="schema-step">
+        <div class="schema-ico red">💻</div>
+        <div class="schema-label">PC autorisé</div>
+        <div class="schema-sub">MAC apprise en sticky</div>
+      </div>
+      <div class="schema-arrow">→</div>
+      <div class="schema-step">
+        <div class="schema-ico red">🔌</div>
+        <div class="schema-label">Débranchement</div>
+        <div class="schema-sub">PC non autorisé branché</div>
+      </div>
+      <div class="schema-arrow">→</div>
+      <div class="schema-step">
+        <div class="schema-ico orange">⚡</div>
+        <div class="schema-label">MAC différente</div>
+        <div class="schema-sub">Violation détectée</div>
+      </div>
+      <div class="schema-arrow">→</div>
+      <div class="schema-step">
+        <div class="schema-ico red">🚫</div>
+        <div class="schema-label">err-disabled</div>
+        <div class="schema-sub">Port coupé automatiquement</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="fig-label">Figure 3 — Détection de violation de sécurité</div>
+      <div class="code-wrap">
+        <div class="code-badge">Log switch — Violation détectée</div>
+        <pre><span class="cmt">! Message affiché dans la console du switch lors de la violation :</span>
+<span class="err">%PORT_SECURITY-2-PSECURE_VIOLATION: Security violation occurred,</span>
+<span class="err">caused by MAC address 00bb.ccdd.eeff on port FastEthernet0/3.</span>
+
+<span class="cmt">! Le port passe automatiquement en err-disabled :</span>
+<span class="err">%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/3,</span>
+<span class="err">changed state to down</span>
+<span class="err">%LINK-3-UPDOWN: Interface FastEthernet0/3, changed state to down</span></pre>
+      </div>
+    </div>
+
+    <div class="expl">
+      <div class="expl-row"><div class="expl-label cmd">⌨ Ce qui se passe lors de la violation</div><div class="expl-cmd">violation shutdown → port passe en err-disabled</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi ce comportement ?</div><div class="expl-text">Le mode <code>violation shutdown</code> est le plus sécurisé : il coupe totalement le port dès qu'une MAC non autorisée est détectée. Le switch envoie un log d'alerte et incrémente le compteur de violations.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Le port Fa0/3 passe en état <strong>err-disabled</strong> — aucune communication n'est possible depuis ce port.</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu technique — Port Security sur matériel Cisco réel — Page 3 / 4</div>
+</div>
+
+<!-- ════════════════ PAGE 4 — ÉTAT PORT + REMISE EN SERVICE + CONCLUSION ════════════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 8 — PORT SECURITY — SÉCURISATION DES PORTS</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <!-- Section — Vérification état port bloqué -->
+    <div class="sec"><div class="sec-num amber">6</div><div class="sec-title">Vérification de l'état du port bloqué</div><div class="sec-line amber"></div></div>
+
+    <div>
+      <div class="fig-label amber">Figure 4 — Port bloqué en err-disabled</div>
+      <div class="code-wrap">
+        <div class="code-badge">Vérification état port</div>
+        <pre><span class="cmt">! Vérifier l'état du port après violation</span>
+<span class="tx">Switch# </span><span class="kw">show port-security interface fastEthernet0/3</span>
+
+<span class="cmt">! Résultat attendu dans la capture d'écran :</span>
+<span class="ti">Port Security              : Enabled</span>
+<span class="err">Port Status                : Secure-shutdown</span>
+<span class="err">Violation Mode             : Shutdown</span>
+<span class="err">Security Violation Count   : 1</span>
+
+<span class="cmt">! Vérifier aussi dans la table des interfaces :</span>
+<span class="tx">Switch# </span><span class="kw">show interfaces fastEthernet0/3 status</span>
+
+<span class="cmt">! Résultat :</span>
+<span class="ti">Port     Name    Status          Vlan</span>
+<span class="err">Fa0/3            err-disabled    1</span></pre>
+      </div>
+    </div>
+
+    <div class="expl amber">
+      <div class="expl-row"><div class="expl-label cmd amber">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">show port-security interface fa0/3 / show interfaces fa0/3 status</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi ?</div><div class="expl-text"><code>Port Status: Secure-shutdown</code> confirme que la violation a bien été détectée et que le port est bloqué. <code>Security Violation Count: 1</code> indique qu'une intrusion a eu lieu — tracé pour l'audit.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Le port apparaît en <strong>err-disabled</strong> — la sécurité fonctionne correctement, aucun trafic ne peut transiter.</div></div>
+    </div>
+
+    <!-- Section — Remise en service -->
+    <div class="sec"><div class="sec-num orange">7</div><div class="sec-title">Procédure de remise en service du port</div><div class="sec-line orange"></div></div>
+
+    <div class="theory">
+      <div class="theory-title">Quand utiliser cette procédure ?</div>
+      <p>Uniquement <strong>après avoir vérifié et rebranché l'équipement autorisé</strong> sur le port. Ne jamais réactiver sans contrôle préalable.</p>
+    </div>
+
+    <div>
+      <div class="fig-label orange">Figure 5 — Remise en service du port Fa0/3</div>
+      <div class="code-wrap">
+        <div class="code-badge">Réactivation port</div>
+        <pre><span class="cmt">! Entrer sur l'interface bloquée</span>
+<span class="tx">Switch(config)# </span><span class="kw">interface fastEthernet0/3</span>
+
+<span class="cmt">! Éteindre manuellement le port (reset de l'état err-disabled)</span>
+<span class="tx">Switch(config-if)# </span><span class="val">shutdown</span>
+
+<span class="cmt">! Réactiver le port</span>
+<span class="tx">Switch(config-if)# </span><span class="val">no shutdown</span>
+
+<span class="tx">Switch(config-if)# exit</span>
+<span class="val">Switch# write memory</span>
+
+<span class="cmt">! Vérification après remise en service :</span>
+<span class="tx">Switch# </span><span class="kw">show port-security interface fastEthernet0/3</span>
+<span class="ok">Port Status                : Secure-up</span>
+<span class="ok">Security Violation Count   : 0</span></pre>
+      </div>
+    </div>
+
+    <div class="expl orange">
+      <div class="expl-row"><div class="expl-label cmd orange">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">shutdown  puis  no shutdown</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi shutdown puis no shutdown ?</div><div class="expl-text">Un port en <code>err-disabled</code> ne revient pas tout seul en service. Il faut le forcer manuellement avec <code>shutdown</code> pour réinitialiser l'état, puis <code>no shutdown</code> pour le réactiver. À utiliser <strong>uniquement après avoir vérifié l'équipement branché</strong>.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Le port repasse en état <strong>Secure-up</strong> — il est de nouveau opérationnel avec la sécurité toujours active.</div></div>
+    </div>
+
+    <!-- Conclusion -->
+    <div class="sec"><div class="sec-num green">8</div><div class="sec-title">Conclusion & récapitulatif</div><div class="sec-line green"></div></div>
+
+    <table>
+      <thead>
+        <tr><th>#</th><th>Étape</th><th>Commande(s) clé(s)</th><th>Pourquoi</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Mode access</td><td>switchport mode access</td><td>Requis avant toute config port-security</td></tr>
+        <tr><td>2</td><td>Activer</td><td>switchport port-security</td><td>Active la sécurité sur le port</td></tr>
+        <tr><td>3</td><td>Limite MAC</td><td>port-security maximum 1</td><td>1 seule machine autorisée par port</td></tr>
+        <tr><td>4</td><td>Sticky</td><td>port-security mac-address sticky</td><td>Apprentissage automatique de la MAC</td></tr>
+        <tr><td>5</td><td>Violation</td><td>port-security violation shutdown</td><td>Port coupé en cas d'intrusion</td></tr>
+        <tr><td>6</td><td>Vérif MAC</td><td>show port-security address</td><td>Confirmer la MAC apprise en sticky</td></tr>
+        <tr><td>7</td><td>Vérif port</td><td>show port-security interface fa0/3</td><td>Contrôler l'état et les violations</td></tr>
+        <tr><td>8</td><td>Remise en service</td><td>shutdown + no shutdown</td><td>Réactiver un port en err-disabled</td></tr>
+      </tbody>
+    </table>
+
+    <div class="result-box">
+      <div class="r-title">✅ Résultat final — Port-Security opérationnel</div>
+      <p>Le port Fa0/3 n'autorise qu'une seule machine. Toute tentative de connexion non autorisée<br>déclenche une coupure automatique du port et un log d'alerte dans la console.</p>
+      <div class="r-sub">🔒 Traçabilité via les logs — Coupure automatique — 1 machine par port</div>
+    </div>
+
+    <div class="warn">
+      <div class="warn-title">⚠️ Rappel important : write memory</div>
+      <p>Sur du matériel Cisco réel : toujours terminer par <code>write memory</code> pour sauvegarder.</p>
+      <p>Sans cette commande, toute la configuration Port-Security est <strong>perdue au redémarrage</strong> du switch.</p>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu technique — Port Security sur matériel Cisco réel — Page 4 / 4</div>
+</div>
+
+</body>
+</html>

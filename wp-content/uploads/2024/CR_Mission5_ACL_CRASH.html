@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Mission 5 — ACL — Sécurisation du routeur CRASH</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @media print {
+    body { margin: 0; background: white; padding: 0; }
+    .page { page-break-after: always; page-break-inside: avoid; box-shadow: none; margin: 0; }
+    .page:last-child { page-break-after: auto; }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #e5e7eb;
+    padding: 20px;
+    font-size: 14px;
+    color: #334155;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    background: white;
+    margin: 0 auto 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+
+  /* HEADER */
+  .pg-header {
+    background: #0a1628;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .pg-header-left  { font-size: 9px; font-weight: 700; color: white; letter-spacing: .04em; }
+  .pg-header-right { font-size: 8px; color: #94a3b8; }
+  .pg-header-accent { height: 3px; background: linear-gradient(90deg, #0891b2, #06b6d4); }
+
+  /* BODY */
+  .pg-body {
+    flex: 1;
+    padding: 18px 22px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  /* FOOTER */
+  .pg-footer {
+    background: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+    padding: 6px 22px;
+    text-align: center;
+    font-size: 8px;
+    color: #94a3b8;
+    flex-shrink: 0;
+  }
+
+  /* COVER */
+  .cover-block {
+    background: #0a1628;
+    border-radius: 12px;
+    padding: 26px 28px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover-block::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(8,145,178,0.25), transparent 70%);
+  }
+  .cover-block::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: 15%;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(6,182,212,0.15), transparent 70%);
+  }
+  .cover-tag   { font-size: 9px; font-weight: 700; color: #67e8f9; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 10px; }
+  .cover-title { font-size: 26px; font-weight: 800; color: white; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .cover-title span { color: #67e8f9; }
+  .cover-sub   { font-size: 10px; color: #64748b; margin-bottom: 16px; }
+  .cover-meta  { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .cover-meta .lbl { font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+  .cover-meta .val { font-size: 11px; font-weight: 700; color: white; }
+
+  /* PALETTE */
+  :root {
+    --cyan:   #0891b2;
+    --cyanlt: #ecfeff;
+    --teal:   #0d9488;
+    --teallt: #f0fdfa;
+    --green:  #16a34a;
+    --greenlt:#f0fdf4;
+    --amber:  #d97706;
+    --amberlt:#fffbeb;
+    --red:    #dc2626;
+    --redlt:  #fef2f2;
+    --purple: #7c3aed;
+    --purplt: #f5f3ff;
+  }
+
+  /* SECTIONS */
+  .sec { display: flex; align-items: center; gap: 10px; }
+  .sec-num {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: var(--cyan); color: white;
+    font-size: 11px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .sec-num.teal   { background: var(--teal); }
+  .sec-num.green  { background: var(--green); }
+  .sec-num.amber  { background: var(--amber); }
+  .sec-num.red    { background: var(--red); }
+  .sec-num.purple { background: var(--purple); }
+  .sec-title { font-size: 15px; font-weight: 800; color: #0f172a; }
+  .sec-line  { flex: 1; height: 2px; background: linear-gradient(90deg, var(--cyan), transparent); border-radius: 1px; }
+  .sec-line.teal   { background: linear-gradient(90deg, var(--teal), transparent); }
+  .sec-line.green  { background: linear-gradient(90deg, var(--green), transparent); }
+  .sec-line.amber  { background: linear-gradient(90deg, var(--amber), transparent); }
+  .sec-line.red    { background: linear-gradient(90deg, var(--red), transparent); }
+  .sec-line.purple { background: linear-gradient(90deg, var(--purple), transparent); }
+
+  /* THEORY */
+  .theory {
+    background: var(--amberlt);
+    border: 1px solid var(--amber);
+    border-left: 4px solid var(--amber);
+    border-radius: 8px;
+    padding: 11px 14px;
+  }
+  .theory.cyan   { background: var(--cyanlt);  border-color: var(--cyan);   border-left-color: var(--cyan); }
+  .theory.teal   { background: var(--teallt);  border-color: var(--teal);   border-left-color: var(--teal); }
+  .theory.green  { background: var(--greenlt); border-color: var(--green);  border-left-color: var(--green); }
+  .theory.red    { background: var(--redlt);   border-color: var(--red);    border-left-color: var(--red); }
+  .theory.purple { background: var(--purplt);  border-color: var(--purple); border-left-color: var(--purple); }
+  .theory-title { font-size: 10px; font-weight: 800; color: var(--amber); margin-bottom: 6px; }
+  .theory.cyan   .theory-title { color: var(--cyan); }
+  .theory.teal   .theory-title { color: var(--teal); }
+  .theory.green  .theory-title { color: var(--green); }
+  .theory.red    .theory-title { color: var(--red); }
+  .theory.purple .theory-title { color: var(--purple); }
+  .theory p { font-size: 10px; color: #475569; line-height: 1.65; margin-bottom: 3px; }
+  .theory p:last-child { margin-bottom: 0; }
+
+  /* FIGURE LABEL */
+  .fig-label {
+    display: inline-flex; align-items: center;
+    background: var(--cyan); color: white;
+    font-size: 9px; font-weight: 700;
+    padding: 4px 12px; border-radius: 6px; margin-bottom: 4px;
+  }
+  .fig-label.teal   { background: var(--teal); }
+  .fig-label.green  { background: var(--green); }
+  .fig-label.amber  { background: var(--amber); }
+  .fig-label.red    { background: var(--red); }
+  .fig-label.purple { background: var(--purple); }
+
+  /* CODE */
+  .code-wrap { position: relative; }
+  .code-badge { position: absolute; top: 6px; right: 10px; font-size: 7.5px; font-weight: 700; color: #64748b; font-family: monospace; }
+  pre {
+    background: #0f172a;
+    border-radius: 8px;
+    padding: 13px 13px 9px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 9px;
+    line-height: 1.65;
+    overflow: hidden;
+  }
+  .kw   { color: #a78bfa; font-weight: bold; }
+  .val  { color: #86efac; }
+  .cmt  { color: #64748b; font-style: italic; }
+  .ti   { color: #38bdf8; font-weight: bold; }
+  .tx   { color: #e2e8f0; }
+  .ok   { color: #86efac; font-weight: bold; }
+  .err  { color: #fca5a5; font-weight: bold; }
+  .warn-c { color: #fbbf24; font-weight: bold; }
+  .cy   { color: #67e8f9; font-weight: bold; }
+
+  /* EXPLICATION */
+  .expl {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid var(--cyan);
+    border-radius: 8px;
+    padding: 11px 14px;
+    display: flex; flex-direction: column; gap: 7px;
+  }
+  .expl.teal   { border-left-color: var(--teal); }
+  .expl.green  { border-left-color: var(--green); }
+  .expl.amber  { border-left-color: var(--amber); }
+  .expl.red    { border-left-color: var(--red); }
+  .expl.purple { border-left-color: var(--purple); }
+  .expl-label     { font-size: 9px; font-weight: 800; }
+  .expl-label.cmd { color: var(--cyan); }
+  .expl-label.cmd.teal   { color: var(--teal); }
+  .expl-label.cmd.green  { color: var(--green); }
+  .expl-label.cmd.amber  { color: var(--amber); }
+  .expl-label.cmd.red    { color: var(--red); }
+  .expl-label.why { color: var(--amber); }
+  .expl-label.res { color: var(--green); }
+  .expl-cmd  { font-family: monospace; font-size: 9px; font-weight: 700; color: #0f172a; background: #e2e8f0; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-top: 2px; }
+  .expl-text { font-size: 9.5px; color: #475569; line-height: 1.6; }
+  .expl-row  { display: flex; flex-direction: column; gap: 2px; }
+
+  /* ENV */
+  .env-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .env-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 10px; }
+  .env-lbl  { font-size: 8px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+  .env-val  { font-size: 10px; font-weight: 700; color: #0f172a; }
+
+  /* RÉSEAU SCHEMA */
+  .net-schema {
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 8px; padding: 14px 18px;
+    display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .net-block {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    text-align: center; min-width: 80px;
+  }
+  .net-ico {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .net-ico.cyan   { background: var(--cyanlt); }
+  .net-ico.teal   { background: var(--teallt); }
+  .net-ico.amber  { background: var(--amberlt); }
+  .net-ico.green  { background: var(--greenlt); }
+  .net-label { font-size: 9px; font-weight: 700; color: #0f172a; }
+  .net-ip    { font-family: monospace; font-size: 8px; color: #64748b; }
+  .net-arrow { font-size: 22px; color: #cbd5e1; }
+
+  /* RÈGLES ACL */
+  .acl-rules { display: flex; flex-direction: column; gap: 6px; }
+  .acl-rule {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 12px; border-radius: 7px; border: 1px solid;
+  }
+  .acl-rule.permit { background: var(--greenlt); border-color: #bbf7d0; }
+  .acl-rule.deny   { background: var(--redlt);   border-color: #fecaca; }
+  .acl-rule-badge {
+    font-size: 8px; font-weight: 800; padding: 2px 8px; border-radius: 99px;
+    white-space: nowrap; flex-shrink: 0; margin-top: 1px;
+  }
+  .acl-rule.permit .acl-rule-badge { background: var(--green); color: white; }
+  .acl-rule.deny   .acl-rule-badge { background: var(--red);   color: white; }
+  .acl-rule-cmd  { font-family: monospace; font-size: 8.5px; color: #0f172a; font-weight: 700; }
+  .acl-rule-desc { font-size: 8.5px; color: #475569; margin-top: 2px; }
+
+  /* TESTS GRID */
+  .tests-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .test-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px; border-radius: 7px; border: 1px solid;
+  }
+  .test-item.pass { background: var(--greenlt); border-color: #bbf7d0; }
+  .test-item.fail { background: var(--redlt);   border-color: #fecaca; }
+  .test-ico  { font-size: 16px; flex-shrink: 0; }
+  .test-text { font-size: 9px; color: #0f172a; line-height: 1.5; }
+  .test-text strong { display: block; font-weight: 700; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 9px; }
+  thead tr { background: var(--cyan); color: white; }
+  thead th  { padding: 7px 8px; text-align: left; font-weight: 700; }
+  tbody tr:nth-child(even) { background: #f8fafc; }
+  tbody td  { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: top; }
+  tbody td:first-child { font-weight: 800; color: var(--cyan); }
+  .td-permit { color: var(--green); font-weight: 700; }
+  .td-deny   { color: var(--red);   font-weight: 700; }
+
+  /* RESULT */
+  .result-box { background: var(--greenlt); border: 2px solid var(--green); border-radius: 10px; padding: 14px; text-align: center; }
+  .result-box .r-title { font-size: 13px; font-weight: 800; color: var(--green); margin-bottom: 6px; }
+  .result-box p { font-size: 9.5px; color: #475569; line-height: 1.6; }
+
+  /* WARN */
+  .warn { background: var(--amberlt); border: 1px solid var(--amber); border-left: 4px solid var(--amber); border-radius: 8px; padding: 10px 14px; }
+  .warn-title { font-size: 10px; font-weight: 800; color: var(--amber); margin-bottom: 4px; }
+  .warn p { font-size: 9.5px; color: #475569; line-height: 1.55; }
+
+  .intro-text { font-size: 10px; color: #475569; line-height: 1.7; }
+  code { font-family: monospace; font-size: 9px; background: #f1f5f9; padding: 1px 5px; border-radius: 3px; color: #0f172a; }
+</style>
+</head>
+<body>
+
+<!-- ════════ PAGE 1 — COVER + CONTEXTE + ARCHITECTURE ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 5 — ACL — SÉCURISATION DU ROUTEUR CRASH</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <div class="cover-block">
+      <div class="cover-tag">Projet CRASH — BTS SIO 2e Année — Compte Rendu Professionnel</div>
+      <div class="cover-title">Mission 5 — <span>Sécurisation du routeur</span><br>CRASH avec les ACL</div>
+      <div class="cover-sub">Filtrage LAN / DMZ / Internet par Listes de Contrôle d'Accès — Cisco IOS — Configuration réelle</div>
+      <div class="cover-meta">
+        <div><div class="lbl">Étudiant</div><div class="val">Aouizir Chahine</div></div>
+        <div><div class="lbl">Accès console</div><div class="val">PuTTY — Serial</div></div>
+        <div><div class="lbl">ACL créées</div><div class="val">ACL 100 + ACL 101</div></div>
+        <div><div class="lbl">Option</div><div class="val">BTS SIO SISR</div></div>
+      </div>
+    </div>
+
+    <!-- Section 1 — Contexte -->
+    <div class="sec"><div class="sec-num">1</div><div class="sec-title">Contexte et objectif de la mission</div><div class="sec-line"></div></div>
+
+    <div class="theory cyan">
+      <div class="theory-title">Pourquoi les ACL sont-elles indispensables sur un routeur ?</div>
+      <p>Le routeur est un <strong>point critique du réseau</strong> : il assure la communication entre le LAN, la DMZ et Internet.</p>
+      <p>Sans filtrage, n'importe quel trafic peut entrer ou sortir — brèche de sécurité majeure.</p>
+      <p>Les ACL permettent de <strong>contrôler précisément chaque flux</strong> en autorisant ou bloquant selon des règles définies.</p>
+    </div>
+
+    <p class="intro-text">Cette mission configure deux ACL : <strong>ACL 100</strong> (protection LAN/DMZ) et <strong>ACL 101</strong> (sécurisation Internet). Les flux bloqués sont journalisés dans Syslog pour traçabilité.</p>
+
+    <!-- Schéma réseau -->
+    <div class="net-schema">
+      <div class="net-block">
+        <div class="net-ico cyan">🖥️</div>
+        <div class="net-label">LAN</div>
+        <div class="net-ip">172.17.0.0/16<br>Interface G0/0</div>
+      </div>
+      <div class="net-arrow">↔</div>
+      <div class="net-block">
+        <div class="net-ico amber">🔀</div>
+        <div class="net-label">Routeur CRASH</div>
+        <div class="net-ip">ACL 100 + ACL 101<br>Cisco IOS</div>
+      </div>
+      <div class="net-arrow">↔</div>
+      <div class="net-block">
+        <div class="net-ico teal">🗄️</div>
+        <div class="net-label">DMZ</div>
+        <div class="net-ip">10.54.0.0/24<br>Interface G0/1</div>
+      </div>
+      <div class="net-arrow">↔</div>
+      <div class="net-block">
+        <div class="net-ico green">🌐</div>
+        <div class="net-label">Internet</div>
+        <div class="net-ip">192.168.230.1<br>Interface G0/2</div>
+      </div>
+    </div>
+
+    <!-- Section 2 — Architecture -->
+    <div class="sec"><div class="sec-num teal">2</div><div class="sec-title">Architecture réseau — Projet CRASH</div><div class="sec-line teal"></div></div>
+    <div class="env-grid">
+      <div class="env-item"><div class="env-lbl">Réseau LAN</div><div class="env-val">172.17.0.0 /16</div></div>
+      <div class="env-item"><div class="env-lbl">Réseau DMZ</div><div class="env-val">10.54.0.0 /24</div></div>
+      <div class="env-item"><div class="env-lbl">Internet (ext.)</div><div class="env-val">192.168.230.1</div></div>
+      <div class="env-item"><div class="env-lbl">Interface LAN</div><div class="env-val">G0/0 (GigabitEthernet)</div></div>
+      <div class="env-item"><div class="env-lbl">Interface DMZ</div><div class="env-val">G0/1 (GigabitEthernet)</div></div>
+      <div class="env-item"><div class="env-lbl">Interface Internet</div><div class="env-val">G0/2 / S0/0/0</div></div>
+    </div>
+
+    <!-- Section 3 — Principe ACL -->
+    <div class="sec"><div class="sec-num amber">3</div><div class="sec-title">Principe de fonctionnement des ACL</div><div class="sec-line amber"></div></div>
+    <div class="theory">
+      <div class="theory-title">Comment fonctionne une ACL Cisco ?</div>
+      <p>Une ACL est une <strong>liste de règles lues de haut en bas</strong> : dès qu'une règle correspond au trafic, elle est appliquée — les suivantes sont ignorées.</p>
+      <p>Chaque règle peut : <strong>permit</strong> (autoriser) ou <strong>deny</strong> (bloquer) le trafic.</p>
+      <p><strong>Règle implicite finale :</strong> à la fin de toute ACL Cisco, une règle invisible <code>deny ip any any</code> bloque tout ce qui n'a pas été explicitement autorisé.</p>
+    </div>
+
+    <!-- Section 4 — Préparation logs -->
+    <div class="sec"><div class="sec-num purple">4</div><div class="sec-title">Préparation — Activation des logs Syslog</div><div class="sec-line purple"></div></div>
+
+    <div>
+      <div class="fig-label purple">Capture 1 — Activation de l'horodatage et des journaux</div>
+      <div class="code-wrap">
+        <div class="code-badge">Routeur CRASH — Pré-configuration</div>
+        <pre><span class="cmt">! Entrer en mode privilégié et configuration globale</span>
+<span class="tx">Router> </span><span class="kw">enable</span>
+<span class="tx">Router# </span><span class="kw">conf t</span>
+
+<span class="cmt">! Activer l'horodatage précis des logs (msec = millisecondes)</span>
+<span class="tx">Router(config)# </span><span class="val">service timestamps log datetime msec</span>
+
+<span class="cmt">! Stocker les logs en mémoire interne (64 Ko)</span>
+<span class="tx">Router(config)# </span><span class="val">logging buffered 64000</span>
+
+<span class="cmt">! Désactiver l'affichage des logs sur la console (évite les interruptions)</span>
+<span class="tx">Router(config)# </span><span class="kw">no logging console</span>
+
+<span class="tx">Router(config)# exit</span>
+<span class="val">Router# write memory     ! Sauvegarder la configuration</span></pre>
+      </div>
+    </div>
+
+    <div class="expl purple">
+      <div class="expl-row"><div class="expl-label cmd" style="color:#7c3aed;">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">service timestamps log datetime msec  /  logging buffered 64000</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi activer les logs avant les ACL ?</div><div class="expl-text">Sans horodatage, les logs sont illisibles — impossible de savoir quand une tentative de connexion a eu lieu. <code>logging buffered</code> stocke les événements en mémoire pour analyse ultérieure avec <code>show logging</code>.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Chaque trafic bloqué par les ACL sera enregistré avec sa date et heure précises — traçabilité complète pour l'audit.</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu Mission 5 — ACL — Configuration sur matériel Cisco réel — Page 1 / 4</div>
+</div>
+
+<!-- ════════ PAGE 2 — ACL 100 ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 5 — ACL — SÉCURISATION DU ROUTEUR CRASH</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <div class="sec"><div class="sec-num">5</div><div class="sec-title">ACL 100 — Protection LAN et DMZ</div><div class="sec-line"></div></div>
+
+    <div class="theory cyan">
+      <div class="theory-title">Objectifs de l'ACL 100</div>
+      <p>Contrôler ce qui <strong>entre dans le routeur</strong> depuis le LAN et la DMZ — seul le trafic interne autorisé peut traverser le routeur.</p>
+      <p>Tout trafic non reconnu (ex : une machine pirate avec une IP externe) sera <strong>bloqué et journalisé</strong>.</p>
+    </div>
+
+    <!-- Règles visuelles -->
+    <div class="acl-rules">
+      <div class="acl-rule permit">
+        <span class="acl-rule-badge">PERMIT</span>
+        <div>
+          <div class="acl-rule-cmd">access-list 100 permit ip 172.17.0.0 0.0.255.255 any</div>
+          <div class="acl-rule-desc">→ Autorise tout le trafic IP provenant du LAN (172.17.0.0/16) vers n'importe quelle destination</div>
+        </div>
+      </div>
+      <div class="acl-rule permit">
+        <span class="acl-rule-badge">PERMIT</span>
+        <div>
+          <div class="acl-rule-cmd">access-list 100 permit ip 10.54.0.0 0.0.0.255 any</div>
+          <div class="acl-rule-desc">→ Autorise tout le trafic IP provenant de la DMZ (10.54.0.0/24) vers n'importe quelle destination</div>
+        </div>
+      </div>
+      <div class="acl-rule deny">
+        <span class="acl-rule-badge">DENY + LOG</span>
+        <div>
+          <div class="acl-rule-cmd">access-list 100 deny ip any any log</div>
+          <div class="acl-rule-desc">→ Bloque TOUT autre trafic et l'enregistre dans les journaux Syslog pour traçabilité</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="fig-label">Capture 2 — Création de l'ACL 100</div>
+      <div class="code-wrap">
+        <div class="code-badge">Routeur CRASH — ACL 100</div>
+        <pre><span class="tx">Router(config)# </span><span class="kw">conf t</span>
+
+<span class="cmt">! Règle 1 : Autoriser le LAN (wildcard 0.0.255.255 = masque inversé de /16)</span>
+<span class="tx">Router(config)# </span><span class="val">access-list 100 permit ip 172.17.0.0 0.0.255.255 any</span>
+
+<span class="cmt">! Règle 2 : Autoriser la DMZ (wildcard 0.0.0.255 = masque inversé de /24)</span>
+<span class="tx">Router(config)# </span><span class="val">access-list 100 permit ip 10.54.0.0 0.0.0.255 any</span>
+
+<span class="cmt">! Règle 3 : Bloquer tout le reste + log dans Syslog</span>
+<span class="tx">Router(config)# </span><span class="kw">access-list 100 deny ip any any log</span></pre>
+      </div>
+    </div>
+
+    <div class="expl">
+      <div class="expl-row"><div class="expl-label cmd">⌨ Notion clé : le wildcard mask</div><div class="expl-cmd">0.0.255.255 = masque inversé de /16  |  0.0.0.255 = masque inversé de /24</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi un wildcard et non un masque normal ?</div><div class="expl-text">Cisco IOS utilise des <strong>wildcards (masques inversés)</strong> dans les ACL : 0 = bit fixe (doit correspondre), 1 = bit libre (peu importe). <code>0.0.255.255</code> signifie "seuls les 16 premiers bits comptent" → correspond à tout le réseau 172.17.0.0/16.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Seul le trafic du LAN et de la DMZ est autorisé à entrer dans le routeur — toute autre source est bloquée et tracée.</div></div>
+    </div>
+
+    <div>
+      <div class="fig-label">Capture 3 — Application de l'ACL 100 sur les interfaces LAN et DMZ</div>
+      <div class="code-wrap">
+        <div class="code-badge">Application sur interfaces</div>
+        <pre><span class="tx">Router(config)# </span><span class="kw">conf t</span>
+
+<span class="cmt">! Appliquer ACL 100 en entrée sur l'interface LAN (G0/0)</span>
+<span class="tx">Router(config)# </span><span class="kw">interface g0/0</span>
+<span class="tx">Router(config-if)# </span><span class="val">ip access-group 100 in</span>
+<span class="tx">Router(config-if)# exit</span>
+
+<span class="cmt">! Appliquer ACL 100 en entrée sur l'interface DMZ (G0/1)</span>
+<span class="tx">Router(config)# </span><span class="kw">interface g0/1</span>
+<span class="tx">Router(config-if)# </span><span class="val">ip access-group 100 in</span>
+<span class="tx">Router(config-if)# exit</span>
+
+<span class="val">Router# write memory     ! Sauvegarder obligatoirement</span></pre>
+      </div>
+    </div>
+
+    <div class="expl">
+      <div class="expl-row"><div class="expl-label cmd">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">ip access-group 100 in</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi "in" et pas "out" ?</div><div class="expl-text"><code>in</code> → filtre le trafic qui <strong>entre dans l'interface</strong> (depuis le LAN/DMZ vers le routeur). C'est le sens correct : on filtre à l'entrée pour bloquer avant même que le routeur ne traite le paquet. <code>out</code> filtrerait à la sortie, ce qui serait trop tardif.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">L'ACL 100 est active sur G0/0 (LAN) et G0/1 (DMZ) — tout trafic entrant depuis ces interfaces est filtré selon les règles définies.</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu Mission 5 — ACL — Configuration sur matériel Cisco réel — Page 2 / 4</div>
+</div>
+
+<!-- ════════ PAGE 3 — ACL 101 + TESTS ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 5 — ACL — SÉCURISATION DU ROUTEUR CRASH</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <div class="sec"><div class="sec-num teal">6</div><div class="sec-title">ACL 101 — Sécurisation des flux Internet</div><div class="sec-line teal"></div></div>
+
+    <div class="theory teal">
+      <div class="theory-title">Objectifs de l'ACL 101</div>
+      <p>Contrôler les flux entre le réseau interne, la DMZ et Internet — autoriser uniquement ce qui est légitime.</p>
+      <p>Bloquer tout accès entrant depuis Internet vers le LAN — protéger le réseau interne d'intrusions.</p>
+    </div>
+
+    <!-- Règles visuelles ACL 101 -->
+    <div class="acl-rules">
+      <div class="acl-rule permit">
+        <span class="acl-rule-badge">PERMIT</span>
+        <div>
+          <div class="acl-rule-cmd">access-list 101 permit tcp 172.17.0.0 0.0.255.255 host 192.168.230.1 eq 80</div>
+          <div class="acl-rule-desc">→ Autorise la navigation HTTP (port 80) du LAN vers Internet</div>
+        </div>
+      </div>
+      <div class="acl-rule permit">
+        <span class="acl-rule-badge">PERMIT</span>
+        <div>
+          <div class="acl-rule-cmd">access-list 101 permit tcp 172.17.0.0 0.0.255.255 host 192.168.230.1 eq 443</div>
+          <div class="acl-rule-desc">→ Autorise la navigation HTTPS (port 443) du LAN vers Internet</div>
+        </div>
+      </div>
+      <div class="acl-rule permit">
+        <span class="acl-rule-badge">PERMIT</span>
+        <div>
+          <div class="acl-rule-cmd">access-list 101 permit icmp 172.17.0.0 0.0.255.255 host 192.168.230.1 echo</div>
+          <div class="acl-rule-desc">→ Autorise le ping sortant du LAN vers Internet</div>
+        </div>
+      </div>
+      <div class="acl-rule permit">
+        <span class="acl-rule-badge">PERMIT</span>
+        <div>
+          <div class="acl-rule-cmd">access-list 101 permit icmp 10.54.0.0 0.0.0.255 host 192.168.230.1 echo</div>
+          <div class="acl-rule-desc">→ Autorise le ping sortant de la DMZ vers Internet</div>
+        </div>
+      </div>
+      <div class="acl-rule deny">
+        <span class="acl-rule-badge">DENY + LOG</span>
+        <div>
+          <div class="acl-rule-cmd">access-list 101 deny ip any any log</div>
+          <div class="acl-rule-desc">→ Bloque TOUT le reste (ping entrant depuis Internet, accès non autorisés) + journalisation</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="fig-label teal">Capture 4 — Création de l'ACL 101</div>
+      <div class="code-wrap">
+        <div class="code-badge">Routeur CRASH — ACL 101</div>
+        <pre><span class="tx">Router(config)# </span><span class="kw">conf t</span>
+
+<span class="cmt">! Autoriser HTTP et HTTPS du LAN vers Internet</span>
+<span class="tx">Router(config)# </span><span class="val">access-list 101 permit tcp 172.17.0.0 0.0.255.255 host 192.168.230.1 eq 80</span>
+<span class="tx">Router(config)# </span><span class="val">access-list 101 permit tcp 172.17.0.0 0.0.255.255 host 192.168.230.1 eq 443</span>
+
+<span class="cmt">! Autoriser le ping sortant (LAN → Internet et DMZ → Internet)</span>
+<span class="tx">Router(config)# </span><span class="val">access-list 101 permit icmp 172.17.0.0 0.0.255.255 host 192.168.230.1 echo</span>
+<span class="tx">Router(config)# </span><span class="val">access-list 101 permit icmp 10.54.0.0 0.0.0.255 host 192.168.230.1 echo</span>
+
+<span class="cmt">! Bloquer tout le reste + log (ping entrant Internet bloqué, accès non autorisés)</span>
+<span class="tx">Router(config)# </span><span class="kw">access-list 101 deny ip any any log</span></pre>
+      </div>
+    </div>
+
+    <div class="expl teal">
+      <div class="expl-row"><div class="expl-label cmd teal">⌨ Mots-clés importants</div><div class="expl-cmd">eq 80 / eq 443 = ports HTTP/HTTPS  |  echo = requête ping  |  host = IP unique</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi filtrer par port (eq 80, eq 443) ?</div><div class="expl-text"><code>eq 80</code> / <code>eq 443</code> → filtre uniquement les connexions Web — les autres ports (FTP, Telnet, SSH depuis Internet) restent bloqués. <code>echo</code> → autorise uniquement les requêtes ping sortantes, pas les réponses entrantes d'Internet non sollicitées.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Le LAN peut naviguer sur Internet (HTTP/HTTPS) et pinger — mais Internet ne peut pas accéder au LAN ou pinger de l'intérieur.</div></div>
+    </div>
+
+    <div>
+      <div class="fig-label teal">Capture 5 — Application de l'ACL 101 sur l'interface Internet (G0/2)</div>
+      <div class="code-wrap">
+        <div class="code-badge">Application — Interface Internet</div>
+        <pre><span class="tx">Router(config)# </span><span class="kw">interface g0/2</span>
+
+<span class="cmt">! Filtrer le trafic entrant depuis Internet</span>
+<span class="tx">Router(config-if)# </span><span class="val">ip access-group 101 in</span>
+
+<span class="cmt">! Filtrer le trafic sortant vers Internet</span>
+<span class="tx">Router(config-if)# </span><span class="val">ip access-group 101 out</span>
+
+<span class="tx">Router(config-if)# exit</span>
+<span class="val">Router# write memory</span></pre>
+      </div>
+    </div>
+
+    <div class="expl teal">
+      <div class="expl-row"><div class="expl-label cmd teal">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">ip access-group 101 in  +  ip access-group 101 out</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi appliquer dans les deux sens ici ?</div><div class="expl-text"><code>in</code> → filtre le trafic venant d'Internet (bloque les connexions entrantes non autorisées). <code>out</code> → filtre le trafic sortant vers Internet (garantit que seul le trafic autorisé peut quitter le réseau). Double filtrage = sécurité renforcée.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">L'ACL 101 contrôle les flux dans les deux sens sur l'interface Internet — protection complète des deux côtés.</div></div>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu Mission 5 — ACL — Configuration sur matériel Cisco réel — Page 3 / 4</div>
+</div>
+
+<!-- ════════ PAGE 4 — VÉRIFICATIONS + CONCLUSION ════════ -->
+<div class="page">
+  <div class="pg-header">
+    <div class="pg-header-left">MISSION 5 — ACL — SÉCURISATION DU ROUTEUR CRASH</div>
+    <div class="pg-header-right">Projet CRASH — BTS SIO 2e année — Aouizir Chahine</div>
+  </div>
+  <div class="pg-header-accent"></div>
+  <div class="pg-body">
+
+    <!-- Section 7 — Tests -->
+    <div class="sec"><div class="sec-num green">7</div><div class="sec-title">Tests de fonctionnement — Validation des règles</div><div class="sec-line green"></div></div>
+
+    <div class="tests-grid">
+      <div class="test-item pass">
+        <div class="test-ico">✅</div>
+        <div class="test-text"><strong>Ping LAN → Internet</strong>Autorisé — ICMP echo depuis 172.17.x.x vers 192.168.230.1 passe</div>
+      </div>
+      <div class="test-item fail">
+        <div class="test-ico">🚫</div>
+        <div class="test-text"><strong>Ping Internet → LAN</strong>Bloqué — ICMP echo depuis 192.168.230.1 vers 172.17.x.x refusé + log</div>
+      </div>
+      <div class="test-item pass">
+        <div class="test-ico">✅</div>
+        <div class="test-text"><strong>Web LAN → Internet (HTTP/HTTPS)</strong>Autorisé — TCP port 80 et 443 vers 192.168.230.1 passent</div>
+      </div>
+      <div class="test-item fail">
+        <div class="test-ico">🚫</div>
+        <div class="test-text"><strong>Accès Internet → LAN</strong>Bloqué — toute connexion entrante d'Internet vers le LAN refusée + log</div>
+      </div>
+    </div>
+
+    <!-- Section 8 — Vérification -->
+    <div class="sec" style="margin-top:4px;"><div class="sec-num green">8</div><div class="sec-title">Vérification des ACL et compteurs Syslog</div><div class="sec-line green"></div></div>
+
+    <div>
+      <div class="fig-label green">Capture 6 — Vérification des ACL et journaux</div>
+      <div class="code-wrap">
+        <div class="code-badge">Commandes de vérification</div>
+        <pre><span class="cmt">! Afficher toutes les ACL avec leurs compteurs de correspondances</span>
+<span class="tx">Router# </span><span class="kw">show ip access-lists</span>
+
+<span class="cmt">! Résultat attendu dans la capture :</span>
+<span class="ti">Extended IP access list 100</span>
+<span class="val">    10 permit ip 172.17.0.0 0.0.255.255 any (235 matches)</span>
+<span class="val">    20 permit ip 10.54.0.0 0.0.0.255 any (47 matches)</span>
+<span class="err">    30 deny ip any any log (12 matches)</span>
+
+<span class="ti">Extended IP access list 101</span>
+<span class="val">    10 permit tcp 172.17.0.0 0.0.255.255 host 192.168.230.1 eq 80 (89 matches)</span>
+<span class="val">    20 permit tcp 172.17.0.0 0.0.255.255 host 192.168.230.1 eq 443 (156 matches)</span>
+<span class="val">    30 permit icmp ... echo (14 matches)</span>
+<span class="err">    50 deny ip any any log (8 matches)</span>
+
+<span class="cmt">! Consulter les journaux Syslog pour voir les tentatives bloquées</span>
+<span class="tx">Router# </span><span class="kw">show logging</span>
+
+<span class="cmt">! Résultat attendu :</span>
+<span class="warn-c">%SEC-6-IPACCESSLOGP: list 100 denied ip 10.0.0.5 -> 192.168.1.1, 1 packet</span>
+<span class="warn-c">%SEC-6-IPACCESSLOGP: list 101 denied ip 192.168.230.1 -> 172.17.1.10, 1 packet</span></pre>
+      </div>
+    </div>
+
+    <div class="expl green">
+      <div class="expl-row"><div class="expl-label cmd green">⌨ Commande(s) utilisée(s)</div><div class="expl-cmd">show ip access-lists  /  show logging</div></div>
+      <div class="expl-row"><div class="expl-label why">🧠 Pourquoi vérifier les compteurs ACL ?</div><div class="expl-text"><code>show ip access-lists</code> affiche le nombre de paquets traités par chaque règle (<strong>matches</strong>). Si une règle a 0 match → soit elle ne sert à rien, soit il y a une erreur de configuration. <code>show logging</code> montre les tentatives bloquées avec horodatage — permet de détecter des attaques ou des erreurs de configuration.</div></div>
+      <div class="expl-row"><div class="expl-label res">✅ Résultat attendu</div><div class="expl-text">Les règles permit ont des matches → le trafic autorisé passe. Les règles deny ont des matches → les tentatives bloquées sont enregistrées.</div></div>
+    </div>
+
+    <!-- Tableau récap -->
+    <div class="sec" style="margin-top:4px;"><div class="sec-num">9</div><div class="sec-title">Récapitulatif complet — ACL 100 + ACL 101</div><div class="sec-line"></div></div>
+
+    <table>
+      <thead>
+        <tr><th>ACL</th><th>Règle</th><th>Commande clé</th><th>Interface / Sens</th><th>Effet</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>100</td><td>Permit LAN</td><td>permit ip 172.17.0.0 0.0.255.255 any</td><td>G0/0 — in</td><td class="td-permit">✅ LAN autorisé</td></tr>
+        <tr><td>100</td><td>Permit DMZ</td><td>permit ip 10.54.0.0 0.0.0.255 any</td><td>G0/1 — in</td><td class="td-permit">✅ DMZ autorisée</td></tr>
+        <tr><td>100</td><td>Deny tout</td><td>deny ip any any log</td><td>G0/0+G0/1 — in</td><td class="td-deny">🚫 Bloqué + log</td></tr>
+        <tr><td>101</td><td>HTTP LAN</td><td>permit tcp 172.17.0.0 0.0.255.255 host ... eq 80</td><td>G0/2 — in/out</td><td class="td-permit">✅ Web autorisé</td></tr>
+        <tr><td>101</td><td>HTTPS LAN</td><td>permit tcp ... eq 443</td><td>G0/2 — in/out</td><td class="td-permit">✅ HTTPS autorisé</td></tr>
+        <tr><td>101</td><td>Ping sortant</td><td>permit icmp ... echo</td><td>G0/2 — in/out</td><td class="td-permit">✅ Ping LAN/DMZ→Net</td></tr>
+        <tr><td>101</td><td>Deny tout</td><td>deny ip any any log</td><td>G0/2 — in/out</td><td class="td-deny">🚫 Internet→LAN bloqué</td></tr>
+      </tbody>
+    </table>
+
+    <div class="result-box">
+      <div class="r-title">✅ Résultat final — Routeur CRASH sécurisé par ACL</div>
+      <p>Le LAN (172.17.0.0/16) et la DMZ (10.54.0.0/24) sont protégés — seul le trafic autorisé transite.<br>
+      La navigation Web (HTTP/HTTPS) et le ping sortant fonctionnent — Internet ne peut pas initier de connexion vers le réseau interne.<br>
+      Toutes les tentatives bloquées sont journalisées dans Syslog avec horodatage pour audit.</p>
+    </div>
+
+    <div class="warn">
+      <div class="warn-title">⚠️ Rappels importants</div>
+      <p><strong>write memory</strong> → toujours sauvegarder après chaque modification — la config est perdue au redémarrage sinon.</p>
+      <p><strong>Règle implicite</strong> → toute ACL Cisco se termine par <code>deny ip any any</code> invisible — penser à ajouter les <code>permit</code> nécessaires avant le <code>deny</code> explicite.</p>
+    </div>
+
+  </div>
+  <div class="pg-footer">Compte rendu Mission 5 — ACL — Configuration sur matériel Cisco réel — Page 4 / 4</div>
+</div>
+
+</body>
+</html>
